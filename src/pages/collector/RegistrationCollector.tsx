@@ -108,11 +108,6 @@ class RegistrationCollector extends React.Component<any, any>{
 
     getRegData(data: any) {
         console.log(JSON.stringify(data))
-        // const requestOptions = {
-        //             body: JSON.stringify(this.dataConfig),
-        //             method: 'POST',
-        //             headers: { 'Content-Type': 'application/json' }
-        // }
         CollectorService.getAllRegistrationCollectionData(data)
         .then(
             (res): any=>{
@@ -129,41 +124,6 @@ class RegistrationCollector extends React.Component<any, any>{
                   }); 
             });
     }
-
-    // componentDidMount() {
-    //     let date_ob = new Date();
-    //     let date = ("0" + date_ob.getDate()).slice(-2);
-    //     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-    //     let year = date_ob.getFullYear();
-    //     let dateNow = month+"-"+date+"-"+year;
-    //     console.log(dateNow);
-        
-    //     this.dataConfig = {
-    //         "startDate": dateNow,
-    //         "endDate": dateNow
-    //     }
-    //     const requestOptions = {
-    //         body: JSON.stringify(this.dataConfig),
-    //         method: 'GET',
-    //         headers: { 'Content-Type': 'application/json' }
-    //     }
-    //     fetch(this.baseUrl+'/getAllDataByfacilityIdAndDates', requestOptions)
-    //       .then(res => res.json())
-    //       .then(
-    //         (result) => {
-    //           this.setState({
-    //             isLoaded: true,
-    //             items: result.content
-    //           });
-    //         },
-    //         (error) => {
-    //           this.setState({
-    //             isLoaded: true,
-    //             error
-    //           });
-    //         }
-    //       )
-    //   }
 
     render() {
         const { error, isLoaded, items } = this.state;
@@ -197,7 +157,7 @@ class RegistrationCollector extends React.Component<any, any>{
                         </tr>
                     </thead>
                     <tbody>
-                    {items.map((i:any) => (
+                    {items?.map((i:any) => (
                         <tr key={i.id}>
                             <td>{ i.facilityId || 'Not Mentioned'}</td>
                             <td>{i.numberOfOpdPatient || 0}</td>
@@ -205,7 +165,7 @@ class RegistrationCollector extends React.Component<any, any>{
                             <td>{i.totalCollection || 0}</td>
                             <td>{i.sentTime || 'Not specified'}</td>
                         </tr>
-                        ))}
+                        )) || ' **** No Data Available ***'}
                     </tbody>
                 </table>
             </div>
