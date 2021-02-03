@@ -74,15 +74,16 @@ class RegistrationCollector extends React.Component<any, any>{
             }
             this.getRegData(this.dataConfig);
         }
-    
+
       }
-      
+
     constructor(props:any) {
         super(props);
         this.state = {
           error: null,
           isLoaded: false,
-          items: []
+          items: [],
+          totalresult: {}
         };
         this.dataConfig = {
             "facilityId": null,
@@ -111,22 +112,44 @@ class RegistrationCollector extends React.Component<any, any>{
         CollectorService.getAllRegistrationCollectionData(data)
         .then(
             (res): any=>{
-                console.log(res);
+                const resultObj = {
+                    "opdTotal" : 0,
+                    "emergencyTotal": 0,
+                    "collectionTotal": 0
+                };
+                const resultData = res.data.content;
+                console.log(resultData);
+                let opdSum = 0;
+                let emergencySum = 0;
+                let collectionSum = 0;
+                for (let i = 0; i < resultData?.length; i++) {
+                    const opdData = resultData[i].numberOfOpdPatient;
+                    opdSum += opdData;
+                    const emergencyData = resultData[i].numberOfEmergencyPatient;
+                    emergencySum += emergencyData;
+                    const totalColData = resultData[i].totalCollection;
+                    collectionSum += totalColData;
+                }
+                resultObj.opdTotal = opdSum;
+                resultObj.emergencyTotal = emergencySum;
+                resultObj.collectionTotal = collectionSum;
+                console.log(resultObj);
                 this.setState({
                     isLoaded: true,
-                    items: res.data.content
+                    items: res.data.content,
+                    totalresult : resultObj
                   });
             },
             (error) =>{
                 this.setState({
                     isLoaded: true,
                     error
-                  }); 
+                  });
             });
     }
 
     render() {
-        const { error, isLoaded, items } = this.state;
+        const { error, isLoaded, items, totalresult } = this.state;
         if (error) {
           return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -137,7 +160,7 @@ class RegistrationCollector extends React.Component<any, any>{
             <h3 className="text-center">Registration Completion Table</h3>
             <form className="form-inline ml-2" onSubmit={this.mySubmitHandler}>
                 <div className="form-group m-2">
-                    <input className="text m-1 p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/> 
+                    <input className="text m-1 p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
                     <label  className="label ml-2 mr-1 text-info font-weight-bold"> Start Date : </label>
                     <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="startDate" id="startDate"/>
                     <label  className="label ml-2 mr-1 text-info font-weight-bold"> End Date : </label>
@@ -166,6 +189,13 @@ class RegistrationCollector extends React.Component<any, any>{
                             <td>{i.sentTime || 'Not specified'}</td>
                         </tr>
                         )) || ' **** No Data Available ***'}
+                            <tr className="font-weight-bold">
+                                <td> Total ::</td>
+                                <td> {totalresult.opdTotal}</td>
+                                <td> {totalresult.emergencyTotal}</td>
+                                <td> {totalresult.collectionTotal}</td>
+                                <td> ***</td>
+                            </tr>
                     </tbody>
                 </table>
             </div>
