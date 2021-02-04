@@ -76,6 +76,7 @@ class RegistrationCollector extends React.Component<any, any>{
         }
 
       }
+    timerID: any;
 
     constructor(props:any) {
         super(props);
@@ -92,10 +93,10 @@ class RegistrationCollector extends React.Component<any, any>{
         };
         this.changeHandler = this.changeHandler.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
+        
       }
 
       componentDidMount(){
-       if(this.dataConfig.startDate === '' && this.dataConfig.startDate === ''){
         let date_ob = new Date();
         let dateNow = this.formateNowDate(date_ob);
         this.dataConfig = {
@@ -103,10 +104,11 @@ class RegistrationCollector extends React.Component<any, any>{
             "startDate": dateNow,
             "endDate": dateNow
         }
-          this.getRegData(this.dataConfig);
-       }
+        this.timerID = setInterval(() => this.getRegData(this.dataConfig), 10000);
       }
-
+      componentWillUnmount() {
+        clearInterval(this.timerID);
+      }
     getRegData(data: any) {
         console.log(JSON.stringify(data))
         CollectorService.getAllRegistrationCollectionData(data)

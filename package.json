@@ -12,6 +12,7 @@
     "@types/react-dom": "^17.0.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "env-cmd": "^10.1.0",
     "formik": "^2.2.6",
     "node-sass": "4.14.1",
     "react": "^17.0.1",
