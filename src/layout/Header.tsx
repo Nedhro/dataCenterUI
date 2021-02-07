@@ -1,21 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import '../static/scss/Custom.scss';
+import banner from '../static/img/dghs_banner.png';
 
 function Header() {
   return (
-    <nav className="navbar navbar-light bg-light">
-        <div className="container-fluid">
-            <a className="navbar-brand">Data Center</a>
-            <a className="navbar-brand"> </a>
-            <a className="navbar-brand"> </a>
-            <a className="navbar-brand"> </a>
-            <a className="navbar-brand"> </a>
-            <a className="navbar-brand">Login</a>
-            <form className="d-flex">
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-            <button className="btn btn-outline-success" type="submit">Search</button>
-            </form>
+    <nav>
+        <div className="">
+            <a href="">
+            <img src={banner} width="100%" height="150px" alt="Banner"/>
+            </a>
         </div>
     </nav>
    

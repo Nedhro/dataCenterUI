@@ -3,9 +3,14 @@ import '../static/scss/Custom.scss';
 
 function Footer() {
   return (
-      <div className="container">
+      <div className="container-fluid">
         <div className="footer">
-            <p>Page Footer Text</p>
+            <span><b>Powered By : </b></span>
+            <span className="font-weight-bold">
+              <a href="https://ctechbd.com/">
+                Crystal Technology Bangladesh Ltd.
+              </a>
+            </span>
         </div>
       </div>
   );
