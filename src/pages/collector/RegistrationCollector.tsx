@@ -104,7 +104,8 @@ class RegistrationCollector extends React.Component<any, any>{
             "startDate": dateNow,
             "endDate": dateNow
         }
-        this.timerID = setInterval(() => this.getRegData(this.dataConfig), 10000);
+        this.getRegData(this.dataConfig);
+        this.timerID = setInterval(() => this.getRegData(this.dataConfig), 5000);
       }
       componentWillUnmount() {
         clearInterval(this.timerID);
@@ -117,23 +118,33 @@ class RegistrationCollector extends React.Component<any, any>{
                 const resultObj = {
                     "opdTotal" : 0,
                     "emergencyTotal": 0,
+                    "paidSum": 0,
+                    "freeSum": 0,
                     "collectionTotal": 0
                 };
                 const resultData = res.data.content;
                 console.log(resultData);
                 let opdSum = 0;
                 let emergencySum = 0;
+                let freeSum = 0;
+                let paidSum = 0;
                 let collectionSum = 0;
                 for (let i = 0; i < resultData?.length; i++) {
                     const opdData = resultData[i].numberOfOpdPatient;
                     opdSum += opdData;
                     const emergencyData = resultData[i].numberOfEmergencyPatient;
                     emergencySum += emergencyData;
+                    const freePatient = resultData[i].numberOfFreePatient;
+                    freeSum += freePatient;
+                    const paidPatient = resultData[i].numberOfPaidPatient;
+                    paidSum += paidPatient;
                     const totalColData = resultData[i].totalCollection;
                     collectionSum += totalColData;
                 }
                 resultObj.opdTotal = opdSum;
                 resultObj.emergencyTotal = emergencySum;
+                resultObj.paidSum = paidSum;
+                resultObj.freeSum = freeSum;
                 resultObj.collectionTotal = collectionSum;
                 console.log(resultObj);
                 this.setState({
@@ -159,7 +170,7 @@ class RegistrationCollector extends React.Component<any, any>{
         } else {
           return (
         <div className="container">
-            <h3 className="text-center">Registration Completion Table</h3>
+            <h3 className="text-center">Data Center Dashboard</h3>
             <form className="form-inline ml-2" onSubmit={this.mySubmitHandler}>
                 <div className="form-group m-2">
                     <input className="text m-1 p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
@@ -177,6 +188,8 @@ class RegistrationCollector extends React.Component<any, any>{
                             <th>Facility Name</th>
                             <th>OPD Patients</th>
                             <th>Emergency Patients</th>
+                            {/* <th>Paid Patients</th>
+                            <th>Free Patients</th> */}
                             <th>Total Collection</th>
                             <th>Collection Date</th>
                         </tr>
@@ -184,9 +197,11 @@ class RegistrationCollector extends React.Component<any, any>{
                     <tbody>
                     {items?.map((i:any) => (
                         <tr key={i.id}>
-                            <td>{ i.facilityId || 'Not Mentioned'}</td>
+                            <td>{i.facilityId || 'Not Mentioned'}</td>
                             <td>{i.numberOfOpdPatient || 0}</td>
                             <td>{i.numberOfEmergencyPatient || 0}</td>
+                            {/* <td>{i.numberOfPaidPatient || 0}</td>
+                            <td>{i.numberOfFreePatient || 0}</td> */}
                             <td>{i.totalCollection || 0}</td>
                             <td>{i.sentTime || 'Not specified'}</td>
                         </tr>
@@ -195,6 +210,8 @@ class RegistrationCollector extends React.Component<any, any>{
                                 <td> Total ::</td>
                                 <td> {totalresult.opdTotal}</td>
                                 <td> {totalresult.emergencyTotal}</td>
+                                {/* <td> {totalresult.paidSum}</td>
+                                <td> {totalresult.freeSum}</td> */}
                                 <td> {totalresult.collectionTotal}</td>
                                 <td> ***</td>
                             </tr>
