@@ -1,5 +1,6 @@
 import React from 'react';
 import CollectorService from "../../service/CollectorService";
+import '../../static/scss/Custom.scss';
 class RegistrationCollector extends React.Component<any, any>{
     baseUrl = 'http://localhost:8081';
     dataConfig : any = {};
@@ -169,17 +170,17 @@ class RegistrationCollector extends React.Component<any, any>{
           return <div>Loading...</div>;
         } else {
           return (
-        <div className="container-fluid">
-            <h3 className="text-center">Data Center Dashboard</h3>
+        <div className="container-fluid text-center">
+            <h3 className="d-inline-block"><span className="text-center">Data Center Dashboard</span></h3>
             <form className="form-inline ml-2" onSubmit={this.mySubmitHandler}>
                 <div className="form-group m-2">
                     <input className="text m-1 p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
                     <label  className="label ml-2 mr-1 text-info font-weight-bold"> Start Date : </label>
                     <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="startDate" id="startDate"/>
                     <label  className="label ml-2 mr-1 text-info font-weight-bold"> End Date : </label>
-                    <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="endDate" id="endDate"/>
+                    <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="endDate" id="endDate"/> <br/>
+                    <button type="submit" className="btn btn-info font-weight-bold m-2 p-2"> Filter </button>
                 </div>
-                <button type="submit" className="btn btn-info font-weight-bold m-2 p-2"> Filter </button>
             </form>
             <div className="container-fluid">
                 <table className="table table-striped table-bordered" id="tableData">
