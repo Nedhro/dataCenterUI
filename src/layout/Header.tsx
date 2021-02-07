@@ -6,10 +6,12 @@ import banner from '../static/img/dghs_banner.png';
 function Header() {
   return (
     <nav>
-        <div className="">
-            <a href="">
-            <img src={banner} width="100%" height="150px" alt="Banner"/>
+        <div className="container-fluid">
+          <div className="header">
+            <a href="/">
+              <img src={banner} width="100%" alt="Banner"/>
             </a>
+          </div>
         </div>
     </nav>
    

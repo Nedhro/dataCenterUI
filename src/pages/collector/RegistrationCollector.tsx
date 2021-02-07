@@ -105,7 +105,7 @@ class RegistrationCollector extends React.Component<any, any>{
             "endDate": dateNow
         }
         this.getRegData(this.dataConfig);
-        this.timerID = setInterval(() => this.getRegData(this.dataConfig), 5000);
+        this.timerID = setInterval(() => this.getRegData(this.dataConfig), 5*60*1000);
       }
       componentWillUnmount() {
         clearInterval(this.timerID);
@@ -169,7 +169,7 @@ class RegistrationCollector extends React.Component<any, any>{
           return <div>Loading...</div>;
         } else {
           return (
-        <div className="container">
+        <div className="container-fluid">
             <h3 className="text-center">Data Center Dashboard</h3>
             <form className="form-inline ml-2" onSubmit={this.mySubmitHandler}>
                 <div className="form-group m-2">
@@ -181,7 +181,7 @@ class RegistrationCollector extends React.Component<any, any>{
                 </div>
                 <button type="submit" className="btn btn-info font-weight-bold m-2 p-2"> Filter </button>
             </form>
-            <div className="container">
+            <div className="container-fluid">
                 <table className="table table-striped table-bordered" id="tableData">
                     <thead>
                         <tr>
