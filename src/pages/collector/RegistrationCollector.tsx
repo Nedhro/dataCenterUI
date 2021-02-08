@@ -171,26 +171,28 @@ class RegistrationCollector extends React.Component<any, any>{
         } else {
           return (
         <div className="container-fluid text-center">
-            <h3 className="d-inline-block"><span className="text-center">Data Center Dashboard</span></h3>
+            <h3 className="d-inline-block">
+                <span className="font-weight-bold">Data Center Dashboard</span>
+            </h3>
             <form className="form-inline ml-2" onSubmit={this.mySubmitHandler}>
-                <div className="form-group m-2">
-                    <input className="text m-1 p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
-                    <label  className="label ml-2 mr-1 text-info font-weight-bold"> Start Date : </label>
+                <div className="form-group m-0 p-2 filter">
+                    <input className="text p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
+                    <label  className="label ml-2 p-1 mr-1 text-info font-weight-bold"> Start Date: </label>
                     <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="startDate" id="startDate"/>
-                    <label  className="label ml-2 mr-1 text-info font-weight-bold"> End Date : </label>
+                    <label  className="label ml-2 mr-1 p-1 text-info font-weight-bold"> End Date: </label>
                     <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="endDate" id="endDate"/> <br/>
                     <button type="submit" className="btn btn-info font-weight-bold m-2 p-2"> Filter </button>
                 </div>
             </form>
-            <div className="container-fluid">
-                <table className="table table-striped table-bordered" id="tableData">
+            <div className="container-fluid tableData">
+                <table className="table table-bordered table-hover table-sm" id="tableData">
                     <thead>
                         <tr>
                             <th>Facility Name</th>
                             <th>OPD Patients</th>
                             <th>Emergency Patients</th>
-                            {/* <th>Paid Patients</th>
-                            <th>Free Patients</th> */}
+                            <th>Free Patients</th>
+                            <th>Paid Patients</th>
                             <th>Total Collection</th>
                             <th>Collection Date</th>
                         </tr>
@@ -201,8 +203,8 @@ class RegistrationCollector extends React.Component<any, any>{
                             <td>{i.facilityId || 'Not Mentioned'}</td>
                             <td>{i.numberOfOpdPatient || 0}</td>
                             <td>{i.numberOfEmergencyPatient || 0}</td>
-                            {/* <td>{i.numberOfPaidPatient || 0}</td>
-                            <td>{i.numberOfFreePatient || 0}</td> */}
+                            <td>{i.numberOfPaidPatient || 0}</td>
+                            <td>{i.numberOfFreePatient || 0}</td>
                             <td>{i.totalCollection || 0}</td>
                             <td>{i.sentTime || 'Not specified'}</td>
                         </tr>
@@ -211,8 +213,8 @@ class RegistrationCollector extends React.Component<any, any>{
                                 <td> Total ::</td>
                                 <td> {totalresult.opdTotal}</td>
                                 <td> {totalresult.emergencyTotal}</td>
-                                {/* <td> {totalresult.paidSum}</td>
-                                <td> {totalresult.freeSum}</td> */}
+                                <td> {totalresult.paidSum}</td>
+                                <td> {totalresult.freeSum}</td>
                                 <td> {totalresult.collectionTotal}</td>
                                 <td> ***</td>
                             </tr>
