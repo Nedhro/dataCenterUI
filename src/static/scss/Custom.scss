@@ -1,3 +1,26 @@
+
+.tableData {
+  overflow-x:auto;
+}
+
+.tableData table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+.tableData table th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+.tableData table tr:nth-child(even){background-color: ghostwhite}
+
+.filter .text {
+  border: 1px solid #ddd;
+}
+
 .footer {
     position: fixed;
     left: 0;
@@ -7,15 +30,16 @@
     color: #9DBDBD;
     text-align: center;
   }
-  .footer a{
+
+  .footer a {
     color:whitesmoke;
   }
 
-.headerImage{
-  width: 100%;
+.headerImage {
   display: block;
+  width: 100%;
+  min-width: 350px;
+  height: auto;
   margin-left: auto;
   margin-right: auto;
-  height: auto;
-  min-width: 465px;
 }
