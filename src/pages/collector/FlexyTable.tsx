@@ -202,7 +202,7 @@ class FlexyTable extends React.Component<any, any>{
             </form>
           <ReactFlexyTable 
           className="table table-stripped table-hover table-sm dataCenter"
-          data={items} sortable globalSearch showExcelButton/>
+          data={items} sortable filterable={false} globalSearch showExcelButton/>
         </div>
           );
         }
