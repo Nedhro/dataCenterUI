@@ -1,21 +1,21 @@
 
-.tableData {
+.tableReg {
   overflow-x:auto;
 }
 
-.tableData table {
+.tableReg table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
   border: 1px solid #ddd;
 }
 
-.tableData table th, td {
+.tableReg table th, td {
   text-align: left;
   padding: 8px;
 }
 
-.tableData table tr:nth-child(even){background-color: ghostwhite}
+.tableReg table tr:nth-child(even){background-color: ghostwhite}
 
 .filter .text {
   border: 1px solid #ddd;
@@ -39,7 +39,7 @@
   display: block;
   width: 100%;
   min-width: 350px;
-  height: auto;
+  height: 120px;
   margin-left: auto;
   margin-right: auto;
 }
