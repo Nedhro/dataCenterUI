@@ -143,11 +143,17 @@
   }
 
   .table td{
-   text-align: center !important;   
+   text-align: center !important;
   }
+  .table th{
+    text-align: center !important;  
+   }
   .table{
     margin-top: 0 !important;
     margin-bottom: 0 !important;
+    position: relative !important;
+    text-align: justify !important;
+    width: 100% !important;
   }
 
  ._3cYlG{
@@ -177,4 +183,8 @@
     border-radius: 3px !important;
     min-width: 60px !important;
     outline-width: 0;
+  }
+
+  .dataCenter{
+    margin-top: 0 !important;
   }
