@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.scss';
 import FlexyTable from './pages/collector/FlexyTable';
-// import FlexyTable from './pages/collector/FlexyTable';
-import RegistrationCollector from './pages/collector/RegistrationCollector';
+//import RegistrationCollector from './pages/collector/RegistrationCollector';
 
 function App() {
   return (

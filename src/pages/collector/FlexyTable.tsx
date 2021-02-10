@@ -152,15 +152,15 @@ class FlexyTable extends React.Component<any, any>{
                 resultObj.freeSum = freeSum;
                 resultObj.collectionTotal = collectionSum;
 
-                const datafinal = resultData.map((data : any)=>{
+                const datafinal = resultData?.map((data : any)=>{
                   let config = {
-                      "Facility Id": data.facilityId || "No Name added",
-                      "Opd Patient": data.numberOfOpdPatient || 0,
-                      "Emergency Patient": data.numberOfEmergencyPatient || 0,
+                      "Facility Name (Id)": data.facilityId || "N/A",
+                      "Opd Patients": data.numberOfOpdPatient || 0,
+                      "Emergency Patients": data.numberOfEmergencyPatient || 0,
                       "Free Patients": data.numberOfPaidPatient || 0,
-                      "Paid Patient": data.numberOfFreePatient || 0,
+                      "Paid Patients": data.numberOfFreePatient || 0,
                       "Total Collection": data.totalCollection || 0,
-                      "Collection Date": data.sentTime
+                      "Collection Date": data.sentTime || "N/A"
                   };
                   return config;
               });
@@ -183,13 +183,13 @@ class FlexyTable extends React.Component<any, any>{
       
         const { error, isLoaded, items } = this.state;
         if (error) {
-          return <div>Error: {error.message}</div>;
+          return <div className="text-center font-weight-bold"> Error: {error.message}</div>;
         } else if (!isLoaded) {
-          return <div>Loading...</div>;
+          return <div className="text-center font-weight-bold"> Loading...</div>;
         } else {
           return (
         <div className="container-fluid">
-           <h4 className="mb-0 mt-0 pb-0 pt-0" style={{ textAlign: 'center' }}>Data Center Dashboard</h4>
+           <h4 className="mb-0 mt-0 pb-0 pt-0" style={{ textAlign: 'center',marginTop:0, marginBottom:0 }}>Data Center Dashboard</h4>
                <form className="form-inline m-0 p-0" onSubmit={this.mySubmitHandler}>
                <div className="form-group mb-0 mt-0 p-2 filter">
                    <input className="text p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
@@ -201,8 +201,8 @@ class FlexyTable extends React.Component<any, any>{
               </div>
             </form>
           <ReactFlexyTable 
-          className="table table-stripped table-hover table-sm" 
-          data={items} sortable globalSearch showExcelButton/>
+          className="table table-stripped table-hover table-sm dataCenter"
+          data={items} sortable filterable={false} globalSearch showExcelButton/>
         </div>
           );
         }
