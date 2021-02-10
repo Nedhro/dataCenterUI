@@ -152,7 +152,7 @@ class FlexyTable extends React.Component<any, any>{
                 resultObj.freeSum = freeSum;
                 resultObj.collectionTotal = collectionSum;
 
-                const datafinal = resultData.map((data : any)=>{
+                const datafinal = resultData?.map((data : any)=>{
                   let config = {
                       "Facility Name (Id)": data.facilityId || "N/A",
                       "Opd Patients": data.numberOfOpdPatient || 0,
