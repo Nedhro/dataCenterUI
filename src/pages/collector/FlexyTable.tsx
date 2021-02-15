@@ -84,6 +84,8 @@ class FlexyTable extends React.Component<any, any>{
 
     constructor(props:any) {
         super(props);
+        let date_ob = new Date();
+        let dateNow = this.formateNowDate(date_ob);
         this.state = {
           error: null,
           isLoaded: false,
@@ -155,11 +157,14 @@ class FlexyTable extends React.Component<any, any>{
                 const datafinal = resultData?.map((data : any)=>{
                   let config = {
                       "Facility Name (Id)": data.facilityId || "N/A",
+                      "Total Patients": data.totalPatient || 0,
                       "Opd Patients": data.numberOfOpdPatient || 0,
                       "Emergency Patients": data.numberOfEmergencyPatient || 0,
-                      "Free Patients": data.numberOfPaidPatient || 0,
-                      "Paid Patients": data.numberOfFreePatient || 0,
-                      "Total Collection": data.totalCollection || 0,
+                      "Male": data.numberOfMalePatient || 0,
+                      "Female": data.numberOfFemalePatient || 0,
+                      "Paid Patients": data.numberOfPaidPatient || 0,
+                      "Free Patients": data.numberOfFreePatient || 0,
+                      "Total Collection (BDT)": data.totalCollection+'.00' || 0,
                       "Collection Date": data.sentTime || "N/A"
                   };
                   return config;
