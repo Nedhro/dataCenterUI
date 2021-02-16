@@ -194,7 +194,7 @@ class FlexyTable extends React.Component<any, any>{
         } else {
           return (
         <div className="container-fluid">
-           <h4 className="mb-0 mt-0 pb-0 pt-0" style={{ textAlign: 'center',marginTop:0, marginBottom:0 }}>Data Center Dashboard</h4>
+           <h4 className="mb-0 mt-0 pb-0 pt-0" style={{ textAlign: 'center',marginTop:0, marginBottom:0 }}>SHR DASHBOARD</h4>
                <form className="form-inline m-0 p-0" onSubmit={this.mySubmitHandler}>
                <div className="form-group mb-0 mt-0 p-2 filter">
                    <input className="text p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
@@ -207,7 +207,9 @@ class FlexyTable extends React.Component<any, any>{
             </form>
           <ReactFlexyTable 
           className="table table-stripped table-hover table-sm dataCenter"
-          data={items} sortable filterable={false} globalSearch showExcelButton/>
+          data={items} sortable filterable={false} globalSearch showExcelButton pageText={"Pages #"} 
+          rowsText={"Rows : "} pageSize={10} pageSizeOptions={[10, 20, 50]} 
+          filteredDataText={""} totalDataText={"Total Data :"} downloadExcelText={"Download"}/>
         </div>
           );
         }
