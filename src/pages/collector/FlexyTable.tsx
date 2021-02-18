@@ -18,6 +18,7 @@ class FlexyTable extends React.Component<any, any>{
        }
        if(nam === 'startDate'){
          startDate = event.target.value;
+         console.log(startDate);
          this.dataConfig.startDate = this.formateDate(startDate);
         }
         if(nam === 'endDate'){
@@ -35,6 +36,15 @@ class FlexyTable extends React.Component<any, any>{
         formattedNowDate = month+"-"+date+"-"+year;
         return formattedNowDate;
     }
+    formateDefaultDate = (data : any) =>{
+        //2021-02-17
+      let formattedNowDate ='';
+      let date = ("0" + data.getDate()).slice(-2);
+      let month = ("0" + (data.getMonth() + 1)).slice(-2);
+      let year = data.getFullYear();
+      formattedNowDate = year+"-"+month+"-"+date;
+      return formattedNowDate;
+  }
 
     formateDate = (data : any) =>{
         let formattedDate ='';
@@ -84,23 +94,16 @@ class FlexyTable extends React.Component<any, any>{
 
     constructor(props:any) {
         super(props);
-        let date_ob = new Date();
-        let dateNow = this.formateNowDate(date_ob);
         this.state = {
           error: null,
           isLoaded: false,
           items: [],
+          dateOfToday: '',
           totalresult: {},
           column: {}
         };
-        this.dataConfig = {
-            "facilityId": null,
-            "startDate": '',
-            "endDate": ''
-        };
         this.changeHandler = this.changeHandler.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
-        
       }
 
       componentDidMount(){
@@ -110,7 +113,7 @@ class FlexyTable extends React.Component<any, any>{
             "facilityId": null,
             "startDate": dateNow,
             "endDate": dateNow
-        }
+        };
         this.getRegData(this.dataConfig);
         this.timerID = setInterval(() => this.getRegData(this.dataConfig), 5*60*1000);
       }
@@ -169,10 +172,11 @@ class FlexyTable extends React.Component<any, any>{
                   };
                   return config;
               });
-              
+              var date = new Date();
                 this.setState({
                     isLoaded: true,
                     items: datafinal,
+                    dateOfToday: this.formateDefaultDate(date),
                     totalresult : resultObj
                   });
             },
@@ -185,8 +189,13 @@ class FlexyTable extends React.Component<any, any>{
     }
 
     render() {
-      
-        const { error, isLoaded, items } = this.state;
+        const { error, isLoaded, items, dateOfToday } = this.state;
+        const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
+        const downloadExcelProps = {
+          type: 'filtered',
+          title: tableTitle,
+          showLabel: true
+        };
         if (error) {
           return <div className="text-center font-weight-bold"> Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -199,17 +208,19 @@ class FlexyTable extends React.Component<any, any>{
                <div className="form-group mb-0 mt-0 p-2 filter">
                    <input className="text p-1 text-info" onChange={this.changeHandler} placeholder="Facility Name" type="text" name="facilityId" id="facilityId"/>
                    <label  className="label ml-2 p-1 mr-1 text-info font-weight-bold"> Start Date: </label>
-                 <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="startDate" id="startDate"/>
+                 <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" 
+                 type="date" name="startDate" id="startDate" defaultValue={dateOfToday}/>
                  <label  className="label ml-2 mr-1 p-1 text-info font-weight-bold"> End Date: </label>
-                <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" type="date" name="endDate" id="endDate"/> <br/>
+                <input className="text m-1 p-1" onChange={this.changeHandler} pattern="MM-dd-yyyy" 
+                type="date" name="endDate" id="endDate" defaultValue={dateOfToday}/> <br/>
                  <button type="submit" className="btn btn-info font-weight-bold m-2 p-2"> Filter </button>
               </div>
             </form>
           <ReactFlexyTable 
           className="table table-stripped table-hover table-sm dataCenter"
           data={items} sortable filterable={false} globalSearch showExcelButton pageText={"Pages #"} 
-          rowsText={"Rows : "} pageSize={10} pageSizeOptions={[10, 20, 50]} 
-          filteredDataText={""} totalDataText={"Total Data :"} downloadExcelText={"Download"}/>
+          rowsText={"Rows : "} pageSize={10} pageSizeOptions={[10, 20, 50]} downloadExcelProps={downloadExcelProps}
+          filteredDataText={"Filtered Data : "} totalDataText={"Total Data :"} downloadExcelText={"Download"}/>
         </div>
           );
         }
