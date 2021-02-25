@@ -4,7 +4,7 @@ import '../static/scss/Custom.scss';
 function Footer() {
   return (
       <div className="container-fluid">
-        <div className="footer">
+        <div className="footer col-12">
             <span><b>Powered By : </b></span>
             <span className="font-weight-bold">
               <a href="https://ctechbd.com/">
