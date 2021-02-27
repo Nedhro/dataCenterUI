@@ -4,9 +4,13 @@ import "../../static/scss/Custom.scss";
 import "../../static/scss/Table.scss";
 import ReactFlexyTable from "react-flexy-table";
 import "react-flexy-table/dist/index.css";
+import CoordinateChart from "../charts/CoordinateChart";
+import Select from "react-select";
 
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
+  timerID: any;
+  dataToExport: any;
   changeHandler = (event: any) => {
     let nam = event.target.name;
     let facilityId = null;
@@ -70,6 +74,7 @@ class DataView extends React.Component<any, any> {
         endDate: endDate || dateNow,
       };
       this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
     }
     if (facilityId !== null && startDate !== "" && endDate !== "") {
       this.dataConfig = {
@@ -78,6 +83,7 @@ class DataView extends React.Component<any, any> {
         endDate: endDate,
       };
       this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
     }
 
     if (facilityId !== null && startDate === "" && endDate === "") {
@@ -87,9 +93,9 @@ class DataView extends React.Component<any, any> {
         endDate: dateNow,
       };
       this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
     }
   };
-  timerID: any;
 
   constructor(props: any) {
     super(props);
@@ -99,7 +105,10 @@ class DataView extends React.Component<any, any> {
       items: [],
       dateOfToday: "",
       totalresult: {},
-      column: {},
+      showing: true,
+      selectedChart: null,
+      selectedFilter: null,
+      filterWithFacilityId: false,
     };
     this.changeHandler = this.changeHandler.bind(this);
     this.mySubmitHandler = this.mySubmitHandler.bind(this);
@@ -118,6 +127,7 @@ class DataView extends React.Component<any, any> {
       () => this.getRegData(this.dataConfig),
       5 * 60 * 1000
     );
+    this.getSumData(this.dataConfig);
   }
   componentWillUnmount() {
     clearInterval(this.timerID);
@@ -134,7 +144,12 @@ class DataView extends React.Component<any, any> {
           collectionTotal: 0,
         };
         const resultData = res.data.content;
-
+        if (data.facilityId !== null) {
+          this.dataToExport = res.data.content;
+          this.setState({
+            filterWithFacilityId: true,
+          });
+        }
         let opdSum = 0;
         let emergencySum = 0;
         let freeSum = 0;
@@ -162,14 +177,14 @@ class DataView extends React.Component<any, any> {
           let config = {
             "Facility Name (Id)": data.facilityId || "N/A",
             "Total Patient": data.totalPatient || 0,
-            "OPD": data.numberOfOpdPatient || 0,
-            "Emergency": data.numberOfEmergencyPatient || 0,
-            "Male": data.numberOfMalePatient || 0,
-            "Female": data.numberOfFemalePatient || 0,
-            "Paid": data.numberOfPaidPatient || 0,
-            "Free": data.numberOfFreePatient || 0,
+            OPD: data.numberOfOpdPatient || 0,
+            Emergency: data.numberOfEmergencyPatient || 0,
+            Male: data.numberOfMalePatient || 0,
+            Female: data.numberOfFemalePatient || 0,
+            Paid: data.numberOfPaidPatient || 0,
+            Free: data.numberOfFreePatient || 0,
             "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-            "Date": data.sentTime || "N/A"
+            Date: data.sentTime || "N/A",
           };
           return config;
         });
@@ -190,28 +205,75 @@ class DataView extends React.Component<any, any> {
     );
   }
 
+  getSumData(data: any) {
+    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+      (response): any => {
+        if (data.facilityId === null) {
+          this.dataToExport = response.data.content;
+          this.setState({
+            filterWithFacilityId: false,
+          });
+        }
+      }
+    );
+  }
+
   render() {
-    const { error, isLoaded, items, dateOfToday } = this.state;
+    const {
+      error,
+      isLoaded,
+      items,
+      dateOfToday,
+      showing,
+      selectedChart,
+      selectedFilter,
+      filterWithFacilityId,
+    } = this.state;
     const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
     const downloadExcelProps = {
       type: "filtered",
       title: tableTitle,
       showLabel: true,
     };
+
+    // Analytical View
+    const chartOptions = [
+      { value: "bar", label: "Bar Chart" },
+      { value: "line", label: "Line Chart" },
+      { value: "scatter", label: "Area Chart" },
+    ];
+    const filterOptions = [
+      { value: "opd-emergency", label: "OPD-Emergency" },
+      { value: "male-female", label: "Male-Female" },
+      { value: "paid-free", label: "Paid-Free" },
+    ];
+    const handleChartTypeChange = (selectedChart) => {
+      this.setState({ selectedChart }, () =>
+        console.log(`Chart Option selected:`, this.state.selectedChart)
+      );
+    };
+    const handleFilterTypeChange = (selectedFilter) => {
+      this.setState({ selectedFilter }, () =>
+        console.log(`Filter Option selected:`, this.state.selectedFilter)
+      );
+    };
+    //end analytical view
+
     if (error) {
       return (
         <div className="text-center font-weight-bold">
-          {" "}
           Error: {error.message}
         </div>
       );
     } else if (!isLoaded) {
-      return <div className="text-center font-weight-bold"> Loading...</div>;
+      return <div className="text-center font-weight-bold">Loading...</div>;
     } else {
       return (
         <div className="container-fluid">
-          <h4 className="mb-0 mt-0 pb-0 pt-0" 
-          style={{ textAlign: "center", marginTop: 0, marginBottom: 0 }}>
+          <h4
+            className="mb-0 mt-0 pb-0 pt-0"
+            style={{ textAlign: "center", marginTop: 0, marginBottom: 0 }}
+          >
             SHR DASHBOARD
           </h4>
           <form className="form-inline m-0 p-0" onSubmit={this.mySubmitHandler}>
@@ -222,7 +284,8 @@ class DataView extends React.Component<any, any> {
                 placeholder="Facility Name"
                 type="text"
                 name="facilityId"
-                id="facilityId"/>
+                id="facilityId"
+              />
               <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
                 Start Date
               </label>
@@ -233,7 +296,8 @@ class DataView extends React.Component<any, any> {
                 type="date"
                 name="startDate"
                 id="startDate"
-                defaultValue={dateOfToday}/>
+                defaultValue={dateOfToday}
+              />
               <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
                 End Date
               </label>
@@ -244,30 +308,74 @@ class DataView extends React.Component<any, any> {
                 type="date"
                 name="endDate"
                 id="endDate"
-                defaultValue={dateOfToday}/>
+                defaultValue={dateOfToday}
+              />
               <button
                 type="submit"
-                className="btn btn-info font-weight-bold mb-1 mt-1">
+                className="btn btn-info font-weight-bold mb-1 mt-1"
+              >
                 Filter
+              </button>
+              <button
+                className="btn btn-success font-weight-bold ml-2 mb-1 mt-1"
+                onClick={() => this.setState({ showing: !showing })}
+              >
+                {showing ? "Analytical View" : "Data View"}
               </button>
             </div>
           </form>
-          <div className="col-12 pl-0 pr-0 pt-0">
-            <ReactFlexyTable
-              className="table table-stripped table-hover table-sm dataCenter pt-0"
-              data={items}
-              sortable
-              globalSearch
-              showExcelButton
-              pageText={"Pages #"}
-              rowsText={"Rows : "}
-              pageSize={10}
-              pageSizeOptions={[10, 20, 50]}
-              downloadExcelProps={downloadExcelProps}
-              filteredDataText={"Filtered Data : "}
-              totalDataText={"Total Data :"}
-              downloadExcelText={"Download"}
-            />
+          <div>
+            <div
+              className="col-12 pl-0 pr-0 pt-0"
+              id="dataView"
+              style={{ display: showing ? "block" : "none" }}
+            >
+              <ReactFlexyTable
+                className="table table-stripped table-hover table-sm tableReg"
+                data={items}
+                sortable
+                globalSearch
+                showExcelButton
+                pageText={"Pages #"}
+                rowsText={"Rows : "}
+                pageSize={10}
+                pageSizeOptions={[10, 20, 50]}
+                downloadExcelProps={downloadExcelProps}
+                filteredDataText={"Filtered Data : "}
+                totalDataText={"Total Data :"}
+                downloadExcelText={"Download"}
+              />
+            </div>
+            <div
+              className="col-12 pl-0 pr-0 pt-0"
+              id="analyticView"
+              style={{ display: showing ? "none" : "block" }}
+            >
+              <div className="row">
+                <div className="col-2 p-0 ml-2">
+                  <Select
+                    value={selectedChart || chartOptions[0]}
+                    onChange={handleChartTypeChange}
+                    options={chartOptions}
+                    placeholder="Select Chart Type"
+                  />
+                </div>
+                <div className="col-2 p-0 ml-2">
+                  <Select
+                    value={selectedFilter || filterOptions[0]}
+                    onChange={handleFilterTypeChange}
+                    options={filterOptions}
+                    placeholder="Select Filter Type"
+                  />
+                </div>
+              </div>
+              <CoordinateChart
+                data={this.dataToExport}
+                chartType={selectedChart}
+                filterType={selectedFilter}
+                dateWiseFilter={filterWithFacilityId}
+              />
+            </div>
           </div>
         </div>
       );

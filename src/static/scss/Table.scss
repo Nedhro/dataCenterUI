@@ -192,12 +192,12 @@ div {
 .table{
   width: 100% !important;
   border-collapse:collapse !important;
-  table-layout: fixed;
+  table-layout: auto !important;
 }
 .table td:first-child {
   text-align: left !important;
 }​
 
-.dataCenter {
+.dataView {
   margin-top: 0 !important;
 }

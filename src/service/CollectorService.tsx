@@ -7,6 +7,9 @@ class CollectorService {
     getAllRegistrationCollectionData(data : Object){
         return axios.post(baseUrl+'/getAllDataByfacilityIdAndDates', data);
     }
+    getAllDataByfIdAndDatewithsum(data : Object){
+        return axios.post(baseUrl+'/getAllDataByfIdAndDatewithsum', data);
+    }
 }
 
 export default new CollectorService();
