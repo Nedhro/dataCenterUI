@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.scss';
-import FlexyTable from './pages/collector/FlexyTable';
+import DataView from './pages/collector/DataView';
 //import RegistrationCollector from './pages/collector/RegistrationCollector';
 
 function App() {
   return (
     <div className="App">
     {/* <RegistrationCollector/> */}
-    <FlexyTable/>
+    <DataView/>
     </div>
   );
 }

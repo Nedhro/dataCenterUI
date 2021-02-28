@@ -24,7 +24,8 @@
 }
 
 .footer {
-    position: fixed;
+  display: block;
+    position: fixed !important;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -40,8 +41,8 @@
 .headerImage {
   display: block;
   width: 100%;
-  min-width: 350px;
-  height: 120px;
+  min-width: 320px;
+  height: 105px;
   margin-left: auto;
   margin-right: auto;
 }
