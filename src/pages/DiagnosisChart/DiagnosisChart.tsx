@@ -8,7 +8,7 @@ import "react-flexy-table/dist/index.css";
 // import Select from "react-select";
 import PieChart from "../charts/PieChart";
 import BarChart from "../charts/BarChart";
-const dateFormat = require("dateformat");
+// const dateFormat = require("dateformat");
 class DiagnosisChart extends React.Component<any, any> {
     dataConfig: any = {};
     timerID: any;
@@ -24,14 +24,14 @@ class DiagnosisChart extends React.Component<any, any> {
         }
         if (nam === "startDate") {
             startDate = event.target.value;
-            console.log(startDate);
+            // console.log(startDate);
             this.dataConfig.startDate = this.formateDate(startDate);
         }
         if (nam === "endDate") {
             endDate = event.target.value;
             this.dataConfig.endDate = this.formateDate(endDate);
         }
-        console.log(this.dataConfig);
+        // console.log(this.dataConfig);
     };
 
     formateNowDate = (data: any) => {
@@ -61,12 +61,12 @@ class DiagnosisChart extends React.Component<any, any> {
 
     mySubmitHandler = (event: any) => {
         event.preventDefault();
-        console.log(event.target.value);
+        // console.log(event.target.value);
         let startDate = this.dataConfig.startDate;
-        let sDate = dateFormat(startDate, "yyyy-mm-dd");
+        // let sDate = dateFormat(startDate, "yyyy-mm-dd");
         let endDate = this.dataConfig.endDate;
-        let eDate = dateFormat(endDate, "yyyy-mm-dd");
-        console.log(sDate, eDate)
+        // let eDate = dateFormat(endDate, "yyyy-mm-dd");
+        // console.log(sDate, eDate)
 
         let date_ob = new Date();
         let dateNow = this.formateNowDate(date_ob);
@@ -129,14 +129,21 @@ class DiagnosisChart extends React.Component<any, any> {
         clearInterval(this.timerID);
     }
     getDiagnosisData(data: any) {
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         CollectorService.getAllDiagnosisData(data).then(
             (res): any => {
-                console.log(res)
-                if (res.data.content !== undefined) {
+                // console.log(res.data)
+                if (res.data.statusCode === 200) {
+                    // console.log(res.data.content)
                     this.setState({
                         diagnosis: res.data.content,
                         message: true
+                    });
+                }
+                else if (res.data.statusCode === 400) {
+                    this.setState({
+                        diagnosis: undefined,
+                        message: res.data.message
                     });
                 }
                 // if (res.data.content === undefined) {
@@ -247,6 +254,7 @@ class DiagnosisChart extends React.Component<any, any> {
             // selectedFilter,
             // filterWithFacilityId,
         } = this.state;
+        console.log(diagnosis)
         // const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
         // const downloadExcelProps = {
         //     type: "filtered",
@@ -334,70 +342,14 @@ class DiagnosisChart extends React.Component<any, any> {
                     </div>
                 </form>
                 <div className="d-flex justify-content-center mt-4">
-                    {/* <h2>{this.state.message}</h2> */}
-                    <PieChart diagnosis={diagnosis} ></PieChart>
-                    <BarChart diagnosis={diagnosis} ></BarChart>
-                    {/* {
-                        this.state.message === false ?  : <h1>hello</h1>
-                    } */}
-                    {/* {
-                        diagnosis !== undefined && 
-                    } */}
+
+                    {
+                        this.state.message === true ? <div className="d-flex justify-content-center "> <PieChart diagnosis={diagnosis} ></PieChart>
+                            <BarChart diagnosis={diagnosis} ></BarChart></div> : <h1 className="text-danger">{this.state.message}</h1>
+                    }
 
                 </div>
-                {/* <div>
-                    <div
-                        className="col-12 pl-0 pr-0 pt-0"
-                        id="dataView"
-                        style={{ display: showing ? "block" : "none" }}
-                    >
-                        <ReactFlexyTable
-                            className="table table-stripped table-hover table-sm tableReg"
-                            data={items}
-                            sortable
-                            globalSearch
-                            showExcelButton
-                            pageText={"Pages #"}
-                            rowsText={"Rows : "}
-                            pageSize={10}
-                            pageSizeOptions={[10, 20, 50]}
-                            downloadExcelProps={downloadExcelProps}
-                            filteredDataText={"Filtered Data : "}
-                            totalDataText={"Total Data :"}
-                            downloadExcelText={"Download"}
-                        />
-                    </div>
-                    <div
-                        className="col-12 pl-0 pr-0 pt-0"
-                        id="analyticView"
-                        style={{ display: showing ? "none" : "block" }}
-                    >
-                        <div className="row">
-                            <div className="col-2 p-0 ml-2">
-                                <Select
-                                    value={selectedChart || chartOptions[0]}
-                                    onChange={handleChartTypeChange}
-                                    options={chartOptions}
-                                    placeholder="Select Chart Type"
-                                />
-                            </div>
-                            <div className="col-2 p-0 ml-2">
-                                <Select
-                                    value={selectedFilter || filterOptions[0]}
-                                    onChange={handleFilterTypeChange}
-                                    options={filterOptions}
-                                    placeholder="Select Filter Type"
-                                />
-                            </div>
-                        </div>
-                        <CoordinateChart
-                            data={this.dataToExport}
-                            chartType={selectedChart}
-                            filterType={selectedFilter}
-                            dateWiseFilter={filterWithFacilityId}
-                        />
-                    </div>
-                </div> */}
+
             </div>
         );
         // }
