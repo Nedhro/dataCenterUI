@@ -103,7 +103,7 @@ class DiagnosisChart extends React.Component<any, any> {
             selectedFilter: null,
             filterWithFacilityId: false,
             diagnosis: '',
-            message: ''
+            message: false
         };
         this.changeHandler = this.changeHandler.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
@@ -132,17 +132,18 @@ class DiagnosisChart extends React.Component<any, any> {
         console.log(JSON.stringify(data));
         CollectorService.getAllDiagnosisData(data).then(
             (res): any => {
-                console.log(res.data)
+                console.log(res)
                 if (res.data.content !== undefined) {
                     this.setState({
                         diagnosis: res.data.content,
+                        message: true
                     });
                 }
-                if (res.data.content === undefined) {
-                    this.setState({
-                        diagnosis: undefined
-                    });
-                }
+                // if (res.data.content === undefined) {
+                //     this.setState({
+                //         diagnosis: undefined
+                //     });
+                // }
                 // else {
                 //     this.setState({
                 //         diagnosis: '',
@@ -334,12 +335,14 @@ class DiagnosisChart extends React.Component<any, any> {
                 </form>
                 <div className="d-flex justify-content-center mt-4">
                     {/* <h2>{this.state.message}</h2> */}
-                    {
-                        diagnosis !== undefined && <PieChart diagnosis={diagnosis} ></PieChart>
-                    }
-                    {
-                        diagnosis !== undefined && <BarChart diagnosis={diagnosis} ></BarChart>
-                    }
+                    <PieChart diagnosis={diagnosis} ></PieChart>
+                    <BarChart diagnosis={diagnosis} ></BarChart>
+                    {/* {
+                        this.state.message === false ?  : <h1>hello</h1>
+                    } */}
+                    {/* {
+                        diagnosis !== undefined && 
+                    } */}
 
                 </div>
                 {/* <div>
