@@ -1,15 +1,23 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
-const PieChart = ({ diagnosis }) => {
+const BarChartNew = ({ diagnosis }) => {
     return (
         <div>
             <Chart
-                type="pie"
-                width={350}
-                height={620}
-                series={Object.values(diagnosis)}
+                type="bar"
+                width={300}
+                height={300}
+
                 options={{
-                    labels: Object.getOwnPropertyNames(diagnosis),
+                    xaxis: {
+                        categories: Object.getOwnPropertyNames(diagnosis)
+                    },
+                    series: [{
+                        name: 'series-1',
+                        data: Object.values(diagnosis)
+                    }],
+                    // series={  }
+                    // labels: Object.getOwnPropertyNames(diagnosis),
                     // dataLabels: {
                     //     dropShadow: {
                     //         blur: 3,
@@ -54,4 +62,4 @@ const PieChart = ({ diagnosis }) => {
     );
 };
 
-export default PieChart;
+export default BarChartNew;

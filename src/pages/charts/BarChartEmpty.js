@@ -1,13 +1,12 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2'
-
-const BarChart = ({ diagnosis }) => {
+const BarChartEmpty = () => {
     const data = {
-        labels: Object.getOwnPropertyNames(diagnosis),
+        labels: [],
         datasets: [
             {
                 label: '# Facility',
-                data: Object.values(diagnosis),
+                data: [],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -95,4 +94,4 @@ const BarChart = ({ diagnosis }) => {
     );
 };
 
-export default BarChart;
+export default BarChartEmpty;
