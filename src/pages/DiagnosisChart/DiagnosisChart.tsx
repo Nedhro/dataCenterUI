@@ -746,7 +746,7 @@ class DiagnosisChart extends React.Component<any, any> {
                                     }
 
                                 </div>
-                                <div className="d-flex justify-content-center " style={{ position: 'relative', top: '35px', border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
+                                <div className="d-flex justify-content-center " style={{ position: 'relative', top: '39px', border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
 
                                     {
                                         this.state.message === true && <div className="d-flex justify-content-center ">
@@ -862,7 +862,7 @@ class DiagnosisChart extends React.Component<any, any> {
                                                         {
                                                             this.state.districtDiagnosisData ? <BarChart diagnosis={this.state.districtDiagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
                                                         }
-                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '130px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtDiagnosisInfoMessage}</h2></div>
+                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '139px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtDiagnosisInfoMessage}</h2></div>
                                                 }
                                                 {/* {
                                                     this.state.districtDiagnosisInfo === true ? <div>
@@ -942,7 +942,7 @@ class DiagnosisChart extends React.Component<any, any> {
                                                         {
                                                             this.state.divisionDiagnosisData ? <BarChart diagnosis={this.state.divisionDiagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
                                                         }
-                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '120px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionDiagnosisInfoMessage}</h2></div>
+                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '122px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionDiagnosisInfoMessage}</h2></div>
                                                 }
                                                 {/* {
                                                     this.state.divisionName !== '' ? <BarChart diagnosis={diagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
