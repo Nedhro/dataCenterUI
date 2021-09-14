@@ -10,7 +10,7 @@ import DoughnutChart from "../charts/DoughnutChart";
 import AsyncSelect from "react-select/async";
 import { toast } from 'react-toastify';
 import BarChartEmpty from "../charts/BarChartEmpty";
-import './DiagnosisChart.css'
+// import './DiagnosisChart.css'
 toast.configure();
 class DiagnosisChart extends React.Component<any, any> {
     dataConfig: any = {};
