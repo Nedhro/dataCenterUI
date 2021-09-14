@@ -142,22 +142,13 @@ class BillingInfo extends React.Component<any, any> {
     }
     fetchFacility = (inputValue: any, callback: any) => {
         setTimeout(() => {
-            fetch(
-                "http://192.168.1.118:5984/facilityName/" +
-                inputValue,
-                {
-                    method: "GET",
-                }
-            )
-                .then((resp) => {
-                    return resp.json();
-                })
-                .then((data) => {
+            CollectorService.getAllFacilityList(inputValue)
+                .then((data:any) => {
                     // console.log(data);
                     const tempArray: any = [];
-                    if (data.content) {
-                        if (data.content.length) {
-                            data.content.forEach((element: any) => {
+                    if (data.data.content) {
+                        if (data.data.content.length) {
+                            data.data.content.forEach((element: any) => {
                                 tempArray.push({
                                     label: `${element}`,
                                     value: element,
@@ -165,8 +156,8 @@ class BillingInfo extends React.Component<any, any> {
                             });
                         } else {
                             tempArray.push({
-                                label: `${data.content}`,
-                                value: data.content,
+                                label: `${data.data.content}`,
+                                value: data.data.content,
                             });
                         }
                     }

@@ -682,11 +682,11 @@ class DiagnosisChart extends React.Component<any, any> {
                                 </div>
                             </div>
                             <div>
-                                <div className="ml-3" style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
+                                <div className="ml-3 " style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
 
                                     {
-                                        this.state.message === true && <div className="d-flex justify-content-center ">
-                                            <div>
+                                        this.state.message === true && <div className="d-flex justify-content-center row">
+                                            <div className="col-5">
                                                 <div className="d-flex justify-content-end form-group">
                                                     <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
                                                         District
@@ -722,7 +722,7 @@ class DiagnosisChart extends React.Component<any, any> {
                                                 </div>
                                             </div>
 
-                                            <div>
+                                            <div className="col-6">
                                                 <div className="d-flex justify-content-end ">
                                                     <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
                                                         Diagnosis
