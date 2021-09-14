@@ -1,29 +1,24 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import Chart from 'react-apexcharts'
-const BarChartNew = ({ diagnosis }) => {
+type CardProps = {
+    diagnosis: any,
+}
+const DoughnutChart: FunctionComponent<CardProps> = ({ diagnosis }) => {
+
     return (
         <div>
             <Chart
-                type="bar"
-                width={300}
-                height={300}
-
+                type="donut"
+                height={620}
+                series={Object.values(diagnosis)}
                 options={{
-                    xaxis: {
-                        categories: Object.getOwnPropertyNames(diagnosis)
+                    labels: Object.getOwnPropertyNames(diagnosis),
+                    dataLabels: {
+                        dropShadow: {
+                            blur: 3,
+                            opacity: 0.8
+                        }
                     },
-                    series: [{
-                        name: 'series-1',
-                        data: Object.values(diagnosis)
-                    }],
-                    // series={  }
-                    // labels: Object.getOwnPropertyNames(diagnosis),
-                    // dataLabels: {
-                    //     dropShadow: {
-                    //         blur: 3,
-                    //         opacity: 0.8
-                    //     }
-                    // },
                     // dropShadow: {
                     //     enabled: true,
                     //     color: '#111',
@@ -36,14 +31,27 @@ const BarChartNew = ({ diagnosis }) => {
                         position: 'bottom',
                         height: 150,
                     },
-
+                    // plotOptions: {
+                    //     pie: {
+                    //         donut: {
+                    //             labels: {
+                    //                 show: true,
+                    //                 total: {
+                    //                     showAlways: true,
+                    //                     show: true,
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // },
                     stroke: {
                         width: 1,
                     },
                     theme: {
-                        palette: 'palette4'
+                        palette: 'palette1'
                     },
                     fill: {
+                        type: 'gradient',
                         // type: 'pattern',
                         // opacity: 1,
                         // pattern: {
@@ -62,4 +70,4 @@ const BarChartNew = ({ diagnosis }) => {
     );
 };
 
-export default BarChartNew;
+export default DoughnutChart;

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { FunctionComponent }  from 'react';
 import { Bar } from 'react-chartjs-2'
-const BarChartEmpty = () => {
+type CardProps = {
+    diagnosis: any,
+}
+const BarChart: FunctionComponent<CardProps> = ({ diagnosis }) => {
     const data = {
-        labels: [],
+        labels: Object.getOwnPropertyNames(diagnosis),
         datasets: [
             {
                 label: '# Facility',
-                data: [],
+                data: Object.values(diagnosis),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -94,4 +97,4 @@ const BarChartEmpty = () => {
     );
 };
 
-export default BarChartEmpty;
+export default BarChart;

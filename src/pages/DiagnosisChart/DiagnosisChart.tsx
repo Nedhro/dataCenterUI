@@ -2,24 +2,15 @@ import React from "react";
 import CollectorService from "../../service/CollectorService";
 import "../../static/scss/Custom.scss";
 import "../../static/scss/Table.scss";
-// import ReactFlexyTable from "react-flexy-table";
 import "react-flexy-table/dist/index.css";
-// import CoordinateChart from "../charts/CoordinateChart";
-// import Select from "react-select";
 import PieChart from "../charts/PieChart";
 import BarChart from "../charts/BarChart";
-// const dateFormat = require("dateformat");
 import Select from "react-select";
 import DoughnutChart from "../charts/DoughnutChart";
-// import PieChartNew from "../charts/PieChartNew";
 import AsyncSelect from "react-select/async";
-import BarChartEmpty from "../charts/BarChartEmpty";
 import { toast } from 'react-toastify';
-// Import toastify css file
-import 'react-toastify/dist/ReactToastify.css';
-// import BarChartNew from "../charts/BarChartNew";
-// toast-configuration method, 
-// it is compulsory method.
+import BarChartEmpty from "../charts/BarChartEmpty";
+import './DiagnosisChart.css'
 toast.configure();
 class DiagnosisChart extends React.Component<any, any> {
     dataConfig: any = {};
@@ -30,16 +21,10 @@ class DiagnosisChart extends React.Component<any, any> {
 
     changeHandler = (event: any) => {
         let nam = event.target.name;
-        // let facilityId = null;
         let startDate = "";
         let endDate = "";
-        // if (nam === "facilityId") {
-        //     facilityId = event.target.value;
-        //     this.dataConfig.facilityId = facilityId;
-        // }
         if (nam === "startDate") {
             startDate = event.target.value;
-            // console.log(startDate);
             this.dataConfig.startDate = this.formateDate(startDate);
             this.setState({
                 startDate: this.formateDate(startDate)
@@ -52,7 +37,6 @@ class DiagnosisChart extends React.Component<any, any> {
                 endDate: this.formateDate(endDate)
             });
         }
-        // console.log(this.dataConfig);
     };
 
     formateNowDate = (data: any) => {
@@ -64,7 +48,6 @@ class DiagnosisChart extends React.Component<any, any> {
         return formattedNowDate;
     };
     formateDefaultDate = (data: any) => {
-        //2021-02-17
         let formattedNowDate = "";
         let date = ("0" + data.getDate()).slice(-2);
         let month = ("0" + (data.getMonth() + 1)).slice(-2);
@@ -82,13 +65,9 @@ class DiagnosisChart extends React.Component<any, any> {
 
     mySubmitHandler = (event: any) => {
         event.preventDefault();
-
-        // console.log(event.target.value);
         let startDate = this.dataConfig.startDate;
-        // let sDate = dateFormat(startDate, "yyyy-mm-dd");
         let endDate = this.dataConfig.endDate;
-        // let eDate = dateFormat(endDate, "yyyy-mm-dd");
-        // console.log(sDate, eDate)
+
 
         let date_ob = new Date();
         let dateNow = this.formateNowDate(date_ob);
@@ -103,7 +82,6 @@ class DiagnosisChart extends React.Component<any, any> {
                 endDate: endDate,
             });
             this.getDiagnosisData(this.dataConfig);
-            // this.getSumData(this.dataConfig);
         }
 
         if (startDate === "" && endDate === "") {
@@ -116,7 +94,6 @@ class DiagnosisChart extends React.Component<any, any> {
                 endDate: dateNow,
             });
             this.getDiagnosisData(this.dataConfig);
-            // this.getSumData(this.dataConfig);
         }
     };
 
@@ -177,7 +154,6 @@ class DiagnosisChart extends React.Component<any, any> {
         let date_ob = new Date();
         let dateNow = this.formateNowDate(date_ob);
         this.dataConfig = {
-            // facilityId: null,
             startDate: dateNow,
             endDate: dateNow,
         };
@@ -190,7 +166,6 @@ class DiagnosisChart extends React.Component<any, any> {
             () => this.getDiagnosisData(this.dataConfig),
             5 * 60 * 1000
         );
-        // this.getSumData(this.dataConfig);
 
     }
     componentWillUnmount() {
@@ -201,22 +176,12 @@ class DiagnosisChart extends React.Component<any, any> {
     //for district
     fetchDistrict = (inputValue: any, callback: any) => {
         setTimeout(() => {
-            fetch(
-                "http://192.168.1.118:5984/district/" +
-                inputValue,
-                {
-                    method: "GET",
-                }
-            )
-                .then((resp) => {
-                    return resp.json();
-                })
-                .then((data) => {
-                    // console.log(data);
+            CollectorService.getAllDistrictList(inputValue)
+                .then((data: any) => {
                     const tempArray: any = [];
-                    if (data.content) {
-                        if (data.content.length) {
-                            data.content.forEach((element: any) => {
+                    if (data.data.content) {
+                        if (data.data.content.length) {
+                            data.data.content.forEach((element: any) => {
                                 tempArray.push({
                                     label: `${element}`,
                                     value: element,
@@ -225,12 +190,11 @@ class DiagnosisChart extends React.Component<any, any> {
                             });
                         } else {
                             tempArray.push({
-                                label: `${data.content}`,
-                                value: data.content,
+                                label: `${data.data.content}`,
+                                value: data.data.content,
                             });
                         }
                     }
-                    console.log(tempArray)
                     callback(tempArray);
                 })
                 .catch((error) => {
@@ -239,7 +203,6 @@ class DiagnosisChart extends React.Component<any, any> {
         }, 1000);
     };
     onSearchDistrict = (selectedOption: any) => {
-        // console.log(selectedOption)
         if (selectedOption) {
             this.setState({
                 selectedOption,
@@ -252,12 +215,9 @@ class DiagnosisChart extends React.Component<any, any> {
             district: selectedOption.value
         };
 
-        console.log(data)
         CollectorService.getAllDiagnosisData(data).then(
             (res): any => {
-                console.log(res.data)
                 if (res.data.statusCode === 200) {
-                    // console.log(res.data.content)
                     this.setState({
                         districtData: true,
                         district: res.data.content,
@@ -270,9 +230,6 @@ class DiagnosisChart extends React.Component<any, any> {
                         districtData: false,
                         districtDiagnosisData: false,
                         districtMessage: res.data.message
-                        // isLoaded: true,
-                        // diagnosis: undefined,
-                        // message: res.data.message
                     });
                 }
 
@@ -287,22 +244,12 @@ class DiagnosisChart extends React.Component<any, any> {
     };
     fetchDiagnosisDistrict = (inputValue: any, callback: any) => {
         setTimeout(() => {
-            fetch(
-                "http://192.168.1.118:5984/diagnosis/" +
-                inputValue,
-                {
-                    method: "GET",
-                }
-            )
-                .then((resp) => {
-                    return resp.json();
-                })
-                .then((data) => {
-                    // console.log(data);
+            CollectorService.getAllDiagnosisList(inputValue)
+                .then((data: any) => {
                     const tempArray: any = [];
-                    if (data.content) {
-                        if (data.content.length) {
-                            data.content.forEach((element: any) => {
+                    if (data.data.content) {
+                        if (data.data.content.length) {
+                            data.data.content.forEach((element: any) => {
                                 tempArray.push({
                                     label: `${element}`,
                                     value: element,
@@ -310,8 +257,8 @@ class DiagnosisChart extends React.Component<any, any> {
                             });
                         } else {
                             tempArray.push({
-                                label: `${data.content}`,
-                                value: data.content,
+                                label: `${data.data.content}`,
+                                value: data.data.content,
                             });
                         }
                     }
@@ -336,9 +283,7 @@ class DiagnosisChart extends React.Component<any, any> {
             diagnosisName: selectedOption.value
         };
 
-        console.log(dataWithDis)
         if (dataWithDis.district == null) {
-            // window.alert('Please Input a District')
             toast.error("Please Input a District", {
                 position: "top-right",
                 autoClose: 5000,
@@ -353,9 +298,7 @@ class DiagnosisChart extends React.Component<any, any> {
         else {
             CollectorService.getAllDiagnosisData(dataWithDis).then(
                 (res): any => {
-                    console.log(res.data)
                     if (res.data.statusCode === 200) {
-                        // console.log(res.data.content)
                         this.setState({
                             districtDiagnosis: res.data.content,
                             districtDiagnosisData: true,
@@ -380,11 +323,8 @@ class DiagnosisChart extends React.Component<any, any> {
         }
     };
 
-
-
     //for division
     onSearchDivision(e: any) {
-        console.log(e);
         if (e) {
             this.setState({
                 divisionName: e.value
@@ -396,10 +336,8 @@ class DiagnosisChart extends React.Component<any, any> {
             division: e.value
         };
 
-        console.log(data)
         CollectorService.getAllDiagnosisData(data).then(
             (res): any => {
-                console.log(res.data)
 
                 if (res.data.statusCode === 200) {
                     this.setState({
@@ -427,22 +365,12 @@ class DiagnosisChart extends React.Component<any, any> {
     }
     fetchDiagnosisDivision = (inputValue: any, callback: any) => {
         setTimeout(() => {
-            fetch(
-                "http://192.168.1.118:5984/diagnosis/" +
-                inputValue,
-                {
-                    method: "GET",
-                }
-            )
-                .then((resp) => {
-                    return resp.json();
-                })
-                .then((data) => {
-                    console.log(data);
+            CollectorService.getAllDiagnosisList(inputValue)
+                .then((data: any) => {
                     const tempArray: any = [];
-                    if (data.content) {
-                        if (data.content.length) {
-                            data.content.forEach((element) => {
+                    if (data.data.content) {
+                        if (data.data.content.length) {
+                            data.data.content.forEach((element: any) => {
                                 tempArray.push({
                                     label: `${element}`,
                                     value: element,
@@ -450,8 +378,8 @@ class DiagnosisChart extends React.Component<any, any> {
                             });
                         } else {
                             tempArray.push({
-                                label: `${data.content}`,
-                                value: data.content,
+                                label: `${data.data.content}`,
+                                value: data.data.content,
                             });
                         }
                     }
@@ -475,10 +403,7 @@ class DiagnosisChart extends React.Component<any, any> {
             division: this.state.divisionName || null,
             diagnosisName: selectedOption.value
         };
-
-        console.log(dataWithDiv)
         if (dataWithDiv.division == null) {
-            // window.alert('Please Input a Division')
             toast.error("Please Input a Division", {
                 position: "top-right",
                 autoClose: 5000,
@@ -493,9 +418,7 @@ class DiagnosisChart extends React.Component<any, any> {
         else {
             CollectorService.getAllDiagnosisData(dataWithDiv).then(
                 (res): any => {
-                    console.log(res.data)
                     if (res.data.statusCode === 200) {
-                        // console.log(res.data.content)
                         this.setState({
                             divisionDiagnosis: res.data.content,
                             divisionDiagnosisData: true,
@@ -525,22 +448,12 @@ class DiagnosisChart extends React.Component<any, any> {
     //for facility
     fetchFacility = (inputValue: any, callback: any) => {
         setTimeout(() => {
-            fetch(
-                "http://192.168.1.118:5984/facilityName/" +
-                inputValue,
-                {
-                    method: "GET",
-                }
-            )
-                .then((resp) => {
-                    return resp.json();
-                })
-                .then((data) => {
-                    console.log(data);
+            CollectorService.getAllFacilityList(inputValue)
+                .then((data: any) => {
                     const tempArray: any = [];
-                    if (data.content) {
-                        if (data.content.length) {
-                            data.content.forEach((element: any) => {
+                    if (data.data.content) {
+                        if (data.data.content.length) {
+                            data.data.content.forEach((element: any) => {
                                 tempArray.push({
                                     label: `${element}`,
                                     value: element,
@@ -548,8 +461,8 @@ class DiagnosisChart extends React.Component<any, any> {
                             });
                         } else {
                             tempArray.push({
-                                label: `${data.content}`,
-                                value: data.content,
+                                label: `${data.data.content}`,
+                                value: data.data.content,
                             });
                         }
                     }
@@ -572,11 +485,8 @@ class DiagnosisChart extends React.Component<any, any> {
             endDate: this.state.endDate,
             facilityName: selectedOption.label
         };
-
-        console.log(data)
         CollectorService.getAllDiagnosisData(data).then(
             (res): any => {
-                console.log(res.data)
                 if (res.data.statusCode === 200) {
                     this.setState({
                         facilityData: true,
@@ -603,12 +513,9 @@ class DiagnosisChart extends React.Component<any, any> {
 
     //for all diagnosis
     getDiagnosisData(data: any) {
-        // console.log(JSON.stringify(data));
         CollectorService.getAllDiagnosisData(data).then(
             (res): any => {
-                // console.log(res.data)
                 if (res.data.statusCode === 200) {
-                    // console.log(res.data.content)
                     this.setState({
                         isLoaded: true,
                         diagnosis: res.data.content,
@@ -643,18 +550,6 @@ class DiagnosisChart extends React.Component<any, any> {
         );
     }
 
-    // getSumData(data: any) {
-    //     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
-    //         (response): any => {
-    //             if (data.facilityId === null) {
-    //                 this.dataToExport = response.data.content;
-    //                 this.setState({
-    //                     filterWithFacilityId: false,
-    //                 });
-    //             }
-    //         }
-    //     );
-    // }
 
     render() {
         const {
@@ -724,24 +619,20 @@ class DiagnosisChart extends React.Component<any, any> {
                     </form>
                     {
                         this.state.message === true ? <div className="d-flex justify-content-center mt-3">
-                            <div>
+                            <div >
                                 <div className="d-flex justify-content-center mt-4">
 
                                     {
                                         this.state.message === true && <div className="d-flex justify-content-center ">
                                             <div>
                                                 <div style={{ width: '600px' }}>
-                                                    {/* <PieChart diagnosis={diagnosis} ></PieChart> */}
                                                     <DoughnutChart diagnosis={diagnosis}></DoughnutChart>
-                                                    {/* <PieChartNew diagnosis={diagnosis}></PieChartNew> */}
-                                                    {/* <Demo></Demo> */}
                                                 </div>
 
                                                 <div className="d-flex justify-content-center">
                                                     <span className="font-weight-bold text-warning">All Diagnosis</span>
                                                 </div>
                                             </div>
-                                            {/* <BarChart diagnosis={diagnosis} ></BarChart> */}
                                         </div>
                                     }
 
@@ -771,7 +662,6 @@ class DiagnosisChart extends React.Component<any, any> {
                                                 <div>
                                                     {
                                                         this.state.facilityData ? <div style={{ width: '500px' }}>
-                                                            {/* <PieChart diagnosis={diagnosis} ></PieChart> */}
                                                             <PieChart diagnosis={this.state.facility} ></PieChart>
                                                         </div>
                                                             : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '140px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '20px', color: 'red' }}>{this.state.facilityDataMessage}</h2></div>
@@ -780,13 +670,12 @@ class DiagnosisChart extends React.Component<any, any> {
 
 
                                                 <div style={{ width: '500px' }} className="d-flex justify-content-center">
-                                                    {/* <span className="font-weight-bold text-primary">Facility: <span className="font-weight-bold text-warning">All</span></span> */}
+
                                                     <span className="font-weight-bold text-primary">Facility: <span className="font-weight-bold text-warning">{
                                                         this.state.facilityList !== '' ? <span>{this.state.facilityList}</span> : <span>All</span>
                                                     }</span></span>
                                                 </div>
                                             </div>
-                                            {/* <BarChart diagnosis={diagnosis} ></BarChart> */}
                                         </div>
                                     }
 
@@ -826,16 +715,13 @@ class DiagnosisChart extends React.Component<any, any> {
                                                 </div>
 
                                                 <div className="d-flex justify-content-center">
-                                                    {/* <span className="font-weight-bold text-primary">District: <span className="font-weight-bold text-warning">All</span></span> */}
+
                                                     <span className="font-weight-bold text-primary">District: <span className="font-weight-bold text-warning">{
                                                         this.state.districtList !== '' ? <span>{this.state.districtList}</span> : <span>All</span>
                                                     }</span></span>
                                                 </div>
                                             </div>
 
-                                            {/* {
-                                                    this.state.districtList === '' ? <div></div> : 
-                                                } */}
                                             <div>
                                                 <div className="d-flex justify-content-end ">
                                                     <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
@@ -864,14 +750,6 @@ class DiagnosisChart extends React.Component<any, any> {
                                                         }
                                                     </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '139px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtDiagnosisInfoMessage}</h2></div>
                                                 }
-                                                {/* {
-                                                    this.state.districtDiagnosisInfo === true ? <div>
-                                                        {
-                                                            this.state.districtDiagnosisData ? <BarChartNew diagnosis={this.state.districtDiagnosis} ></BarChartNew> : <BarChartEmpty></BarChartEmpty>
-                                                        }
-                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '100px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtDiagnosisInfoMessage}</h2></div>
-                                                } */}
-                                                {/* <BarChart diagnosis={diagnosis} ></BarChart> */}
 
 
                                             </div>
@@ -908,9 +786,6 @@ class DiagnosisChart extends React.Component<any, any> {
                                                             : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '120px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionMessage}</h2></div>
                                                     }
                                                 </div>
-                                                {/* <div style={{ width: '500px' }}>
-                                                    <PieChart diagnosis={division} ></PieChart>
-                                                </div> */}
 
                                                 <div className="d-flex justify-content-center">
                                                     <span className="font-weight-bold text-primary">Division: <span className="font-weight-bold text-warning">{
@@ -944,10 +819,6 @@ class DiagnosisChart extends React.Component<any, any> {
                                                         }
                                                     </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '122px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionDiagnosisInfoMessage}</h2></div>
                                                 }
-                                                {/* {
-                                                    this.state.divisionName !== '' ? <BarChart diagnosis={diagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
-                                                } */}
-                                                {/* <BarChart diagnosis={diagnosis} ></BarChart> */}
                                             </div>
 
                                         </div>
