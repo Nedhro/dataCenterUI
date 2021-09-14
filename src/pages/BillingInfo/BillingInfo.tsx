@@ -74,7 +74,7 @@ class BillingInfo extends React.Component<any, any> {
         CollectorService.billingData(this.dataConfig.facilityName, this.dataConfig.department, this.dataConfig.date, this.dataConfig.totalAmount).then(
             (res): any => {
                 console.log(res.data)
-                if (res.data.statusCode === 200) {
+                if (res.data.statusCode === 201) {
                     toast.success(res.data.message, {
                         position: "bottom-right",
                         autoClose: 5000,
