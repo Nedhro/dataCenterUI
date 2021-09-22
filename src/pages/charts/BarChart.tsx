@@ -1,5 +1,6 @@
-import React, { FunctionComponent }  from 'react';
-import { Bar } from 'react-chartjs-2'
+import React, { FunctionComponent } from 'react';
+import { Bar } from 'react-chartjs-2';
+// import './BarChart.css';
 type CardProps = {
     diagnosis: any,
 }
@@ -89,9 +90,11 @@ const BarChart: FunctionComponent<CardProps> = ({ diagnosis }) => {
     };
     return (
         <div>
-            <div style={{ width: '600px' }}>
+            <div id="bar">
 
-                <Bar data={data} />
+                <section>
+                    <Bar data={data} />
+                </section>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { FunctionComponent }  from 'react';
+import React, { FunctionComponent } from 'react';
 import Chart from 'react-apexcharts'
 type CardProps = {
     diagnosis: any,
@@ -8,8 +8,8 @@ const PieChart: FunctionComponent<CardProps> = ({ diagnosis }) => {
         <div>
             <Chart
                 type="pie"
-                width={350}
-                height={620}
+                // width={350}
+                height={520}
                 series={Object.values(diagnosis)}
                 options={{
                     labels: Object.getOwnPropertyNames(diagnosis),

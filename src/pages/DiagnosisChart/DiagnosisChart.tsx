@@ -10,7 +10,7 @@ import DoughnutChart from "../charts/DoughnutChart";
 import AsyncSelect from "react-select/async";
 import { toast } from 'react-toastify';
 import BarChartEmpty from "../charts/BarChartEmpty";
-// import './DiagnosisChart.css'
+import './DiagnosisChart.css'
 toast.configure();
 class DiagnosisChart extends React.Component<any, any> {
     dataConfig: any = {};
@@ -618,213 +618,243 @@ class DiagnosisChart extends React.Component<any, any> {
                         </div>
                     </form>
                     {
-                        this.state.message === true ? <div className="d-flex justify-content-center mt-3">
+                        this.state.message === true ? <div className=" px-5 mt-3">
                             <div >
-                                <div className="d-flex justify-content-center mt-4">
+                                <div className="row">
+                                    <div className="col-md-4 col-sm-12">
+                                        <div className="d-flex justify-content-center mt-4">
 
-                                    {
-                                        this.state.message === true && <div className="d-flex justify-content-center ">
-                                            <div>
-                                                <div style={{ width: '600px' }}>
-                                                    <DoughnutChart diagnosis={diagnosis}></DoughnutChart>
-                                                </div>
+                                            {
+                                                this.state.message === true && <div className="d-flex justify-content-center ">
+                                                    <div>
+                                                        <div id="allDiagnosis">
+                                                            <section>
+                                                                <DoughnutChart diagnosis={diagnosis}></DoughnutChart>
+                                                            </section>
+                                                        </div>
 
-                                                <div className="d-flex justify-content-center">
-                                                    <span className="font-weight-bold text-warning">All Diagnosis</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-
-                                </div>
-                                <div className="d-flex justify-content-center " style={{ position: 'relative', top: '39px', border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
-
-                                    {
-                                        this.state.message === true && <div className="d-flex justify-content-center ">
-                                            <div>
-                                                <div className="d-flex justify-content-end">
-                                                    <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
-                                                        Facility Name
-                                                    </label>
-                                                    <div style={{ width: '200px' }} >
-                                                        <AsyncSelect
-                                                            name='facilityName'
-                                                            defaultValue={this.state.facilityList}
-                                                            loadOptions={this.fetchFacility}
-                                                            placeholder="Facility Name"
-                                                            onChange={(e: any) => {
-                                                                this.onSearchFacility(e);
-                                                            }}
-                                                            defaultOptions={false}
-                                                        />
+                                                        <div className="d-flex justify-content-center">
+                                                            <span className="font-weight-bold text-warning">All Diagnosis</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    {
-                                                        this.state.facilityData ? <div style={{ width: '500px' }}>
-                                                            <PieChart diagnosis={this.state.facility} ></PieChart>
-                                                        </div>
-                                                            : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '140px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '20px', color: 'red' }}>{this.state.facilityDataMessage}</h2></div>
-                                                    }
-                                                </div>
+                                            }
 
-
-                                                <div style={{ width: '500px' }} className="d-flex justify-content-center">
-
-                                                    <span className="font-weight-bold text-primary">Facility: <span className="font-weight-bold text-warning">{
-                                                        this.state.facilityList !== '' ? <span>{this.state.facilityList}</span> : <span>All</span>
-                                                    }</span></span>
-                                                </div>
-                                            </div>
                                         </div>
-                                    }
+                                    </div>
+                                    <div className="col-md-8 col-sm-12">
+                                        <div className="ml-3 " style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '100%' }}>
 
+                                            {
+                                                this.state.message === true && <div className="d-flex justify-content-center row">
+                                                    <div className="col-md-5 col-sm-12">
+                                                        <div className="d-flex justify-content-end form-group">
+                                                            <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
+                                                                District
+                                                            </label>
+                                                            <div style={{ width: '200px' }} >
+                                                                <AsyncSelect
+                                                                    name='districtName'
+                                                                    defaultValue={this.state.districtList}
+                                                                    loadOptions={this.fetchDistrict}
+                                                                    placeholder="District Name"
+                                                                    onChange={(e: any) => {
+                                                                        this.onSearchDistrict(e);
+                                                                    }}
+                                                                    defaultOptions={false}
+                                                                />
+
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            {
+                                                                this.state.districtData ?
+                                                                    <div id="pie">
+                                                                        <section>
+                                                                            <PieChart diagnosis={this.state.district} ></PieChart>
+                                                                        </section>
+                                                                    </div>
+                                                                    : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '120px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtMessage}</h2></div>
+                                                            }
+                                                        </div>
+
+                                                        <div className="d-flex justify-content-center">
+
+                                                            <span className="font-weight-bold text-primary">District: <span className="font-weight-bold text-warning">{
+                                                                this.state.districtList !== '' ? <span>{this.state.districtList}</span> : <span>All</span>
+                                                            }</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-md-6 col-sm-12">
+                                                        <div className="d-flex justify-content-end ">
+                                                            <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
+                                                                Diagnosis
+                                                            </label>
+                                                            <div style={{ width: '200px' }} >
+
+                                                                <AsyncSelect
+                                                                    name='diagnosisName'
+                                                                    defaultValue={this.state.diagnosisListDistrict}
+                                                                    loadOptions={this.fetchDiagnosisDistrict}
+                                                                    placeholder="Diagnosis Name"
+                                                                    onChange={(e: any) => {
+                                                                        this.onSearchDiagnosisDistrict(e);
+                                                                    }}
+                                                                    defaultOptions={false}
+                                                                />
+                                                            </div>
+
+                                                        </div>
+
+                                                        {
+                                                            this.state.districtDiagnosisInfo === true ? <div >
+                                                                {
+                                                                    this.state.districtDiagnosisData ? <BarChart diagnosis={this.state.districtDiagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
+                                                                }
+                                                            </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '139px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtDiagnosisInfoMessage}</h2></div>
+                                                        }
+
+
+                                                    </div>
+
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
-                            <div>
-                                <div className="ml-3 " style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
+                            <br />
+                            <div className="row">
+                                <div className="col-md-4  col-sm-12">
+                                    <div className="ml-3 mt-5 " style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '100%' }}>
 
-                                    {
-                                        this.state.message === true && <div className="d-flex justify-content-center row">
-                                            <div className="col-5">
-                                                <div className="d-flex justify-content-end form-group">
-                                                    <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
-                                                        District
-                                                    </label>
-                                                    <div style={{ width: '200px' }} >
-                                                        <AsyncSelect
-                                                            name='districtName'
-                                                            defaultValue={this.state.districtList}
-                                                            loadOptions={this.fetchDistrict}
-                                                            placeholder="District Name"
-                                                            onChange={(e: any) => {
-                                                                this.onSearchDistrict(e);
-                                                            }}
-                                                            defaultOptions={false}
-                                                        />
+                                        {
+                                            this.state.message === true && <div className="d-flex justify-content-center row">
+                                                <div className="col-md-12 col-sm-12">
+                                                    <div className="d-flex justify-content-end mr-4">
+                                                        <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
+                                                            Facility Name
+                                                        </label>
+                                                        <div style={{ width: '200px' }} >
+                                                            <AsyncSelect
+                                                                name='facilityName'
+                                                                defaultValue={this.state.facilityList}
+                                                                loadOptions={this.fetchFacility}
+                                                                placeholder="Facility Name"
+                                                                onChange={(e: any) => {
+                                                                    this.onSearchFacility(e);
+                                                                }}
+                                                                defaultOptions={false}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="d-flex justify-content-center">
+                                                        {
+                                                            this.state.facilityData ? <div id="pie">
+                                                                <section>
+                                                                    <PieChart diagnosis={this.state.facility} ></PieChart>
+                                                                </section>
+                                                            </div>
+                                                                : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '140px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '20px', color: 'red' }}>{this.state.facilityDataMessage}</h2></div>
+                                                        }
+                                                    </div>
 
+
+                                                    <div className="d-flex justify-content-center px-5">
+
+                                                        <span className="font-weight-bold text-primary">Facility: <span className="font-weight-bold text-warning">{
+                                                            this.state.facilityList !== '' ? <span>{this.state.facilityList}</span> : <span>All</span>
+                                                        }</span></span>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    {
-                                                        this.state.districtData ? <div style={{ width: '500px' }}>
-                                                            <PieChart diagnosis={this.state.district} ></PieChart>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                                {/* <div className="col-md-4 col-sm-12">
+                                    <div className="" style={{ position: 'relative', top: '47px', border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '100%' }}>
+
+                                       
+
+                                    </div>
+                                </div> */}
+                                <div className="col-md-8 col-sm-12">
+                                    <div className="ml-3 mt-5 " style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '100%' }}>
+
+                                        {
+                                            this.state.message === true && <div className="d-flex justify-content-center row">
+                                                <div className="col-md-5 col-sm-12">
+                                                    <div className="d-flex justify-content-end">
+                                                        <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
+                                                            Division
+                                                        </label>
+                                                        <div style={{ width: '200px' }} >
+
+                                                            < Select
+
+                                                                name="division"
+                                                                options={this.state.divisionList}
+                                                                onChange={this.onSearchDivision}
+                                                                defaultInputValue={this.state.divisionName}
+                                                                isSearchable={true}
+                                                            />
                                                         </div>
-                                                            : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '120px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtMessage}</h2></div>
+                                                    </div>
+                                                    <div>
+                                                        {
+                                                            this.state.divisionData ? <div id="pie">
+                                                                <section>
+                                                                    <PieChart diagnosis={division} ></PieChart>
+                                                                </section>
+                                                            </div>
+                                                                : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '120px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionMessage}</h2></div>
+                                                        }
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-center">
+                                                        <span className="font-weight-bold text-primary">Division: <span className="font-weight-bold text-warning">{
+                                                            this.state.divisionName !== '' ? <span>{this.state.divisionName}</span> : <span>All</span>
+                                                        }</span></span>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6 col-sm-12">
+                                                    <div className="d-flex justify-content-end">
+                                                        <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
+                                                            Diagnosis
+                                                        </label>
+                                                        <div style={{ width: '200px' }} >
+
+                                                            <AsyncSelect
+                                                                name='diagnosisName'
+                                                                defaultValue={this.state.diagnosisListDivision}
+                                                                loadOptions={this.fetchDiagnosisDivision}
+                                                                placeholder="Diagnosis Name"
+                                                                onChange={(e: any) => {
+                                                                    this.onSearchDiagnosisDivision(e);
+                                                                }}
+                                                                defaultOptions={false}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    {
+                                                        this.state.divisionDiagnosisInfo === true ? <div>
+                                                            {
+                                                                this.state.divisionDiagnosisData ? <BarChart diagnosis={this.state.divisionDiagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
+                                                            }
+                                                        </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '122px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionDiagnosisInfoMessage}</h2></div>
                                                     }
                                                 </div>
 
-                                                <div className="d-flex justify-content-center">
-
-                                                    <span className="font-weight-bold text-primary">District: <span className="font-weight-bold text-warning">{
-                                                        this.state.districtList !== '' ? <span>{this.state.districtList}</span> : <span>All</span>
-                                                    }</span></span>
-                                                </div>
                                             </div>
+                                        }
 
-                                            <div className="col-6">
-                                                <div className="d-flex justify-content-end ">
-                                                    <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
-                                                        Diagnosis
-                                                    </label>
-                                                    <div style={{ width: '200px' }} >
-
-                                                        <AsyncSelect
-                                                            name='diagnosisName'
-                                                            defaultValue={this.state.diagnosisListDistrict}
-                                                            loadOptions={this.fetchDiagnosisDistrict}
-                                                            placeholder="Diagnosis Name"
-                                                            onChange={(e: any) => {
-                                                                this.onSearchDiagnosisDistrict(e);
-                                                            }}
-                                                            defaultOptions={false}
-                                                        />
-                                                    </div>
-
-                                                </div>
-
-                                                {
-                                                    this.state.districtDiagnosisInfo === true ? <div>
-                                                        {
-                                                            this.state.districtDiagnosisData ? <BarChart diagnosis={this.state.districtDiagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
-                                                        }
-                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '139px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.districtDiagnosisInfoMessage}</h2></div>
-                                                }
-
-
-                                            </div>
-
-                                        </div>
-                                    }
+                                    </div>
                                 </div>
-                                <div className="ml-3 mt-5 " style={{ border: '1px solid white', boxShadow: '5px 5px 20px gray', borderRadius: '10px', height: '50%' }}>
 
-                                    {
-                                        this.state.message === true && <div className="d-flex justify-content-center ">
-                                            <div>
-                                                <div className="d-flex justify-content-end">
-                                                    <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
-                                                        Division
-                                                    </label>
-                                                    <div style={{ width: '200px' }} >
 
-                                                        < Select
-
-                                                            name="division"
-                                                            options={this.state.divisionList}
-                                                            onChange={this.onSearchDivision}
-                                                            defaultInputValue={this.state.divisionName}
-                                                            isSearchable={true}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    {
-                                                        this.state.divisionData ? <div style={{ width: '500px' }}>
-                                                            <PieChart diagnosis={division} ></PieChart>
-                                                        </div>
-                                                            : <div style={{ height: '520px', width: '500px' }}> <h2 style={{ position: 'relative', top: '120px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionMessage}</h2></div>
-                                                    }
-                                                </div>
-
-                                                <div className="d-flex justify-content-center">
-                                                    <span className="font-weight-bold text-primary">Division: <span className="font-weight-bold text-warning">{
-                                                        this.state.divisionName !== '' ? <span>{this.state.divisionName}</span> : <span>All</span>
-                                                    }</span></span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="d-flex justify-content-end">
-                                                    <label className="label ml-2 mr-1 p-1 mt-3 text-info font-weight-bold">
-                                                        Diagnosis
-                                                    </label>
-                                                    <div style={{ width: '200px' }} >
-
-                                                        <AsyncSelect
-                                                            name='diagnosisName'
-                                                            defaultValue={this.state.diagnosisListDivision}
-                                                            loadOptions={this.fetchDiagnosisDivision}
-                                                            placeholder="Diagnosis Name"
-                                                            onChange={(e: any) => {
-                                                                this.onSearchDiagnosisDivision(e);
-                                                            }}
-                                                            defaultOptions={false}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                {
-                                                    this.state.divisionDiagnosisInfo === true ? <div>
-                                                        {
-                                                            this.state.divisionDiagnosisData ? <BarChart diagnosis={this.state.divisionDiagnosis} ></BarChart> : <BarChartEmpty></BarChartEmpty>
-                                                        }
-                                                    </div> : <div style={{ height: '520px' }}> <h2 style={{ position: 'relative', top: '122px', border: '1px solid white', boxShadow: '5px 5px 30px gray', borderRadius: '10px', padding: '90px 20px', color: 'red' }}>{this.state.divisionDiagnosisInfoMessage}</h2></div>
-                                                }
-                                            </div>
-
-                                        </div>
-                                    }
-
-                                </div>
 
                             </div>
 
