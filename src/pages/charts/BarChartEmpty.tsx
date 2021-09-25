@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Bar } from 'react-chartjs-2'
-
+import { Bar } from 'react-chartjs-2';
+// import './BarChart.css';
 
 const BarChartEmpty: FunctionComponent = () => {
     const data = {
@@ -88,9 +88,11 @@ const BarChartEmpty: FunctionComponent = () => {
     };
     return (
         <div>
-            <div style={{ width: '600px' }}>
+            <div id="barEmpty">
 
-                <Bar data={data} />
+                <section>
+                    <Bar data={data} />
+                </section>
             </div>
         </div>
     );
