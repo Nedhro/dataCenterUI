@@ -7,6 +7,11 @@ import "react-flexy-table/dist/index.css";
 import CoordinateChart from "../charts/CoordinateChart";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
+import totalPatient from "../../icons/totalPatient.png"
+import opdPatient from "../../icons/opdPatient.png"
+import emergencyPatient from "../../icons/emergencyPatient.png"
+import malePatient from "../../icons/malePatient.png"
+import femalePatient from "../../icons/femalePatient.png"
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
   timerID: any;
@@ -60,7 +65,47 @@ class DataView extends React.Component<any, any> {
   mySubmitHandler = (event: any) => {
     event.preventDefault();
     console.log(event.target.value);
-    let facilityId = this.dataConfig.facilityId;
+    let facilityId = this.state.facilityId;
+    let startDate = this.dataConfig.startDate;
+    let endDate = this.dataConfig.endDate;
+
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfig = {
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfig = {
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfig = {
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+  };
+
+  mySubmitHandlerEO = (event: any) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    let facilityId = this.state.facilityId;
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
 
@@ -106,9 +151,17 @@ class DataView extends React.Component<any, any> {
       dateOfToday: "",
       totalresult: {},
       showing: true,
-      selectedChart: null,
+      selectedChartEO: null,
+      selectedChartMF: null,
+      selectedChartFP: null,
+      // selectedChart: null,
       selectedFilter: null,
+      facilityId: null,
+      facilityIdEO:null,
+      division:null,
+      district:null,
       filterWithFacilityId: false,
+      filterWithFacilityIdEO: false,
       opdEmergency: {
         label: "OPD-Emergency",
         value: "opd-emergency"
@@ -130,9 +183,11 @@ class DataView extends React.Component<any, any> {
       { value: 'Barishal', label: 'Barishal' },],
       districtList: '',
     };
+    this.onSearchChange = this.onSearchChange.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
     this.mySubmitHandler = this.mySubmitHandler.bind(this);
   }
+
 
   componentDidMount() {
     let date_ob = new Date();
@@ -168,6 +223,7 @@ class DataView extends React.Component<any, any> {
           this.dataToExport = res.data.content;
           this.setState({
             filterWithFacilityId: true,
+            filterWithFacilityIdEO: true,
           });
         }
         let opdSum = 0;
@@ -232,11 +288,21 @@ class DataView extends React.Component<any, any> {
           this.dataToExport = response.data.content;
           this.setState({
             filterWithFacilityId: false,
+            filterWithFacilityIdEO: false,
           });
         }
       }
     );
   }
+  onSearchDivision = (selectedOption:any) => {
+    console.log(selectedOption);
+    if (selectedOption) {
+        this.setState({
+            selectedOption,
+            division: selectedOption.value
+        });
+    }
+}
   //for district
   fetchDistrict = (inputValue: any, callback: any) => {
     setTimeout(() => {
@@ -266,7 +332,15 @@ class DataView extends React.Component<any, any> {
         });
     }, 1000);
   };
-
+  onSearchDistrict = (selectedOption:any) => {
+    console.log(selectedOption);
+    if (selectedOption) {
+        this.setState({
+            selectedOption,
+            district: selectedOption.value
+        });
+    }
+}
 
   //for facility
   fetchFacility = (inputValue: any, callback: any) => {
@@ -296,6 +370,24 @@ class DataView extends React.Component<any, any> {
         });
     }, 1000);
   };
+  onSearchChange = (selectedOption:any) => {
+    console.log(selectedOption);
+    if (selectedOption) {
+        this.setState({
+            selectedOption,
+            facilityId: selectedOption.value
+        });
+    }
+}
+onSearchChangeEO = (selectedOption:any) => {
+  console.log(selectedOption);
+  if (selectedOption) {
+      this.setState({
+          selectedOption,
+          facilityIdEO: selectedOption.value
+      });
+  }
+}
   render() {
     const {
       error,
@@ -303,9 +395,13 @@ class DataView extends React.Component<any, any> {
       items,
       dateOfToday,
       showing,
-      selectedChart,
+      selectedChartEO,
+      selectedChartMF,
+      selectedChartFP,
       // selectedFilter,
+      facilityId,
       filterWithFacilityId,
+      filterWithFacilityIdEO,
     } = this.state;
     const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
     const downloadExcelProps = {
@@ -313,6 +409,7 @@ class DataView extends React.Component<any, any> {
       title: tableTitle,
       showLabel: true,
     };
+    console.log(facilityId)
 
     // Analytical View
     const chartOptions = [
@@ -325,9 +422,19 @@ class DataView extends React.Component<any, any> {
     //   { value: "male-female", label: "Male-Female" },
     //   { value: "paid-free", label: "Paid-Free" },
     // ];
-    const handleChartTypeChange = (selectedChart) => {
-      this.setState({ selectedChart }, () =>
-        console.log(`Chart Option selected:`, this.state.selectedChart)
+    const handleChartTypeChangeEO = (selectedChartEO) => {
+      this.setState({ selectedChartEO }, () =>
+        console.log(`Chart Option selected:`, this.state.selectedChartEO)
+      );
+    };
+    const handleChartTypeChangeMF = (selectedChartMF) => {
+      this.setState({ selectedChartMF }, () =>
+        console.log(`Chart Option selected:`, this.state.selectedChartMF)
+      );
+    };
+    const handleChartTypeChangeFP = (selectedChartFP) => {
+      this.setState({ selectedChartFP }, () =>
+        console.log(`Chart Option selected:`, this.state.selectedChartFP)
       );
     };
     // const handleFilterTypeChange = (selectedFilter) => {
@@ -361,6 +468,7 @@ class DataView extends React.Component<any, any> {
 
 
           <div className="mt-4">
+            <div className="text-center"><h5 style={{fontWeight: 'bold', fontSize: '20px'}} className="text-danger"><u>Last 24 Hours</u></h5></div>
             <div className="row d-flex justify-content-center">
               <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
                 <div style={{
@@ -368,7 +476,7 @@ class DataView extends React.Component<any, any> {
                   padding: '15px'
                 }} className="d-flex justify-content-center row">
                   <div className="col-4">
-                    <img src="https://img.icons8.com/external-justicon-flat-justicon/74/000000/external-medical-history-hospital-and-medical-justicon-flat-justicon.png" alt="total-patient" />
+                    <img src={totalPatient} alt="total-patient" />
 
                   </div>
                   <div className="col-7">
@@ -384,7 +492,7 @@ class DataView extends React.Component<any, any> {
                   padding: '15px'
                 }} className="d-flex justify-content-center row">
                   <div className="col-4">
-                    <img alt="total-opd" src="https://img.icons8.com/external-flatart-icons-lineal-color-flatarticons/74/000000/external-medical-doctor-health-and-medical-flatart-icons-lineal-color-flatarticons.png" />
+                    <img alt="total-opd" src={opdPatient} />
 
                   </div>
                   <div className="col-7">
@@ -399,7 +507,7 @@ class DataView extends React.Component<any, any> {
                   padding: '15px'
                 }} className="d-flex justify-content-center row">
                   <div className="col-4">
-                    <img alt="total-emergency" src="https://img.icons8.com/external-konkapp-outline-color-konkapp/74/000000/external-medical-bed-medical-konkapp-outline-color-konkapp.png" />
+                    <img alt="total-emergency" src={emergencyPatient} />
 
                   </div>
                   <div className="col-8">
@@ -414,7 +522,7 @@ class DataView extends React.Component<any, any> {
                   padding: '15px'
                 }} className="d-flex justify-content-center row">
                   <div className="col-4">
-                    <img alt="total-male" src="https://img.icons8.com/office/74/000000/protection-mask.png" />
+                    <img alt="total-male" src={malePatient} />
 
                   </div>
                   <div className="col-7">
@@ -429,7 +537,7 @@ class DataView extends React.Component<any, any> {
                   padding: '15px'
                 }} className="d-flex justify-content-center row ">
                   <div className="col-4">
-                    <img alt="total-female" src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/74/000000/external-medical-mask-coronavirus-flatart-icons-flat-flatarticons.png" />
+                    <img alt="total-female" src={femalePatient} />
 
                   </div>
                   <div className="col-7">
@@ -441,7 +549,7 @@ class DataView extends React.Component<any, any> {
             </div>
           </div>
           <div>
-            <div className="d-flex justify-content-start">
+            <div className="d-flex justify-content-end mt-4">
               <div
                 className=" pl-0 pr-0 pt-0"
                 id="dataView"
@@ -450,20 +558,53 @@ class DataView extends React.Component<any, any> {
                 <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                   <div className="form-group col-12 ml-1 pl-0 filter d-flex">
 
+                  <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            Division
+                          </label>
+                          <div style={{ width: '180px' }} >
 
+                            < Select
+
+                              name="division"
+                              options={this.state.divisionList}
+                              // onChange={this.onSearchDivision}
+                              defaultInputValue={this.state.divisionName}
+                              isSearchable={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            District
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='districtName'
+                              defaultValue={this.state.districtList}
+                              loadOptions={this.fetchDistrict}
+                              placeholder="District Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchChange(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+
+                          </div>
+                        </div>
                     <div className="d-flex">
                       <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
                         Facility Name
                       </label>
                       <div style={{ width: '180px' }} >
                         <AsyncSelect
-                          name='facilityName'
-                          defaultValue={this.state.facilityList}
+                          name='facilityId'
+                          value={this.state.facilityList}
                           loadOptions={this.fetchFacility}
                           placeholder="Facility Name"
-                          // onChange={(e: any) => {
-                          //   this.onSearchFacility(e);
-                          // }}
+                          onChange={(e: any) => {
+                            this.onSearchChange(e);
+                          }}
                           defaultOptions={false}
                         />
                       </div>
@@ -566,14 +707,17 @@ class DataView extends React.Component<any, any> {
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray'
               }}>
+                <div className='p-3 text-info text-center'>
+                <h2><u>Emergency-OPD</u></h2>
+                </div>
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
-                            value={selectedChart || chartOptions[0]}
-                            onChange={handleChartTypeChange}
+                            value={selectedChartEO || chartOptions[0]}
+                            onChange={handleChartTypeChangeEO}
                             options={chartOptions}
                             placeholder="Select Chart Type"
                           />
@@ -605,7 +749,7 @@ class DataView extends React.Component<any, any> {
                               loadOptions={this.fetchDistrict}
                               placeholder="District Name"
                               // onChange={(e: any) => {
-                              //   this.onSearchDistrict(e);
+                              //   this.onSearchChange(e);
                               // }}
                               defaultOptions={false}
                             />
@@ -622,20 +766,13 @@ class DataView extends React.Component<any, any> {
                               defaultValue={this.state.facilityList}
                               loadOptions={this.fetchFacility}
                               placeholder="Facility Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchFacility(e);
-                              // }}
+                              onChange={(e: any) => {
+                                this.onSearchChangeEO(e);
+                              }}
                               defaultOptions={false}
                             />
                           </div>
-                          {/* <input
-                          className="text p-1 text-info"
-                          onChange={this.changeHandler}
-                          placeholder="Facility Name"
-                          type="text"
-                          name="facilityId"
-                          id="facilityId"
-                        /> */}
+                      
                         </div>
                         <div className="d-flex">
                           <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
@@ -680,9 +817,9 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExport}
-                    chartType={selectedChart}
+                    chartType={selectedChartEO}
                     filterType={this.state.opdEmergency}
-                    dateWiseFilter={filterWithFacilityId}
+                    dateWiseFilter={filterWithFacilityIdEO}
                   />
                 </div>
               </div>
@@ -690,14 +827,17 @@ class DataView extends React.Component<any, any> {
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
               }}>
+                 <div className='p-3 text-info text-center'>
+                <h2><u>Male-Female</u></h2>
+                </div>
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
-                            value={selectedChart || chartOptions[0]}
-                            onChange={handleChartTypeChange}
+                            value={selectedChartMF || chartOptions[0]}
+                            onChange={handleChartTypeChangeMF}
                             options={chartOptions}
                             placeholder="Select Chart Type"
                           />
@@ -729,7 +869,7 @@ class DataView extends React.Component<any, any> {
                               loadOptions={this.fetchDistrict}
                               placeholder="District Name"
                               // onChange={(e: any) => {
-                              //   this.onSearchDistrict(e);
+                              //   this.onSearchChange(e);
                               // }}
                               defaultOptions={false}
                             />
@@ -746,9 +886,9 @@ class DataView extends React.Component<any, any> {
                               defaultValue={this.state.facilityList}
                               loadOptions={this.fetchFacility}
                               placeholder="Facility Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchFacility(e);
-                              // }}
+                              onChange={(e: any) => {
+                                this.onSearchChange(e);
+                              }}
                               defaultOptions={false}
                             />
                           </div>
@@ -804,7 +944,7 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExport}
-                    chartType={selectedChart}
+                    chartType={selectedChartMF}
                     filterType={this.state.maleFemale}
                     dateWiseFilter={filterWithFacilityId}
                   />
@@ -814,14 +954,17 @@ class DataView extends React.Component<any, any> {
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
               }}>
+                 <div className='p-3 text-info text-center'>
+                <h2><u>Free-Paid</u></h2>
+                </div>
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
-                            value={selectedChart || chartOptions[0]}
-                            onChange={handleChartTypeChange}
+                            value={selectedChartFP || chartOptions[0]}
+                            onChange={handleChartTypeChangeFP}
                             options={chartOptions}
                             placeholder="Select Chart Type"
                           />
@@ -853,7 +996,7 @@ class DataView extends React.Component<any, any> {
                               loadOptions={this.fetchDistrict}
                               placeholder="District Name"
                               // onChange={(e: any) => {
-                              //   this.onSearchDistrict(e);
+                              //   this.onSearchChange(e);
                               // }}
                               defaultOptions={false}
                             />
@@ -870,9 +1013,9 @@ class DataView extends React.Component<any, any> {
                               defaultValue={this.state.facilityList}
                               loadOptions={this.fetchFacility}
                               placeholder="Facility Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchFacility(e);
-                              // }}
+                              onChange={(e: any) => {
+                                this.onSearchChange(e);
+                              }}
                               defaultOptions={false}
                             />
                           </div>
@@ -928,7 +1071,7 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExport}
-                    chartType={selectedChart}
+                    chartType={selectedChartFP}
                     filterType={this.state.paidFree}
                     dateWiseFilter={filterWithFacilityId}
                   />
