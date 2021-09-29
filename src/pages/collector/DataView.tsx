@@ -6,7 +6,7 @@ import ReactFlexyTable from "react-flexy-table";
 import "react-flexy-table/dist/index.css";
 import CoordinateChart from "../charts/CoordinateChart";
 import Select from "react-select";
-
+import AsyncSelect from "react-select/async";
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
   timerID: any;
@@ -109,6 +109,26 @@ class DataView extends React.Component<any, any> {
       selectedChart: null,
       selectedFilter: null,
       filterWithFacilityId: false,
+      opdEmergency: {
+        label: "OPD-Emergency",
+        value: "opd-emergency"
+      },
+      maleFemale: {
+        label: "Male-Female",
+        value: "male-female"
+      },
+      paidFree: {
+        label: "Paid-Free",
+        value: "paid-free"
+      },
+      divisionList: [{ value: 'Dhaka', label: 'Dhaka' },
+      { value: 'Rajshahi', label: 'Rajshahi' },
+      { value: 'Rangpur', label: 'Rangpur' },
+      { value: 'Sylhet', label: 'Sylhet' },
+      { value: 'Khulna', label: 'Khulna' },
+      { value: 'Chittagong', label: 'Chittagong' },
+      { value: 'Barishal', label: 'Barishal' },],
+      districtList: '',
     };
     this.changeHandler = this.changeHandler.bind(this);
     this.mySubmitHandler = this.mySubmitHandler.bind(this);
@@ -217,7 +237,65 @@ class DataView extends React.Component<any, any> {
       }
     );
   }
+  //for district
+  fetchDistrict = (inputValue: any, callback: any) => {
+    setTimeout(() => {
+      CollectorService.getAllDistrictList(inputValue)
+        .then((data: any) => {
+          const tempArray: any = [];
+          if (data.data.content) {
+            if (data.data.content.length) {
+              data.data.content.forEach((element: any) => {
+                tempArray.push({
+                  label: `${element}`,
+                  value: element,
+                });
 
+              });
+            } else {
+              tempArray.push({
+                label: `${data.data.content}`,
+                value: data.data.content,
+              });
+            }
+          }
+          callback(tempArray);
+        })
+        .catch((error) => {
+          console.log(error, "catch the hoop");
+        });
+    }, 1000);
+  };
+
+
+  //for facility
+  fetchFacility = (inputValue: any, callback: any) => {
+    setTimeout(() => {
+      CollectorService.getAllFacilityList(inputValue)
+        .then((data: any) => {
+          const tempArray: any = [];
+          if (data.data.content) {
+            if (data.data.content.length) {
+              data.data.content.forEach((element: any) => {
+                tempArray.push({
+                  label: `${element}`,
+                  value: element,
+                });
+              });
+            } else {
+              tempArray.push({
+                label: `${data.data.content}`,
+                value: data.data.content,
+              });
+            }
+          }
+          callback(tempArray);
+        })
+        .catch((error) => {
+          console.log(error, "catch the hoop");
+        });
+    }, 1000);
+  };
   render() {
     const {
       error,
@@ -226,7 +304,7 @@ class DataView extends React.Component<any, any> {
       dateOfToday,
       showing,
       selectedChart,
-      selectedFilter,
+      // selectedFilter,
       filterWithFacilityId,
     } = this.state;
     const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
@@ -242,22 +320,24 @@ class DataView extends React.Component<any, any> {
       { value: "line", label: "Line Chart" },
       { value: "scatter", label: "Area Chart" },
     ];
-    const filterOptions = [
-      { value: "opd-emergency", label: "OPD-Emergency" },
-      { value: "male-female", label: "Male-Female" },
-      { value: "paid-free", label: "Paid-Free" },
-    ];
+    // const filterOptions = [
+    //   { value: "opd-emergency", label: "OPD-Emergency" },
+    //   { value: "male-female", label: "Male-Female" },
+    //   { value: "paid-free", label: "Paid-Free" },
+    // ];
     const handleChartTypeChange = (selectedChart) => {
       this.setState({ selectedChart }, () =>
         console.log(`Chart Option selected:`, this.state.selectedChart)
       );
     };
-    const handleFilterTypeChange = (selectedFilter) => {
-      this.setState({ selectedFilter }, () =>
-        console.log(`Filter Option selected:`, this.state.selectedFilter)
-      );
-    };
+    // const handleFilterTypeChange = (selectedFilter) => {
+    //   this.setState({ selectedFilter }, () =>
+    //     console.log(`Filter Option selected:`, this.state.selectedFilter)
+    //   );
+    // };
     //end analytical view
+
+
 
     if (error) {
       return (
@@ -270,66 +350,186 @@ class DataView extends React.Component<any, any> {
     } else {
       return (
         <div className="container-fluid">
-          <h4
-            className="mb-0 mt-0 pb-0 pt-0"
-            style={{ textAlign: "center", marginTop: 0, marginBottom: 0 }}
-          >
-            SHR DASHBOARD
-          </h4>
-          <form className="form-inline m-0 p-0" onSubmit={this.mySubmitHandler}>
-            <div className="form-group col-12 ml-1 pl-0 filter">
-              <input
-                className="text p-1 text-info"
-                onChange={this.changeHandler}
-                placeholder="Facility Name"
-                type="text"
-                name="facilityId"
-                id="facilityId"
-              />
-              <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                Start Date
-              </label>
-              <input
-                className="text m-1 p-1"
-                onChange={this.changeHandler}
-                pattern="MM-dd-yyyy"
-                type="date"
-                name="startDate"
-                id="startDate"
-                defaultValue={dateOfToday}
-              />
-              <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                End Date
-              </label>
-              <input
-                className="text m-1 p-1"
-                onChange={this.changeHandler}
-                pattern="MM-dd-yyyy"
-                type="date"
-                name="endDate"
-                id="endDate"
-                defaultValue={dateOfToday}
-              />
-              <button
-                type="submit"
-                className="btn btn-info font-weight-bold mb-1 mt-1"
-              >
-                Filter
-              </button>
-              <button
-                className="btn btn-success font-weight-bold ml-2 mb-1 mt-1"
-                onClick={() => this.setState({ showing: !showing })}
-              >
-                {showing ? "Analytical View" : "Data View"}
-              </button>
+          <div style={{ backgroundColor: '#066B86', height: '50px', marginLeft: '3px', marginTop: '-15px', }} >
+            <h4
+              className="mb-0 mt-0 pb-0 pt-0 text-white"
+              style={{ textAlign: "center", marginTop: 0, marginBottom: 0, fontWeight: 'bold', fontSize: '30px' }}
+            >
+              SHR DASHBOARD
+            </h4>
+          </div>
+
+
+          <div className="mt-4">
+            <div className="row d-flex justify-content-center">
+              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
+                <div style={{
+                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
+                  padding: '15px'
+                }} className="d-flex justify-content-center row">
+                  <div className="col-4">
+                    <img src="https://img.icons8.com/external-justicon-flat-justicon/74/000000/external-medical-history-hospital-and-medical-justicon-flat-justicon.png" alt="total-patient" />
+
+                  </div>
+                  <div className="col-7">
+                    <h2 className="font-weight-bold text-info">40</h2>
+                    <small className="font-weight-bold">Total Patient</small>
+
+                  </div>
+                </div>
+              </div>
+              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
+                <div style={{
+                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
+                  padding: '15px'
+                }} className="d-flex justify-content-center row">
+                  <div className="col-4">
+                    <img alt="total-opd" src="https://img.icons8.com/external-flatart-icons-lineal-color-flatarticons/74/000000/external-medical-doctor-health-and-medical-flatart-icons-lineal-color-flatarticons.png" />
+
+                  </div>
+                  <div className="col-7">
+                    <h2 className="font-weight-bold text-info">20</h2>
+                    <small className="font-weight-bold">Total OPD Patient</small>
+                  </div>
+                </div>
+              </div>
+              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
+                <div style={{
+                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
+                  padding: '15px'
+                }} className="d-flex justify-content-center row">
+                  <div className="col-4">
+                    <img alt="total-emergency" src="https://img.icons8.com/external-konkapp-outline-color-konkapp/74/000000/external-medical-bed-medical-konkapp-outline-color-konkapp.png" />
+
+                  </div>
+                  <div className="col-8">
+                    <h2 className="font-weight-bold text-info">10</h2>
+                    <small className="font-weight-bold">Total Emergency Patient</small>
+                  </div>
+                </div>
+              </div>
+              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
+                <div style={{
+                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
+                  padding: '15px'
+                }} className="d-flex justify-content-center row">
+                  <div className="col-4">
+                    <img alt="total-male" src="https://img.icons8.com/office/74/000000/protection-mask.png" />
+
+                  </div>
+                  <div className="col-7">
+                    <h2 className="font-weight-bold text-info">5</h2>
+                    <small className="font-weight-bold">Total Male Patient</small>
+                  </div>
+                </div>
+              </div>
+              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
+                <div style={{
+                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
+                  padding: '15px'
+                }} className="d-flex justify-content-center row ">
+                  <div className="col-4">
+                    <img alt="total-female" src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/74/000000/external-medical-mask-coronavirus-flatart-icons-flat-flatarticons.png" />
+
+                  </div>
+                  <div className="col-7">
+                    <h2 className="font-weight-bold text-info">12</h2>
+                    <small className="font-weight-bold">Total Female Patient</small>
+                  </div>
+                </div>
+              </div>
             </div>
-          </form>
+          </div>
           <div>
+            <div className="d-flex justify-content-start">
+              <div
+                className=" pl-0 pr-0 pt-0"
+                id="dataView"
+                style={{ display: showing ? "none" : "block" }}
+              >
+                <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                  <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+
+
+                    <div className="d-flex">
+                      <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                        Facility Name
+                      </label>
+                      <div style={{ width: '180px' }} >
+                        <AsyncSelect
+                          name='facilityName'
+                          defaultValue={this.state.facilityList}
+                          loadOptions={this.fetchFacility}
+                          placeholder="Facility Name"
+                          // onChange={(e: any) => {
+                          //   this.onSearchFacility(e);
+                          // }}
+                          defaultOptions={false}
+                        />
+                      </div>
+                      {/* <input
+                          className="text p-1 text-info"
+                          onChange={this.changeHandler}
+                          placeholder="Facility Name"
+                          type="text"
+                          name="facilityId"
+                          id="facilityId"
+                        /> */}
+                    </div>
+                    <div className="d-flex">
+                      <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                        Start Date
+                      </label>
+                      <input
+                        className="text m-1 p-1"
+                        onChange={this.changeHandler}
+                        pattern="MM-dd-yyyy"
+                        type="date"
+                        name="startDate"
+                        id="startDate"
+                        defaultValue={dateOfToday}
+                      />
+                    </div>
+                    <div className="d-flex">
+                      <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                        End Date
+                      </label>
+                      <input
+                        className="text m-1 p-1"
+                        onChange={this.changeHandler}
+                        pattern="MM-dd-yyyy"
+                        type="date"
+                        name="endDate"
+                        id="endDate"
+                        defaultValue={dateOfToday}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="btn btn-info font-weight-bold mb-1 mt-1"
+                    >
+                      Filter
+                    </button>
+
+                  </div>
+                </form>
+              </div>
+              <div className="mt-2 pt-2">
+                <button
+                  className="btn btn-success font-weight-bold ml-2 mb-1 mt-1"
+                  onClick={() => this.setState({ showing: !showing })}
+                >
+                  {showing ? "Data View" : "Analytical View"}
+                </button>
+              </div>
+            </div>
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="dataView"
-              style={{ display: showing ? "block" : "none" }}
+              style={{ display: showing ? "none" : "block" }}
             >
+
               <ReactFlexyTable
                 className="table table-stripped table-hover table-sm tableReg"
                 data={items}
@@ -349,35 +549,401 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="analyticView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ? "block" : "none" }}
             >
               <div className="row">
+
                 <div className="col-2 p-0 ml-2">
-                  <Select
-                    value={selectedChart || chartOptions[0]}
-                    onChange={handleChartTypeChange}
-                    options={chartOptions}
-                    placeholder="Select Chart Type"
-                  />
-                </div>
-                <div className="col-2 p-0 ml-2">
-                  <Select
+                  {/* <Select
                     value={selectedFilter || filterOptions[0]}
                     onChange={handleFilterTypeChange}
                     options={filterOptions}
                     placeholder="Select Filter Type"
+                  /> */}
+                </div>
+              </div>
+              <div style={{
+                border: '1px solid lightGray', borderRadius: '20px',
+                padding: '15px', boxShadow: '5px 5px 20px gray'
+              }}>
+                <div >
+                  <div className=" p-0 ml-2">
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                      <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+                        <div style={{ width: '250px' }}>
+                          <Select
+                            value={selectedChart || chartOptions[0]}
+                            onChange={handleChartTypeChange}
+                            options={chartOptions}
+                            placeholder="Select Chart Type"
+                          />
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            Division
+                          </label>
+                          <div style={{ width: '180px' }} >
+
+                            < Select
+
+                              name="division"
+                              options={this.state.divisionList}
+                              // onChange={this.onSearchDivision}
+                              defaultInputValue={this.state.divisionName}
+                              isSearchable={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            District
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='districtName'
+                              defaultValue={this.state.districtList}
+                              loadOptions={this.fetchDistrict}
+                              placeholder="District Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchDistrict(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            Facility Name
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='facilityName'
+                              defaultValue={this.state.facilityList}
+                              loadOptions={this.fetchFacility}
+                              placeholder="Facility Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchFacility(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+                          </div>
+                          {/* <input
+                          className="text p-1 text-info"
+                          onChange={this.changeHandler}
+                          placeholder="Facility Name"
+                          type="text"
+                          name="facilityId"
+                          id="facilityId"
+                        /> */}
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                            Start Date
+                          </label>
+                          <input
+                            className="text m-1 p-1"
+                            onChange={this.changeHandler}
+                            pattern="MM-dd-yyyy"
+                            type="date"
+                            name="startDate"
+                            id="startDate"
+                            defaultValue={dateOfToday}
+                          />
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            End Date
+                          </label>
+                          <input
+                            className="text m-1 p-1"
+                            onChange={this.changeHandler}
+                            pattern="MM-dd-yyyy"
+                            type="date"
+                            name="endDate"
+                            id="endDate"
+                            defaultValue={dateOfToday}
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="btn btn-info font-weight-bold mb-1 mt-1"
+                        >
+                          Filter
+                        </button>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <CoordinateChart
+                    data={this.dataToExport}
+                    chartType={selectedChart}
+                    filterType={this.state.opdEmergency}
+                    dateWiseFilter={filterWithFacilityId}
                   />
                 </div>
               </div>
-              <CoordinateChart
-                data={this.dataToExport}
-                chartType={selectedChart}
-                filterType={selectedFilter}
-                dateWiseFilter={filterWithFacilityId}
-              />
+              <div style={{
+                border: '1px solid lightGray', borderRadius: '20px',
+                padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
+              }}>
+                <div >
+                  <div className=" p-0 ml-2">
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                      <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+                        <div style={{ width: '250px' }}>
+                          <Select
+                            value={selectedChart || chartOptions[0]}
+                            onChange={handleChartTypeChange}
+                            options={chartOptions}
+                            placeholder="Select Chart Type"
+                          />
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            Division
+                          </label>
+                          <div style={{ width: '180px' }} >
+
+                            < Select
+
+                              name="division"
+                              options={this.state.divisionList}
+                              // onChange={this.onSearchDivision}
+                              defaultInputValue={this.state.divisionName}
+                              isSearchable={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            District
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='districtName'
+                              defaultValue={this.state.districtList}
+                              loadOptions={this.fetchDistrict}
+                              placeholder="District Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchDistrict(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            Facility Name
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='facilityName'
+                              defaultValue={this.state.facilityList}
+                              loadOptions={this.fetchFacility}
+                              placeholder="Facility Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchFacility(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+                          </div>
+                          {/* <input
+                          className="text p-1 text-info"
+                          onChange={this.changeHandler}
+                          placeholder="Facility Name"
+                          type="text"
+                          name="facilityId"
+                          id="facilityId"
+                        /> */}
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                            Start Date
+                          </label>
+                          <input
+                            className="text m-1 p-1"
+                            onChange={this.changeHandler}
+                            pattern="MM-dd-yyyy"
+                            type="date"
+                            name="startDate"
+                            id="startDate"
+                            defaultValue={dateOfToday}
+                          />
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            End Date
+                          </label>
+                          <input
+                            className="text m-1 p-1"
+                            onChange={this.changeHandler}
+                            pattern="MM-dd-yyyy"
+                            type="date"
+                            name="endDate"
+                            id="endDate"
+                            defaultValue={dateOfToday}
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="btn btn-info font-weight-bold mb-1 mt-1"
+                        >
+                          Filter
+                        </button>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <CoordinateChart
+                    data={this.dataToExport}
+                    chartType={selectedChart}
+                    filterType={this.state.maleFemale}
+                    dateWiseFilter={filterWithFacilityId}
+                  />
+                </div>
+              </div>
+              <div style={{
+                border: '1px solid lightGray', borderRadius: '20px',
+                padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
+              }}>
+                <div >
+                  <div className=" p-0 ml-2">
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                      <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+                        <div style={{ width: '250px' }}>
+                          <Select
+                            value={selectedChart || chartOptions[0]}
+                            onChange={handleChartTypeChange}
+                            options={chartOptions}
+                            placeholder="Select Chart Type"
+                          />
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            Division
+                          </label>
+                          <div style={{ width: '180px' }} >
+
+                            < Select
+
+                              name="division"
+                              options={this.state.divisionList}
+                              // onChange={this.onSearchDivision}
+                              defaultInputValue={this.state.divisionName}
+                              isSearchable={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            District
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='districtName'
+                              defaultValue={this.state.districtList}
+                              loadOptions={this.fetchDistrict}
+                              placeholder="District Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchDistrict(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+
+                          </div>
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                            Facility Name
+                          </label>
+                          <div style={{ width: '180px' }} >
+                            <AsyncSelect
+                              name='facilityName'
+                              defaultValue={this.state.facilityList}
+                              loadOptions={this.fetchFacility}
+                              placeholder="Facility Name"
+                              // onChange={(e: any) => {
+                              //   this.onSearchFacility(e);
+                              // }}
+                              defaultOptions={false}
+                            />
+                          </div>
+                          {/* <input
+                          className="text p-1 text-info"
+                          onChange={this.changeHandler}
+                          placeholder="Facility Name"
+                          type="text"
+                          name="facilityId"
+                          id="facilityId"
+                        /> */}
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                            Start Date
+                          </label>
+                          <input
+                            className="text m-1 p-1"
+                            onChange={this.changeHandler}
+                            pattern="MM-dd-yyyy"
+                            type="date"
+                            name="startDate"
+                            id="startDate"
+                            defaultValue={dateOfToday}
+                          />
+                        </div>
+                        <div className="d-flex">
+                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                            End Date
+                          </label>
+                          <input
+                            className="text m-1 p-1"
+                            onChange={this.changeHandler}
+                            pattern="MM-dd-yyyy"
+                            type="date"
+                            name="endDate"
+                            id="endDate"
+                            defaultValue={dateOfToday}
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="btn btn-info font-weight-bold mb-1 mt-1"
+                        >
+                          Filter
+                        </button>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <CoordinateChart
+                    data={this.dataToExport}
+                    chartType={selectedChart}
+                    filterType={this.state.paidFree}
+                    dateWiseFilter={filterWithFacilityId}
+                  />
+                </div>
+              </div>
+              <div>
+
+              </div>
+
+              <div>
+
+              </div>
             </div>
           </div>
-        </div>
+        </div >
       );
     }
   }
