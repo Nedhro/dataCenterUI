@@ -322,9 +322,6 @@ class DataView extends React.Component<any, any> {
               >
                 {showing ? "Analytical View" : "Data View"}
               </button>
-              <a className="btn btn-dark font-weight-bold ml-2 mb-1 mt-1" href="/diagnosis">
-                Diagnosis
-              </a>
             </div>
           </form>
           <div>
