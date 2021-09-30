@@ -16,6 +16,9 @@ class CollectorService {
     getAllFacilityList(data: Object) {
         return axios.get(baseUrl + '/facilityName/' + data);
     }
+    getAllCard() {
+        return axios.get(baseUrl + '/getTotalsForCards');
+    }
 }
 
 export default new CollectorService();

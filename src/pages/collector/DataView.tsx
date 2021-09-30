@@ -14,8 +14,10 @@ import malePatient from "../../icons/malePatient.png"
 import femalePatient from "../../icons/femalePatient.png"
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
+  // dataConfigEO: any = {};
   timerID: any;
   dataToExport: any;
+  // dataToExportEO: any;
   changeHandler = (event: any) => {
     let nam = event.target.name;
     let facilityId = null;
@@ -36,6 +38,26 @@ class DataView extends React.Component<any, any> {
     }
     console.log(this.dataConfig);
   };
+  // changeHandlerEO = (event: any) => {
+  //   let nam = event.target.name;
+  //   let facilityId = null;
+  //   let startDate = "";
+  //   let endDate = "";
+  //   if (nam === "facilityId") {
+  //     facilityId = event.target.value;
+  //     this.dataConfigEO.facilityId = facilityId;
+  //   }
+  //   if (nam === "startDate") {
+  //     startDate = event.target.value;
+  //     console.log(startDate);
+  //     this.dataConfigEO.startDate = this.formateDate(startDate);
+  //   }
+  //   if (nam === "endDate") {
+  //     endDate = event.target.value;
+  //     this.dataConfigEO.endDate = this.formateDate(endDate);
+  //   }
+  //   console.log(this.dataConfigEO);
+  // };
 
   formateNowDate = (data: any) => {
     let formattedNowDate = "";
@@ -102,45 +124,45 @@ class DataView extends React.Component<any, any> {
     }
   };
 
-  mySubmitHandlerEO = (event: any) => {
-    event.preventDefault();
-    console.log(event.target.value);
-    let facilityId = this.state.facilityId;
-    let startDate = this.dataConfig.startDate;
-    let endDate = this.dataConfig.endDate;
+  // mySubmitHandlerEO = (event: any) => {
+  //   event.preventDefault();
+  //   console.log(event.target.value);
+  //   let facilityId = this.state.facilityId;
+  //   let startDate = this.dataConfigEO.startDate;
+  //   let endDate = this.dataConfigEO.endDate;
 
-    let date_ob = new Date();
-    let dateNow = this.formateNowDate(date_ob);
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfig = {
-        facilityId: null,
-        startDate: startDate || dateNow,
-        endDate: endDate || dateNow,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
-    if (facilityId !== null && startDate !== "" && endDate !== "") {
-      this.dataConfig = {
-        facilityId: facilityId,
-        startDate: startDate,
-        endDate: endDate,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigEO = {
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigEO = {
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
 
-    if (facilityId !== null && startDate === "" && endDate === "") {
-      this.dataConfig = {
-        facilityId: facilityId,
-        startDate: dateNow,
-        endDate: dateNow,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
-  };
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigEO = {
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+  // };
 
   constructor(props: any) {
     super(props);
@@ -157,11 +179,12 @@ class DataView extends React.Component<any, any> {
       // selectedChart: null,
       selectedFilter: null,
       facilityId: null,
-      facilityIdEO:null,
-      division:null,
-      district:null,
+      // facilityIdEO: null,
+      division: null,
+      district: null,
+      card: {},
       filterWithFacilityId: false,
-      filterWithFacilityIdEO: false,
+      // filterWithFacilityIdEO: false,
       opdEmergency: {
         label: "OPD-Emergency",
         value: "opd-emergency"
@@ -203,6 +226,16 @@ class DataView extends React.Component<any, any> {
       5 * 60 * 1000
     );
     this.getSumData(this.dataConfig);
+    CollectorService.getAllCard().then(
+      (response): any => {
+        if (response) {
+          this.setState({
+            card: response.data.content
+          })
+        }
+        console.log(response);
+      }
+    );
   }
   componentWillUnmount() {
     clearInterval(this.timerID);
@@ -223,7 +256,7 @@ class DataView extends React.Component<any, any> {
           this.dataToExport = res.data.content;
           this.setState({
             filterWithFacilityId: true,
-            filterWithFacilityIdEO: true,
+            // filterWithFacilityIdEO: true,
           });
         }
         let opdSum = 0;
@@ -288,21 +321,112 @@ class DataView extends React.Component<any, any> {
           this.dataToExport = response.data.content;
           this.setState({
             filterWithFacilityId: false,
-            filterWithFacilityIdEO: false,
+            // filterWithFacilityIdEO: false,
           });
         }
       }
     );
   }
-  onSearchDivision = (selectedOption:any) => {
+
+  //for emergency-opd
+  // getRegDataEO(data: any) {
+  //   console.log(JSON.stringify(data));
+  //   CollectorService.getAllRegistrationCollectionData(data).then(
+  //     (res): any => {
+  //       const resultObj = {
+  //         opdTotal: 0,
+  //         emergencyTotal: 0,
+  //         paidSum: 0,
+  //         freeSum: 0,
+  //         collectionTotal: 0,
+  //       };
+  //       const resultData = res.data.content;
+  //       if (data.facilityId !== null) {
+  //         this.dataToExportEO = res.data.content;
+  //         this.setState({
+  //           // filterWithFacilityId: true,
+  //           filterWithFacilityIdEO: true,
+  //         });
+  //       }
+  //       let opdSum = 0;
+  //       let emergencySum = 0;
+  //       let freeSum = 0;
+  //       let paidSum = 0;
+  //       let collectionSum = 0;
+  //       for (let i = 0; i < resultData?.length; i++) {
+  //         const opdData = resultData[i].numberOfOpdPatient;
+  //         opdSum += opdData;
+  //         const emergencyData = resultData[i].numberOfEmergencyPatient;
+  //         emergencySum += emergencyData;
+  //         const freePatient = resultData[i].numberOfFreePatient;
+  //         freeSum += freePatient;
+  //         const paidPatient = resultData[i].numberOfPaidPatient;
+  //         paidSum += paidPatient;
+  //         const totalColData = resultData[i].totalCollection;
+  //         collectionSum += totalColData;
+  //       }
+  //       resultObj.opdTotal = opdSum;
+  //       resultObj.emergencyTotal = emergencySum;
+  //       resultObj.paidSum = paidSum;
+  //       resultObj.freeSum = freeSum;
+  //       resultObj.collectionTotal = collectionSum;
+
+  //       const datafinal = resultData?.map((data: any) => {
+  //         let config = {
+  //           "Facility Name (Id)": data.facilityId || "N/A",
+  //           "Total Patient": data.totalPatient || 0,
+  //           OPD: data.numberOfOpdPatient || 0,
+  //           Emergency: data.numberOfEmergencyPatient || 0,
+  //           Male: data.numberOfMalePatient || 0,
+  //           Female: data.numberOfFemalePatient || 0,
+  //           Paid: data.numberOfPaidPatient || 0,
+  //           Free: data.numberOfFreePatient || 0,
+  //           "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+  //           Date: data.sentTime || "N/A",
+  //         };
+  //         return config;
+  //       });
+  //       var date = new Date();
+  //       this.setState({
+  //         isLoaded: true,
+  //         items: datafinal,
+  //         dateOfToday: this.formateDefaultDate(date),
+  //         totalresult: resultObj,
+  //       });
+  //     },
+  //     (error) => {
+  //       this.setState({
+  //         isLoaded: true,
+  //         error,
+  //       });
+  //     }
+  //   );
+  // }
+
+  // getSumDataEO(data: any) {
+  //   CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+  //     (response): any => {
+  //       if (data.facilityId === null) {
+  //         this.dataToExportEO = response.data.content;
+  //         this.setState({
+  //           // filterWithFacilityId: false,
+  //           filterWithFacilityIdEO: false,
+  //         });
+  //       }
+  //     }
+  //   );
+  // }
+
+  //for division
+  onSearchDivision = (selectedOption: any) => {
     console.log(selectedOption);
     if (selectedOption) {
-        this.setState({
-            selectedOption,
-            division: selectedOption.value
-        });
+      this.setState({
+        selectedOption,
+        division: selectedOption.value
+      });
     }
-}
+  }
   //for district
   fetchDistrict = (inputValue: any, callback: any) => {
     setTimeout(() => {
@@ -332,15 +456,15 @@ class DataView extends React.Component<any, any> {
         });
     }, 1000);
   };
-  onSearchDistrict = (selectedOption:any) => {
+  onSearchDistrict = (selectedOption: any) => {
     console.log(selectedOption);
     if (selectedOption) {
-        this.setState({
-            selectedOption,
-            district: selectedOption.value
-        });
+      this.setState({
+        selectedOption,
+        district: selectedOption.value
+      });
     }
-}
+  }
 
   //for facility
   fetchFacility = (inputValue: any, callback: any) => {
@@ -370,24 +494,61 @@ class DataView extends React.Component<any, any> {
         });
     }, 1000);
   };
-  onSearchChange = (selectedOption:any) => {
+  onSearchChange = (selectedOption: any) => {
     console.log(selectedOption);
     if (selectedOption) {
-        this.setState({
-            selectedOption,
-            facilityId: selectedOption.value
-        });
-    }
-}
-onSearchChangeEO = (selectedOption:any) => {
-  console.log(selectedOption);
-  if (selectedOption) {
       this.setState({
-          selectedOption,
-          facilityIdEO: selectedOption.value
+        selectedOption,
+        facilityId: selectedOption.value
       });
+    }
+
   }
-}
+  onSearchChangeChart = (selectedOption: any) => {
+    console.log(selectedOption);
+    if (selectedOption) {
+      this.setState({
+        selectedOption,
+        facilityId: selectedOption.value
+      });
+    }
+    let facilityId = selectedOption.value;
+    let startDate = this.dataConfig.startDate;
+    let endDate = this.dataConfig.endDate;
+
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfig = {
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfig = {
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfig = {
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+
+  }
   render() {
     const {
       error,
@@ -401,7 +562,7 @@ onSearchChangeEO = (selectedOption:any) => {
       // selectedFilter,
       facilityId,
       filterWithFacilityId,
-      filterWithFacilityIdEO,
+      // filterWithFacilityIdEO,
     } = this.state;
     const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
     const downloadExcelProps = {
@@ -468,7 +629,7 @@ onSearchChangeEO = (selectedOption:any) => {
 
 
           <div className="mt-4">
-            <div className="text-center"><h5 style={{fontWeight: 'bold', fontSize: '20px'}} className="text-danger"><u>Last 24 Hours</u></h5></div>
+            <div className="text-center"><h5 style={{ fontWeight: 'bold', fontSize: '20px' }} className="text-danger"><u>Last 24 Hours</u></h5></div>
             <div className="row d-flex justify-content-center">
               <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
                 <div style={{
@@ -480,7 +641,7 @@ onSearchChangeEO = (selectedOption:any) => {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">40</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalPatient}</h2>
                     <small className="font-weight-bold">Total Patient</small>
 
                   </div>
@@ -496,7 +657,7 @@ onSearchChangeEO = (selectedOption:any) => {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">20</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalOpdPatient}</h2>
                     <small className="font-weight-bold">Total OPD Patient</small>
                   </div>
                 </div>
@@ -511,7 +672,7 @@ onSearchChangeEO = (selectedOption:any) => {
 
                   </div>
                   <div className="col-8">
-                    <h2 className="font-weight-bold text-info">10</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalEmergencyPatient}</h2>
                     <small className="font-weight-bold">Total Emergency Patient</small>
                   </div>
                 </div>
@@ -526,7 +687,7 @@ onSearchChangeEO = (selectedOption:any) => {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">5</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalMalePatient}</h2>
                     <small className="font-weight-bold">Total Male Patient</small>
                   </div>
                 </div>
@@ -541,7 +702,7 @@ onSearchChangeEO = (selectedOption:any) => {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">12</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalFemalePatient}</h2>
                     <small className="font-weight-bold">Total Female Patient</small>
                   </div>
                 </div>
@@ -549,7 +710,7 @@ onSearchChangeEO = (selectedOption:any) => {
             </div>
           </div>
           <div>
-            <div className="d-flex justify-content-end mt-4">
+            <div className="d-flex justify-content-start mt-4">
               <div
                 className=" pl-0 pr-0 pt-0"
                 id="dataView"
@@ -558,40 +719,40 @@ onSearchChangeEO = (selectedOption:any) => {
                 <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                   <div className="form-group col-12 ml-1 pl-0 filter d-flex">
 
-                  <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            Division
-                          </label>
-                          <div style={{ width: '180px' }} >
+                    <div className="d-flex">
+                      <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                        Division
+                      </label>
+                      <div style={{ width: '180px' }} >
 
-                            < Select
+                        < Select
 
-                              name="division"
-                              options={this.state.divisionList}
-                              // onChange={this.onSearchDivision}
-                              defaultInputValue={this.state.divisionName}
-                              isSearchable={true}
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            District
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='districtName'
-                              defaultValue={this.state.districtList}
-                              loadOptions={this.fetchDistrict}
-                              placeholder="District Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchChange(e);
-                              // }}
-                              defaultOptions={false}
-                            />
+                          name="division"
+                          options={this.state.divisionList}
+                          // onChange={this.onSearchDivision}
+                          defaultInputValue={this.state.divisionName}
+                          isSearchable={true}
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex">
+                      <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                        District
+                      </label>
+                      <div style={{ width: '180px' }} >
+                        <AsyncSelect
+                          name='districtName'
+                          defaultValue={this.state.districtList}
+                          loadOptions={this.fetchDistrict}
+                          placeholder="District Name"
+                          // onChange={(e: any) => {
+                          //   this.onSearchChange(e);
+                          // }}
+                          defaultOptions={false}
+                        />
 
-                          </div>
-                        </div>
+                      </div>
+                    </div>
                     <div className="d-flex">
                       <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
                         Facility Name
@@ -656,15 +817,79 @@ onSearchChangeEO = (selectedOption:any) => {
                   </div>
                 </form>
               </div>
+              <div >
+                <div
+                  className="col-12  pt-0"
+                  id="dataView"
+                  style={{ display: showing ? "block" : "none" }}
+                >
+                  <div className="d-flex  ">
+                    <div className="d-flex ">
+                      <label className="label ml-2 mr-1 pt-3 p-1 text-info font-weight-bold">
+                        Division
+                      </label>
+                      <div style={{ width: '180px' }} >
+
+                        < Select
+
+                          name="division"
+                          options={this.state.divisionList}
+                          // onChange={this.onSearchDivision}
+                          defaultInputValue={this.state.divisionName}
+                          isSearchable={true}
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex">
+                      <label className="label ml-2 mr-1 p-1 pt-3 text-info font-weight-bold">
+                        District
+                      </label>
+                      <div style={{ width: '180px' }} >
+                        <AsyncSelect
+                          name='districtName'
+                          defaultValue={this.state.districtList}
+                          loadOptions={this.fetchDistrict}
+                          placeholder="District Name"
+                          // onChange={(e: any) => {
+                          //   this.onSearchChange(e);
+                          // }}
+                          defaultOptions={false}
+                        />
+
+                      </div>
+                    </div>
+                    <div className="d-flex">
+                      <label className="label ml-2 mr-1 p-1 pt-3 text-info font-weight-bold">
+                        Facility Name
+                      </label>
+                      <div style={{ width: '180px' }} >
+                        <AsyncSelect
+                          name='facilityName'
+                          defaultValue={this.state.facilityList}
+                          loadOptions={this.fetchFacility}
+                          placeholder="Facility Name"
+                          onChange={(e: any) => {
+                            this.onSearchChangeChart(e);
+                          }}
+                          defaultOptions={false}
+                        />
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
               <div className="mt-2 pt-2">
                 <button
-                  className="btn btn-success font-weight-bold ml-2 mb-1 mt-1"
+                  className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                   onClick={() => this.setState({ showing: !showing })}
                 >
                   {showing ? "Data View" : "Analytical View"}
                 </button>
               </div>
             </div>
+
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="dataView"
@@ -707,8 +932,8 @@ onSearchChangeEO = (selectedOption:any) => {
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray'
               }}>
-                <div className='p-3 text-info text-center'>
-                <h2><u>Emergency-OPD</u></h2>
+                <div className='p-3 text-dark text-center'>
+                  <h2><u>Emergency-OPD</u></h2>
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
@@ -722,58 +947,8 @@ onSearchChangeEO = (selectedOption:any) => {
                             placeholder="Select Chart Type"
                           />
                         </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            Division
-                          </label>
-                          <div style={{ width: '180px' }} >
 
-                            < Select
 
-                              name="division"
-                              options={this.state.divisionList}
-                              // onChange={this.onSearchDivision}
-                              defaultInputValue={this.state.divisionName}
-                              isSearchable={true}
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            District
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='districtName'
-                              defaultValue={this.state.districtList}
-                              loadOptions={this.fetchDistrict}
-                              placeholder="District Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchChange(e);
-                              // }}
-                              defaultOptions={false}
-                            />
-
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            Facility Name
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='facilityName'
-                              defaultValue={this.state.facilityList}
-                              loadOptions={this.fetchFacility}
-                              placeholder="Facility Name"
-                              onChange={(e: any) => {
-                                this.onSearchChangeEO(e);
-                              }}
-                              defaultOptions={false}
-                            />
-                          </div>
-                      
-                        </div>
                         <div className="d-flex">
                           <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
                             Start Date
@@ -819,7 +994,7 @@ onSearchChangeEO = (selectedOption:any) => {
                     data={this.dataToExport}
                     chartType={selectedChartEO}
                     filterType={this.state.opdEmergency}
-                    dateWiseFilter={filterWithFacilityIdEO}
+                    dateWiseFilter={filterWithFacilityId}
                   />
                 </div>
               </div>
@@ -827,8 +1002,8 @@ onSearchChangeEO = (selectedOption:any) => {
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
               }}>
-                 <div className='p-3 text-info text-center'>
-                <h2><u>Male-Female</u></h2>
+                <div className='p-3 text-dark text-center'>
+                  <h2><u>Male-Female</u></h2>
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
@@ -842,65 +1017,7 @@ onSearchChangeEO = (selectedOption:any) => {
                             placeholder="Select Chart Type"
                           />
                         </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            Division
-                          </label>
-                          <div style={{ width: '180px' }} >
 
-                            < Select
-
-                              name="division"
-                              options={this.state.divisionList}
-                              // onChange={this.onSearchDivision}
-                              defaultInputValue={this.state.divisionName}
-                              isSearchable={true}
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            District
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='districtName'
-                              defaultValue={this.state.districtList}
-                              loadOptions={this.fetchDistrict}
-                              placeholder="District Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchChange(e);
-                              // }}
-                              defaultOptions={false}
-                            />
-
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            Facility Name
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='facilityName'
-                              defaultValue={this.state.facilityList}
-                              loadOptions={this.fetchFacility}
-                              placeholder="Facility Name"
-                              onChange={(e: any) => {
-                                this.onSearchChange(e);
-                              }}
-                              defaultOptions={false}
-                            />
-                          </div>
-                          {/* <input
-                          className="text p-1 text-info"
-                          onChange={this.changeHandler}
-                          placeholder="Facility Name"
-                          type="text"
-                          name="facilityId"
-                          id="facilityId"
-                        /> */}
-                        </div>
                         <div className="d-flex">
                           <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
                             Start Date
@@ -954,8 +1071,8 @@ onSearchChangeEO = (selectedOption:any) => {
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
               }}>
-                 <div className='p-3 text-info text-center'>
-                <h2><u>Free-Paid</u></h2>
+                <div className='p-3 text-dark text-center'>
+                  <h2><u>Free-Paid</u></h2>
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
@@ -969,65 +1086,7 @@ onSearchChangeEO = (selectedOption:any) => {
                             placeholder="Select Chart Type"
                           />
                         </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            Division
-                          </label>
-                          <div style={{ width: '180px' }} >
 
-                            < Select
-
-                              name="division"
-                              options={this.state.divisionList}
-                              // onChange={this.onSearchDivision}
-                              defaultInputValue={this.state.divisionName}
-                              isSearchable={true}
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            District
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='districtName'
-                              defaultValue={this.state.districtList}
-                              loadOptions={this.fetchDistrict}
-                              placeholder="District Name"
-                              // onChange={(e: any) => {
-                              //   this.onSearchChange(e);
-                              // }}
-                              defaultOptions={false}
-                            />
-
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                            Facility Name
-                          </label>
-                          <div style={{ width: '180px' }} >
-                            <AsyncSelect
-                              name='facilityName'
-                              defaultValue={this.state.facilityList}
-                              loadOptions={this.fetchFacility}
-                              placeholder="Facility Name"
-                              onChange={(e: any) => {
-                                this.onSearchChange(e);
-                              }}
-                              defaultOptions={false}
-                            />
-                          </div>
-                          {/* <input
-                          className="text p-1 text-info"
-                          onChange={this.changeHandler}
-                          placeholder="Facility Name"
-                          type="text"
-                          name="facilityId"
-                          id="facilityId"
-                        /> */}
-                        </div>
                         <div className="d-flex">
                           <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
                             Start Date
