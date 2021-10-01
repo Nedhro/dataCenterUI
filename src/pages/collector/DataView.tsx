@@ -520,7 +520,7 @@ class DataView extends React.Component<any, any> {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalPatient}</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalPatient || 0}</h2>
                     <small className="font-weight-bold">Total Patient</small>
 
                   </div>
@@ -536,7 +536,7 @@ class DataView extends React.Component<any, any> {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalOpdPatient}</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalOpdPatient || 0}</h2>
                     <small className="font-weight-bold">Total OPD Patient</small>
                   </div>
                 </div>
@@ -551,7 +551,7 @@ class DataView extends React.Component<any, any> {
 
                   </div>
                   <div className="col-8">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalEmergencyPatient}</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalEmergencyPatient || 0}</h2>
                     <small className="font-weight-bold">Total Emergency Patient</small>
                   </div>
                 </div>
@@ -566,7 +566,7 @@ class DataView extends React.Component<any, any> {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalMalePatient}</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalMalePatient || 0}</h2>
                     <small className="font-weight-bold">Total Male Patient</small>
                   </div>
                 </div>
@@ -581,7 +581,7 @@ class DataView extends React.Component<any, any> {
 
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalFemalePatient}</h2>
+                    <h2 className="font-weight-bold text-info">{this.state.card.totalFemalePatient || 0}</h2>
                     <small className="font-weight-bold">Total Female Patient</small>
                   </div>
                 </div>
