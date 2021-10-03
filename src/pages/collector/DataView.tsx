@@ -174,6 +174,13 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegDataEO(this.dataConfigEO);
     this.getSumDataEO(this.dataConfigEO);
+    this.dataConfigMF = {
+      facilityId: null,
+      startDate: dateNow,
+      endDate: dateNow,
+    };
+    this.getRegDataMF(this.dataConfigMF);
+    this.getSumDataMF(this.dataConfigMF);
     // this.timerID = setInterval(
     //   () => this.getRegData(this.dataConfig),
     //   5 * 60 * 1000
@@ -1161,7 +1168,7 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerMF}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
@@ -1179,7 +1186,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandler}
+                            onChange={this.changeHandlerMF}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -1193,7 +1200,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandler}
+                            onChange={this.changeHandlerMF}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -1215,10 +1222,10 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
-                    data={this.dataToExport}
+                    data={this.dataToExportMF}
                     chartType={selectedChartMF}
                     filterType={this.state.maleFemale}
-                    dateWiseFilter={filterWithFacilityId}
+                    dateWiseFilter={this.state.filterWithFacilityIdMF}
                   />
                 </div>
               </div>
