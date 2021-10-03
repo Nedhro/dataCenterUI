@@ -14,14 +14,15 @@ import malePatient from "../../icons/malePatient.png"
 import femalePatient from "../../icons/femalePatient.png"
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
-  dataConfigEO: any = {};
-  dataConfigMF: any = {};
-  dataConfigFP: any = {};
+  // dataConfigEO: any = {};
+  // dataConfigMF: any = {};
+  // dataConfigFP: any = {};
   timerID: any;
   dataToExport: any;
-  dataToExportEO: any;
-  dataToExportMF: any;
-  dataToExportFP: any;
+  facility: any;
+  // dataToExportEO: any;
+  // dataToExportMF: any;
+  // dataToExportFP: any;
   changeHandler = (event: any) => {
     let nam = event.target.name;
 
@@ -127,9 +128,9 @@ class DataView extends React.Component<any, any> {
       district: null,
       card: {},
       filterWithFacilityId: false,
-      filterWithFacilityIdEO: false,
-      filterWithFacilityIdMF: false,
-      filterWithFacilityIdFP: false,
+      // filterWithFacilityIdEO: false,
+      // filterWithFacilityIdMF: false,
+      // filterWithFacilityIdFP: false,
       opdEmergency: {
         label: "OPD-Emergency",
         value: "opd-emergency"
@@ -167,24 +168,24 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegData(this.dataConfig);
     this.getSumData(this.dataConfig);
-    this.dataConfigEO = {
-      facilityId: null,
-      startDate: dateNow,
-      endDate: dateNow,
-    };
-    this.getRegDataEO(this.dataConfigEO);
-    this.getSumDataEO(this.dataConfigEO);
-    this.dataConfigMF = {
-      facilityId: null,
-      startDate: dateNow,
-      endDate: dateNow,
-    };
-    this.getRegDataMF(this.dataConfigMF);
-    this.getSumDataMF(this.dataConfigMF);
-    // this.timerID = setInterval(
-    //   () => this.getRegData(this.dataConfig),
-    //   5 * 60 * 1000
-    // );
+    // this.dataConfigEO = {
+    //   facilityId: null,
+    //   startDate: dateNow,
+    //   endDate: dateNow,
+    // };
+    // this.getRegDataEO(this.dataConfigEO);
+    // this.getSumDataEO(this.dataConfigEO);
+    // this.dataConfigMF = {
+    //   facilityId: null,
+    //   startDate: dateNow,
+    //   endDate: dateNow,
+    // };
+    // this.getRegDataMF(this.dataConfigMF);
+    // this.getSumDataMF(this.dataConfigMF);
+    this.timerID = setInterval(
+      () => this.getRegData(this.dataConfig),
+      5 * 60 * 1000
+    );
 
     CollectorService.getAllCard().then(
       (response): any => {
@@ -212,6 +213,7 @@ class DataView extends React.Component<any, any> {
           collectionTotal: 0,
         };
         const resultData = res.data.content;
+        console.log(resultData)
         if (data.facilityId !== null) {
           this.dataToExport = res.data.content;
           this.setState({
@@ -293,187 +295,187 @@ class DataView extends React.Component<any, any> {
   //for charts
 
   //for emergency-opd
-  getRegDataEO(data: any) {
-    console.log(JSON.stringify(data));
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
+  // getRegDataEO(data: any) {
+  //   console.log(JSON.stringify(data));
+  //   CollectorService.getAllRegistrationCollectionData(data).then(
+  //     (res): any => {
+  //       console.log(res.data.content);
+  //       if (data.facilityId !== null) {
+  //         this.dataToExportEO = res.data.content;
+  //         this.setState({
+  //           filterWithFacilityIdEO: true,
+  //         });
+  //       }
 
-        if (data.facilityId !== null) {
-          this.dataToExportEO = res.data.content;
-          this.setState({
-            filterWithFacilityIdEO: true,
-          });
-        }
+  //     },
+  //     (error) => {
+  //       this.setState({
+  //         isLoaded: true,
+  //         error,
+  //       });
+  //     }
+  //   );
+  // }
 
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
+  // getSumDataEO(data: any) {
+  //   CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+  //     (response): any => {
+  //       if (data.facilityId === null) {
+  //         this.dataToExportEO = response.data.content;
+  //         this.setState({
+  //           filterWithFacilityIdEO: false,
+  //         });
+  //       }
+  //     }
+  //   );
+  // }
+  // changeHandlerEO = (event: any) => {
+  //   let nam = event.target.name;
+  //   let startDate = "";
+  //   let endDate = "";
 
-  getSumDataEO(data: any) {
-    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
-      (response): any => {
-        if (data.facilityId === null) {
-          this.dataToExportEO = response.data.content;
-          this.setState({
-            filterWithFacilityIdEO: false,
-          });
-        }
-      }
-    );
-  }
-  changeHandlerEO = (event: any) => {
-    let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
+  //   if (nam === "startDate") {
+  //     startDate = event.target.value;
+  //     console.log(startDate);
+  //     this.dataConfigEO.startDate = this.formateDate(startDate);
+  //   }
+  //   if (nam === "endDate") {
+  //     endDate = event.target.value;
+  //     this.dataConfigEO.endDate = this.formateDate(endDate);
+  //   }
+  //   // console.log(this.dataConfig);
+  // };
+  // mySubmitHandlerEO = (event: any) => {
+  //   event.preventDefault();
+  //   console.log(event.target.value);
+  //   let facilityId = this.state.facilityId;
+  //   let startDate = this.dataConfigEO.startDate;
+  //   let endDate = this.dataConfigEO.endDate;
 
-    if (nam === "startDate") {
-      startDate = event.target.value;
-      console.log(startDate);
-      this.dataConfigEO.startDate = this.formateDate(startDate);
-    }
-    if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigEO.endDate = this.formateDate(endDate);
-    }
-    // console.log(this.dataConfig);
-  };
-  mySubmitHandlerEO = (event: any) => {
-    event.preventDefault();
-    console.log(event.target.value);
-    let facilityId = this.state.facilityId;
-    let startDate = this.dataConfigEO.startDate;
-    let endDate = this.dataConfigEO.endDate;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
 
-    let date_ob = new Date();
-    let dateNow = this.formateNowDate(date_ob);
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigEO = {
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigEO = {
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: startDate || dateNow,
-        endDate: endDate || dateNow,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
-    if (facilityId !== null && startDate !== "" && endDate !== "") {
-      this.dataConfigEO = {
-        facilityId: facilityId,
-        startDate: startDate,
-        endDate: endDate,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
-
-    if (facilityId !== null && startDate === "" && endDate === "") {
-      this.dataConfigEO = {
-        facilityId: facilityId,
-        startDate: dateNow,
-        endDate: dateNow,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
-  };
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigEO = {
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+  // };
 
 
-  //for male-female
-  getRegDataMF(data: any) {
-    console.log(JSON.stringify(data));
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
+  // //for male-female
+  // getRegDataMF(data: any) {
+  //   console.log(JSON.stringify(data));
+  //   CollectorService.getAllRegistrationCollectionData(data).then(
+  //     (res): any => {
 
-        if (data.facilityId !== null) {
-          this.dataToExportMF = res.data.content;
-          this.setState({
-            filterWithFacilityIdMF: true,
-          });
-        }
+  //       if (data.facilityId !== null) {
+  //         this.dataToExportMF = res.data.content;
+  //         this.setState({
+  //           filterWithFacilityIdMF: true,
+  //         });
+  //       }
 
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
+  //     },
+  //     (error) => {
+  //       this.setState({
+  //         isLoaded: true,
+  //         error,
+  //       });
+  //     }
+  //   );
+  // }
 
-  getSumDataMF(data: any) {
-    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
-      (response): any => {
-        if (data.facilityId === null) {
-          this.dataToExportMF = response.data.content;
-          this.setState({
-            filterWithFacilityIdMF: false,
-          });
-        }
-      }
-    );
-  }
-  changeHandlerMF = (event: any) => {
-    let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
+  // getSumDataMF(data: any) {
+  //   CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+  //     (response): any => {
+  //       if (data.facilityId === null) {
+  //         this.dataToExportMF = response.data.content;
+  //         this.setState({
+  //           filterWithFacilityIdMF: false,
+  //         });
+  //       }
+  //     }
+  //   );
+  // }
+  // changeHandlerMF = (event: any) => {
+  //   let nam = event.target.name;
+  //   let startDate = "";
+  //   let endDate = "";
 
-    if (nam === "startDate") {
-      startDate = event.target.value;
-      // console.log(startDate);
-      this.dataConfigMF.startDate = this.formateDate(startDate);
-    }
-    if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigMF.endDate = this.formateDate(endDate);
-    }
-    // console.log(this.dataConfig);
-  };
-  mySubmitHandlerMF = (event: any) => {
-    event.preventDefault();
-    console.log(event.target.value);
-    let facilityId = this.state.facilityId;
-    let startDate = this.dataConfigMF.startDate;
-    let endDate = this.dataConfigMF.endDate;
+  //   if (nam === "startDate") {
+  //     startDate = event.target.value;
+  //     // console.log(startDate);
+  //     this.dataConfigMF.startDate = this.formateDate(startDate);
+  //   }
+  //   if (nam === "endDate") {
+  //     endDate = event.target.value;
+  //     this.dataConfigMF.endDate = this.formateDate(endDate);
+  //   }
+  //   // console.log(this.dataConfig);
+  // };
+  // mySubmitHandlerMF = (event: any) => {
+  //   event.preventDefault();
+  //   console.log(event.target.value);
+  //   let facilityId = this.state.facilityId;
+  //   let startDate = this.dataConfigMF.startDate;
+  //   let endDate = this.dataConfigMF.endDate;
 
-    let date_ob = new Date();
-    let dateNow = this.formateNowDate(date_ob);
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: startDate || dateNow,
-        endDate: endDate || dateNow,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-    }
-    if (facilityId !== null && startDate !== "" && endDate !== "") {
-      this.dataConfigMF = {
-        facilityId: facilityId,
-        startDate: startDate,
-        endDate: endDate,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-    }
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigMF = {
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigMF = {
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
 
-    if (facilityId !== null && startDate === "" && endDate === "") {
-      this.dataConfigMF = {
-        facilityId: facilityId,
-        startDate: dateNow,
-        endDate: dateNow,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-    }
-  };
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigMF = {
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+  // };
 
   //for division
   onSearchDivision = (selectedOption: any) => {
@@ -574,110 +576,92 @@ class DataView extends React.Component<any, any> {
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
 
-    let date_ob = new Date();
-    let dateNow = this.formateNowDate(date_ob);
+    // let date_ob = new Date();
+    // let dateNow = this.formateNowDate(date_ob);
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfig = {
-        facilityId: null,
-        startDate: startDate || dateNow,
-        endDate: endDate || dateNow,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
-    if (facilityId !== null && startDate !== "" && endDate !== "") {
-      this.dataConfig = {
-        facilityId: facilityId,
-        startDate: startDate,
-        endDate: endDate,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
+    this.dataConfig = {
+      facilityId: facilityId,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
-    if (facilityId !== null && startDate === "" && endDate === "") {
-      this.dataConfig = {
-        facilityId: facilityId,
-        startDate: dateNow,
-        endDate: dateNow,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
+
+
 
 
     //for emergency-opd 
-    let startDateEO = this.dataConfigEO.startDate;
-    let endDateEO = this.dataConfigEO.endDate;
+    // let startDateEO = this.dataConfigEO.startDate;
+    // let endDateEO = this.dataConfigEO.endDate;
 
-    let date_obEO = new Date();
-    let dateNowEO = this.formateNowDate(date_obEO);
+    // let date_obEO = new Date();
+    // let dateNowEO = this.formateNowDate(date_obEO);
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: startDateEO || dateNowEO,
-        endDate: endDateEO || dateNowEO,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
-    if (facilityId !== null && startDateEO !== "" && endDateEO !== "") {
-      this.dataConfigEO = {
-        facilityId: facilityId,
-        startDate: startDateEO,
-        endDate: endDateEO,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
+    // if (facilityId === null || facilityId === "") {
+    //   this.dataConfigEO = {
+    //     facilityId: null,
+    //     startDate: startDateEO || dateNowEO,
+    //     endDate: endDateEO || dateNowEO,
+    //   };
+    //   this.getRegDataEO(this.dataConfigEO);
+    //   this.getSumDataEO(this.dataConfigEO);
+    // }
+    // if (facilityId !== null && startDateEO !== "" && endDateEO !== "") {
+    //   this.dataConfigEO = {
+    //     facilityId: facilityId,
+    //     startDate: startDateEO,
+    //     endDate: endDateEO,
+    //   };
+    //   this.getRegDataEO(this.dataConfigEO);
+    //   this.getSumDataEO(this.dataConfigEO);
+    // }
 
-    if (facilityId !== null && startDateEO === "" && endDateEO === "") {
-      this.dataConfigEO = {
-        facilityId: facilityId,
-        startDate: dateNowEO,
-        endDate: dateNowEO,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
+    // if (facilityId !== null && startDateEO === "" && endDateEO === "") {
+    //   this.dataConfigEO = {
+    //     facilityId: facilityId,
+    //     startDate: dateNowEO,
+    //     endDate: dateNowEO,
+    //   };
+    //   this.getRegDataEO(this.dataConfigEO);
+    //   this.getSumDataEO(this.dataConfigEO);
+    // }
 
     //for male-female
-    let startDateMF = this.dataConfigMF.startDate;
-    let endDateMF = this.dataConfigMF.endDate;
+    // let startDateMF = this.dataConfigMF.startDate;
+    // let endDateMF = this.dataConfigMF.endDate;
 
-    let date_obMF = new Date();
-    let dateNowMF = this.formateNowDate(date_obMF);
+    // let date_obMF = new Date();
+    // let dateNowMF = this.formateNowDate(date_obMF);
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: startDateMF || dateNowMF,
-        endDate: endDateMF || dateNowMF,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-    }
-    if (facilityId !== null && startDateMF !== "" && endDateMF !== "") {
-      this.dataConfigMF = {
-        facilityId: facilityId,
-        startDate: startDateMF,
-        endDate: endDateMF,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-    }
+    // if (facilityId === null || facilityId === "") {
+    //   this.dataConfigMF = {
+    //     facilityId: null,
+    //     startDate: startDateMF || dateNowMF,
+    //     endDate: endDateMF || dateNowMF,
+    //   };
+    //   this.getRegDataMF(this.dataConfigMF);
+    //   this.getSumDataMF(this.dataConfigMF);
+    // }
+    // if (facilityId !== null && startDateMF !== "" && endDateMF !== "") {
+    //   this.dataConfigMF = {
+    //     facilityId: facilityId,
+    //     startDate: startDateMF,
+    //     endDate: endDateMF,
+    //   };
+    //   this.getRegDataMF(this.dataConfigMF);
+    //   this.getSumDataMF(this.dataConfigMF);
+    // }
 
-    if (facilityId !== null && startDateMF === "" && endDateMF === "") {
-      this.dataConfigMF = {
-        facilityId: facilityId,
-        startDate: dateNowMF,
-        endDate: dateNowMF,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-    }
+    // if (facilityId !== null && startDateMF === "" && endDateMF === "") {
+    //   this.dataConfigMF = {
+    //     facilityId: facilityId,
+    //     startDate: dateNowMF,
+    //     endDate: dateNowMF,
+    //   };
+    //   this.getRegDataMF(this.dataConfigMF);
+    //   this.getSumDataMF(this.dataConfigMF);
+    // }
 
   }
   render() {
@@ -1097,7 +1081,7 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerEO}>
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
@@ -1116,7 +1100,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandlerEO}
+                            onChange={this.changeHandler}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -1130,7 +1114,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandlerEO}
+                            onChange={this.changeHandler}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -1152,10 +1136,10 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
-                    data={this.dataToExportEO}
+                    data={this.dataToExport}
                     chartType={selectedChartEO}
                     filterType={this.state.opdEmergency}
-                    dateWiseFilter={this.state.filterWithFacilityIdEO}
+                    dateWiseFilter={this.state.filterWithFacilityId}
                   />
                 </div>
               </div>
@@ -1168,7 +1152,7 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerMF}>
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
@@ -1186,7 +1170,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandlerMF}
+                            onChange={this.changeHandler}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -1200,7 +1184,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandlerMF}
+                            onChange={this.changeHandler}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -1222,10 +1206,10 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
-                    data={this.dataToExportMF}
+                    data={this.dataToExport}
                     chartType={selectedChartMF}
                     filterType={this.state.maleFemale}
-                    dateWiseFilter={this.state.filterWithFacilityIdMF}
+                    dateWiseFilter={this.state.filterWithFacilityId}
                   />
                 </div>
               </div>

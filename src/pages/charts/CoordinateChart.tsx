@@ -272,7 +272,7 @@ class CoordinateChart extends React.Component<ChartProps, any> {
       //   bargap: 0.15,
       //   bargroupgap: 0.1,
     };
-    // console.log(this.filterType)
+    console.log(this.filterType)
     return <PlotlyChart
       data={this.data}
       layout={layout}
