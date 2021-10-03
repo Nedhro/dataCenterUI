@@ -14,19 +14,20 @@ import malePatient from "../../icons/malePatient.png"
 import femalePatient from "../../icons/femalePatient.png"
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
-  // dataConfigEO: any = {};
+  dataConfigEO: any = {};
+  dataConfigMF: any = {};
+  dataConfigFP: any = {};
   timerID: any;
   dataToExport: any;
-  // dataToExportEO: any;
+  dataToExportEO: any;
+  dataToExportMF: any;
+  dataToExportFP: any;
   changeHandler = (event: any) => {
     let nam = event.target.name;
-    let facilityId = null;
+
     let startDate = "";
     let endDate = "";
-    if (nam === "facilityId") {
-      facilityId = event.target.value;
-      this.dataConfig.facilityId = facilityId;
-    }
+
     if (nam === "startDate") {
       startDate = event.target.value;
       console.log(startDate);
@@ -104,7 +105,7 @@ class DataView extends React.Component<any, any> {
     }
   };
 
- 
+
 
   constructor(props: any) {
     super(props);
@@ -126,7 +127,9 @@ class DataView extends React.Component<any, any> {
       district: null,
       card: {},
       filterWithFacilityId: false,
-    
+      filterWithFacilityIdEO: false,
+      filterWithFacilityIdMF: false,
+      filterWithFacilityIdFP: false,
       opdEmergency: {
         label: "OPD-Emergency",
         value: "opd-emergency"
@@ -163,11 +166,19 @@ class DataView extends React.Component<any, any> {
       endDate: dateNow,
     };
     this.getRegData(this.dataConfig);
-    this.timerID = setInterval(
-      () => this.getRegData(this.dataConfig),
-      5 * 60 * 1000
-    );
     this.getSumData(this.dataConfig);
+    this.dataConfigEO = {
+      facilityId: null,
+      startDate: dateNow,
+      endDate: dateNow,
+    };
+    this.getRegDataEO(this.dataConfigEO);
+    this.getSumDataEO(this.dataConfigEO);
+    // this.timerID = setInterval(
+    //   () => this.getRegData(this.dataConfig),
+    //   5 * 60 * 1000
+    // );
+
     CollectorService.getAllCard().then(
       (response): any => {
         if (response) {
@@ -270,7 +281,193 @@ class DataView extends React.Component<any, any> {
     );
   }
 
-  
+
+
+  //for charts
+
+  //for emergency-opd
+  getRegDataEO(data: any) {
+    console.log(JSON.stringify(data));
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
+
+        if (data.facilityId !== null) {
+          this.dataToExportEO = res.data.content;
+          this.setState({
+            filterWithFacilityIdEO: true,
+          });
+        }
+
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
+
+  getSumDataEO(data: any) {
+    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+      (response): any => {
+        if (data.facilityId === null) {
+          this.dataToExportEO = response.data.content;
+          this.setState({
+            filterWithFacilityIdEO: false,
+          });
+        }
+      }
+    );
+  }
+  changeHandlerEO = (event: any) => {
+    let nam = event.target.name;
+    let startDate = "";
+    let endDate = "";
+
+    if (nam === "startDate") {
+      startDate = event.target.value;
+      console.log(startDate);
+      this.dataConfigEO.startDate = this.formateDate(startDate);
+    }
+    if (nam === "endDate") {
+      endDate = event.target.value;
+      this.dataConfigEO.endDate = this.formateDate(endDate);
+    }
+    // console.log(this.dataConfig);
+  };
+  mySubmitHandlerEO = (event: any) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    let facilityId = this.state.facilityId;
+    let startDate = this.dataConfigEO.startDate;
+    let endDate = this.dataConfigEO.endDate;
+
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigEO = {
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfigEO = {
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfigEO = {
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+  };
+
+
+  //for male-female
+  getRegDataMF(data: any) {
+    console.log(JSON.stringify(data));
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
+
+        if (data.facilityId !== null) {
+          this.dataToExportMF = res.data.content;
+          this.setState({
+            filterWithFacilityIdMF: true,
+          });
+        }
+
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
+
+  getSumDataMF(data: any) {
+    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+      (response): any => {
+        if (data.facilityId === null) {
+          this.dataToExportMF = response.data.content;
+          this.setState({
+            filterWithFacilityIdMF: false,
+          });
+        }
+      }
+    );
+  }
+  changeHandlerMF = (event: any) => {
+    let nam = event.target.name;
+    let startDate = "";
+    let endDate = "";
+
+    if (nam === "startDate") {
+      startDate = event.target.value;
+      // console.log(startDate);
+      this.dataConfigMF.startDate = this.formateDate(startDate);
+    }
+    if (nam === "endDate") {
+      endDate = event.target.value;
+      this.dataConfigMF.endDate = this.formateDate(endDate);
+    }
+    // console.log(this.dataConfig);
+  };
+  mySubmitHandlerMF = (event: any) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    let facilityId = this.state.facilityId;
+    let startDate = this.dataConfigMF.startDate;
+    let endDate = this.dataConfigMF.endDate;
+
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigMF = {
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfigMF = {
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfigMF = {
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+  };
+
   //for division
   onSearchDivision = (selectedOption: any) => {
     console.log(selectedOption);
@@ -402,6 +599,79 @@ class DataView extends React.Component<any, any> {
       this.getSumData(this.dataConfig);
     }
 
+
+    //for emergency-opd 
+    let startDateEO = this.dataConfigEO.startDate;
+    let endDateEO = this.dataConfigEO.endDate;
+
+    let date_obEO = new Date();
+    let dateNowEO = this.formateNowDate(date_obEO);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigEO = {
+        facilityId: null,
+        startDate: startDateEO || dateNowEO,
+        endDate: endDateEO || dateNowEO,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+    if (facilityId !== null && startDateEO !== "" && endDateEO !== "") {
+      this.dataConfigEO = {
+        facilityId: facilityId,
+        startDate: startDateEO,
+        endDate: endDateEO,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+
+    if (facilityId !== null && startDateEO === "" && endDateEO === "") {
+      this.dataConfigEO = {
+        facilityId: facilityId,
+        startDate: dateNowEO,
+        endDate: dateNowEO,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+
+    //for male-female
+    let startDateMF = this.dataConfigMF.startDate;
+    let endDateMF = this.dataConfigMF.endDate;
+
+    let date_obMF = new Date();
+    let dateNowMF = this.formateNowDate(date_obMF);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigMF = {
+        facilityId: null,
+        startDate: startDateMF || dateNowMF,
+        endDate: endDateMF || dateNowMF,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+    if (facilityId !== null && startDateMF !== "" && endDateMF !== "") {
+      this.dataConfigMF = {
+        facilityId: facilityId,
+        startDate: startDateMF,
+        endDate: endDateMF,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+
+    if (facilityId !== null && startDateMF === "" && endDateMF === "") {
+      this.dataConfigMF = {
+        facilityId: facilityId,
+        startDate: dateNowMF,
+        endDate: dateNowMF,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+
   }
   render() {
     const {
@@ -460,9 +730,9 @@ class DataView extends React.Component<any, any> {
     const customStyles = {
       control: (provided, state) => ({
         ...provided,
-        marginTop: '6px',
+        marginTop: '2px',
         borderRadius: '0px',
-        minHeight: '40px',
+        minHeight: '36px',
         height: '30px',
         boxShadow: state.isFocused ? null : null,
       }),
@@ -471,7 +741,7 @@ class DataView extends React.Component<any, any> {
         ...provided,
         height: '30px',
         padding: '0 6px',
-        marginTop: '-5px',
+        marginTop: '-6px',
       }),
 
       input: (provided, state) => ({
@@ -507,8 +777,8 @@ class DataView extends React.Component<any, any> {
           </div>
 
 
-          <div className="mt-4">
-            <div className="text-center"><h5 style={{ fontWeight: 'bold', fontSize: '20px' }} className="text-danger"><u>Last 24 Hours</u></h5></div>
+          <div className="mt-1">
+            <div className="text-center"><h5 style={{ fontWeight: 'bold', fontSize: '20px' }} className="text-danger"><u>Todays Report</u></h5></div>
             <div className="row d-flex justify-content-center">
               <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
                 <div style={{
@@ -591,7 +861,7 @@ class DataView extends React.Component<any, any> {
           <div>
             <div className="d-flex justify-content-start mt-4">
               <div
-                className=" pl-0 pr-0 pt-0"
+                className=" pl-0 pr-0 pt-1"
                 id="dataView"
                 style={{ display: showing ? "none" : "block" }}
               >
@@ -706,7 +976,7 @@ class DataView extends React.Component<any, any> {
                 >
                   <div className="d-flex  ">
                     <div className="d-flex ">
-                      <label className="label ml-2 mr-1 pt-3 p-1 text-info font-weight-bold">
+                      <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
                         Division
                       </label>
                       <div style={{ width: '180px' }} >
@@ -722,7 +992,7 @@ class DataView extends React.Component<any, any> {
                       </div>
                     </div>
                     <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1 pt-3 text-info font-weight-bold">
+                      <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
                         District
                       </label>
                       <div style={{ width: '180px' }} >
@@ -741,7 +1011,7 @@ class DataView extends React.Component<any, any> {
                       </div>
                     </div>
                     <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1 pt-3 text-info font-weight-bold">
+                      <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
                         Facility Name
                       </label>
                       <div style={{ width: '180px' }} >
@@ -763,7 +1033,7 @@ class DataView extends React.Component<any, any> {
 
                 </div>
               </div>
-              <div className="mt-2 pt-2">
+              <div className="mt-2 ">
                 <button
                   className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                   onClick={() => this.setState({ showing: !showing })}
@@ -820,11 +1090,11 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerEO}>
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
-                          styles={customStyles}
+                            styles={customStyles}
                             value={selectedChartEO || chartOptions[0]}
                             onChange={handleChartTypeChangeEO}
                             options={chartOptions}
@@ -839,7 +1109,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandler}
+                            onChange={this.changeHandlerEO}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -853,7 +1123,7 @@ class DataView extends React.Component<any, any> {
                           </label>
                           <input
                             className="text m-1 p-1"
-                            onChange={this.changeHandler}
+                            onChange={this.changeHandlerEO}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -875,10 +1145,10 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
-                    data={this.dataToExport}
+                    data={this.dataToExportEO}
                     chartType={selectedChartEO}
                     filterType={this.state.opdEmergency}
-                    dateWiseFilter={filterWithFacilityId}
+                    dateWiseFilter={this.state.filterWithFacilityIdEO}
                   />
                 </div>
               </div>
@@ -895,7 +1165,7 @@ class DataView extends React.Component<any, any> {
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
-                          styles={customStyles}
+                            styles={customStyles}
                             value={selectedChartMF || chartOptions[0]}
                             onChange={handleChartTypeChangeMF}
                             options={chartOptions}
@@ -965,7 +1235,7 @@ class DataView extends React.Component<any, any> {
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
-                          styles={customStyles}
+                            styles={customStyles}
                             value={selectedChartFP || chartOptions[0]}
                             onChange={handleChartTypeChangeFP}
                             options={chartOptions}
