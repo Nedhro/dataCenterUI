@@ -72,40 +72,76 @@ class DataView extends React.Component<any, any> {
     event.preventDefault();
     // console.log(event.target.value);
     let facilityId = this.state.facilityIdData;
+    let division = this.state.divisionData;
+    let district = this.state.districtData;
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
 
-    let date_ob = new Date();
-    let dateNow = this.formateNowDate(date_ob);
+    // let date_ob = new Date();
+    // let dateNow = this.formateNowDate(date_ob);
+    this.dataConfig = {
+      division: division,
+      district: district,
+      facilityId: facilityId,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
+    // if (facilityId === null || facilityId === "") {
+    //   this.dataConfig = {
+    //     facilityId: null,
+    //     division: division,
+    //     district: district,
+    //     startDate: startDate || dateNow,
+    //     endDate: endDate || dateNow,
+    //   };
+    //   this.getRegData(this.dataConfig);
+    //   this.getSumData(this.dataConfig);
+    // }
+    // if (facilityId !== null && division === null && district !== null && startDate !== "" && endDate !== "") {
+    //   this.dataConfig = {
+    //     division: null,
+    //     district: district,
+    //     facilityId: facilityId,
+    //     startDate: startDate,
+    //     endDate: endDate,
+    //   };
+    //   this.getRegData(this.dataConfig);
+    //   this.getSumData(this.dataConfig);
+    // }
+    // if (facilityId !== null && division !== null && district === null && startDate !== "" && endDate !== "") {
+    //   this.dataConfig = {
+    //     division: division,
+    //     district: null,
+    //     facilityId: facilityId,
+    //     startDate: startDate,
+    //     endDate: endDate,
+    //   };
+    //   this.getRegData(this.dataConfig);
+    //   this.getSumData(this.dataConfig);
+    // }
+    // if (facilityId !== null && division !== null && district !== null && startDate !== "" && endDate !== "") {
+    //   this.dataConfig = {
+    //     division: division,
+    //     district: district,
+    //     facilityId: facilityId,
+    //     startDate: startDate,
+    //     endDate: endDate,
+    //   };
+    //   this.getRegData(this.dataConfig);
+    //   this.getSumData(this.dataConfig);
+    // }
 
-    if (facilityId === null || facilityId === "") {
-      this.dataConfig = {
-        facilityId: null,
-        startDate: startDate || dateNow,
-        endDate: endDate || dateNow,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
-    if (facilityId !== null && startDate !== "" && endDate !== "") {
-      this.dataConfig = {
-        facilityId: facilityId,
-        startDate: startDate,
-        endDate: endDate,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
-
-    if (facilityId !== null && startDate === "" && endDate === "") {
-      this.dataConfig = {
-        facilityId: facilityId,
-        startDate: dateNow,
-        endDate: dateNow,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
+    // if (facilityId !== null && startDate === "" && endDate === "") {
+    //   this.dataConfig = {
+    //     facilityId: facilityId,
+    //     startDate: dateNow,
+    //     endDate: dateNow,
+    //   };
+    //   this.getRegData(this.dataConfig);
+    //   this.getSumData(this.dataConfig);
+    // }
   };
 
 
@@ -126,6 +162,8 @@ class DataView extends React.Component<any, any> {
       selectedFilter: null,
       facilityId: null,
       facilityIdData: null,
+      divisionData: null,
+      districtData: null,
       // facilityIdEO: null,
       division: null,
       district: null,
@@ -165,10 +203,13 @@ class DataView extends React.Component<any, any> {
     let date_ob = new Date();
     let dateNow = this.formateNowDate(date_ob);
     this.dataConfig = {
+      division:null,
+      district:null,
       facilityId: null,
       startDate: dateNow,
       endDate: dateNow,
     };
+    
     this.getRegData(this.dataConfig);
     this.getSumData(this.dataConfig);
     this.dataConfigEO = {
@@ -215,9 +256,10 @@ class DataView extends React.Component<any, any> {
     clearInterval(this.timerID);
   }
   getRegData(data: any) {
-    // console.log(JSON.stringify(data));
+    console.log(data);
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
+        console.log(res)
         const resultObj = {
           opdTotal: 0,
           emergencyTotal: 0,
@@ -671,6 +713,29 @@ class DataView extends React.Component<any, any> {
     }
 
   }
+
+  onSearchChangeDiv = (selectedOption: any) => {
+    // console.log(selectedOption);
+    if (selectedOption) {
+      this.setState({
+        selectedOption,
+        divisionData: selectedOption.value
+      });
+    }
+
+  }
+
+
+  onSearchChangeDis = (selectedOption: any) => {
+    // console.log(selectedOption);
+    if (selectedOption) {
+      this.setState({
+        selectedOption,
+        districtData: selectedOption.value
+      });
+    }
+
+  }
   onSearchChangeChart = (selectedOption: any) => {
     // console.log(selectedOption);
     if (selectedOption) {
@@ -928,7 +993,9 @@ class DataView extends React.Component<any, any> {
                           styles={customStyles}
                           name="division"
                           options={this.state.divisionList}
-                          // onChange={this.onSearchDivision}
+                          onChange={(e: any) => {
+                            this.onSearchChangeDiv(e);
+                          }}
                           defaultInputValue={this.state.divisionName}
                           isSearchable={true}
                         />
@@ -945,9 +1012,9 @@ class DataView extends React.Component<any, any> {
                           defaultValue={this.state.districtList}
                           loadOptions={this.fetchDistrict}
                           placeholder="District Name"
-                          // onChange={(e: any) => {
-                          //   this.onSearchChange(e);
-                          // }}
+                          onChange={(e: any) => {
+                            this.onSearchChangeDis(e);
+                          }}
                           defaultOptions={false}
                         />
 
