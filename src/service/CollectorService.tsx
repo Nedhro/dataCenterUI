@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:5984';
+const baseUrl = 'http://192.168.1.118:5984';
 
 class CollectorService {
 

@@ -677,6 +677,15 @@ class DataView extends React.Component<any, any> {
       this.dataConfig.facilityId = selectedOption.value;
 
     }
+    this.dataConfig = {
+      facilityId: selectedOption.value,
+      startDate: this.dataConfig.startDate,
+      endDate: this.dataConfig.endDate,
+      division: this.state.divisionData,
+      district: this.state.districtData,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
 
   }
@@ -689,7 +698,15 @@ class DataView extends React.Component<any, any> {
         divisionData: selectedOption.value
       });
     }
-
+    this.dataConfig = {
+      facilityId: this.dataConfig.facilityId,
+      startDate: this.dataConfig.startDate,
+      endDate: this.dataConfig.endDate,
+      division: selectedOption.value,
+      district: this.state.districtData,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
   }
   onSearchChangeDis = (selectedOption: any) => {
@@ -700,54 +717,16 @@ class DataView extends React.Component<any, any> {
         districtData: selectedOption.value
       });
     }
+    this.dataConfig = {
+      facilityId: this.dataConfig.facilityId,
+      startDate: this.dataConfig.startDate,
+      endDate: this.dataConfig.endDate,
+      division: this.state.divisionData,
+      district: selectedOption.value,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
-
-  }
-
-  handleChangeEO = () => {
-    let facilityId = this.dataConfigEO.facilityId;
-    let startDate = this.dataConfigEO.startDate;
-    let endDate = this.dataConfigEO.endDate;
-    let district = this.dataConfigEO.districtChart;
-    let division = this.dataConfigEO.divisionChart;
-    let date_ob = new Date();
-    let dateNow = this.formateNowDate(date_ob);
-
-    console.log(this.dataConfigEO);
-    if (facilityId === null || facilityId === "") {
-      this.dataConfigEO = {
-        division: division,
-        district: district,
-        facilityId: null,
-        startDate: startDate || dateNow,
-        endDate: endDate || dateNow,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
-    if (facilityId !== null && startDate !== "" && endDate !== "") {
-      this.dataConfigEO = {
-        division: division,
-        district: district,
-        facilityId: facilityId,
-        startDate: startDate,
-        endDate: endDate,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
-
-    if (facilityId !== null && startDate === "" && endDate === "") {
-      this.dataConfigEO = {
-        division: division,
-        district: district,
-        facilityId: facilityId,
-        startDate: dateNow,
-        endDate: dateNow,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-    }
   }
 
 
