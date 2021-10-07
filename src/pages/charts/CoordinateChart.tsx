@@ -25,7 +25,7 @@ class CoordinateChart extends React.Component<ChartProps, any> {
   xAxisValue: any;
 
   componentWillReceiveProps(_nextProps: ChartProps) {
-    // console.log(_nextProps);
+    console.log(_nextProps);
     this.chartType = _nextProps.chartType?.value;
     this.filterType = _nextProps.filterType?.value;
     this.filterWithDateAndFacility = _nextProps.dateWiseFilter;
@@ -52,7 +52,6 @@ class CoordinateChart extends React.Component<ChartProps, any> {
     this.chartData = _nextProps?.data;
   }
   public render() {
-    // console.log(this.chartData)
     let facilityList: any = [];
     let totalPatient: any = [];
     let opdData: any = [];
@@ -195,7 +194,7 @@ class CoordinateChart extends React.Component<ChartProps, any> {
       //   bargap: 0.15,
       //   bargroupgap: 0.1,
     };
-    // console.log(this.data, layout, config);
+
     return <PlotlyChart
       data={this.data}
       layout={layout}

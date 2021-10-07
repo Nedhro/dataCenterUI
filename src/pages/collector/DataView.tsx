@@ -12,8 +12,6 @@ import opdPatient from "../../icons/opdPatient.png"
 import emergencyPatient from "../../icons/emergencyPatient.png"
 import malePatient from "../../icons/malePatient.png"
 import femalePatient from "../../icons/femalePatient.png"
-
-
 class DataView extends React.Component<any, any> {
   dataConfig: any = {};
   dataConfigEO: any = {};
@@ -21,26 +19,25 @@ class DataView extends React.Component<any, any> {
   dataConfigFP: any = {};
   timerID: any;
   dataToExport: any;
-  facility: any;
   dataToExportEO: any;
   dataToExportMF: any;
   dataToExportFP: any;
   changeHandler = (event: any) => {
     let nam = event.target.name;
-
+    // let facilityId = null;
     let startDate = "";
     let endDate = "";
 
     if (nam === "startDate") {
       startDate = event.target.value;
-      // console.log(startDate);
+      console.log(startDate);
       this.dataConfig.startDate = this.formateDate(startDate);
     }
     if (nam === "endDate") {
       endDate = event.target.value;
       this.dataConfig.endDate = this.formateDate(endDate);
     }
-    // console.log(this.dataConfig);
+    console.log(this.dataConfig);
   };
 
   formateNowDate = (data: any) => {
@@ -70,28 +67,244 @@ class DataView extends React.Component<any, any> {
 
   mySubmitHandler = (event: any) => {
     event.preventDefault();
-    // console.log(event.target.value);
-    let facilityId = this.state.facilityIdData;
-    let division = this.state.divisionData;
-    let district = this.state.districtData;
+    console.log(event.target.value);
+    let facilityId = this.dataConfig.facilityId;
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
+    let district = this.state.districtData;
+    let division = this.state.divisionData;
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
 
+    if (facilityId === null || facilityId === "") {
+      this.dataConfig = {
+        division: division,
+        district: district,
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfig = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
 
-    this.dataConfig = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    this.getRegData(this.dataConfig);
-    this.getSumData(this.dataConfig);
-
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfig = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegData(this.dataConfig);
+      this.getSumData(this.dataConfig);
+    }
   };
 
+  //Emergency opd
+  changeHandlerEO = (event: any) => {
+    let nam = event.target.name;
+    let startDate = "";
+    let endDate = "";
+
+    if (nam === "startDate") {
+      startDate = event.target.value;
+
+      this.dataConfigEO.startDate = this.formateDate(startDate);
+    }
+    if (nam === "endDate") {
+      endDate = event.target.value;
+      this.dataConfigEO.endDate = this.formateDate(endDate);
+    }
+  };
+  mySubmitHandlerEO = (event: any) => {
+    event.preventDefault();
+    let facilityId = this.dataConfigEO.facilityId;
+    let startDate = this.dataConfigEO.startDate;
+    let endDate = this.dataConfigEO.endDate;
+    let district = this.state.districtChart;
+    let division = this.state.divisionChart;
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    console.log(this.dataConfigEO);
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigEO = {
+        division: division,
+        district: district,
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfigEO = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfigEO = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
 
 
+  };
+  //male female
+  changeHandlerMF = (event: any) => {
+    let nam = event.target.name;
+    let startDate = "";
+    let endDate = "";
+
+    if (nam === "startDate") {
+      startDate = event.target.value;
+
+      this.dataConfigMF.startDate = this.formateDate(startDate);
+    }
+    if (nam === "endDate") {
+      endDate = event.target.value;
+      this.dataConfigMF.endDate = this.formateDate(endDate);
+    }
+  };
+  mySubmitHandlerMF = (event: any) => {
+    event.preventDefault();
+
+    let facilityId = this.dataConfigMF.facilityId;
+    let startDate = this.dataConfigMF.startDate;
+    let endDate = this.dataConfigMF.endDate;
+    let district = this.state.districtChart;
+    let division = this.state.divisionChart;
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigMF = {
+        division: division,
+        district: district,
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfigMF = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfigMF = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
+    }
+
+
+  };
+  //free paid
+  changeHandlerFP = (event: any) => {
+    let nam = event.target.name;
+    let startDate = "";
+    let endDate = "";
+
+    if (nam === "startDate") {
+      startDate = event.target.value;
+
+      this.dataConfigFP.startDate = this.formateDate(startDate);
+    }
+    if (nam === "endDate") {
+      endDate = event.target.value;
+      this.dataConfigFP.endDate = this.formateDate(endDate);
+    }
+
+  };
+  mySubmitHandlerFP = (event: any) => {
+    event.preventDefault();
+
+    let facilityId = this.dataConfigFP.facilityId;
+    let startDate = this.dataConfigFP.startDate;
+    let endDate = this.dataConfigFP.endDate;
+    let district = this.state.districtChart;
+    let division = this.state.divisionChart;
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigFP = {
+        division: division,
+        district: district,
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegDataFP(this.dataConfigFP);
+      this.getSumDataFP(this.dataConfigFP);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfigFP = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataFP(this.dataConfigFP);
+      this.getSumDataFP(this.dataConfigFP);
+    }
+
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfigFP = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegDataFP(this.dataConfigFP);
+      this.getSumDataFP(this.dataConfigFP);
+    }
+
+
+  };
   constructor(props: any) {
     super(props);
     this.state = {
@@ -101,35 +314,15 @@ class DataView extends React.Component<any, any> {
       dateOfToday: "",
       totalresult: {},
       showing: true,
-      selectedChartEO: null,
-      selectedChartMF: null,
-      selectedChartFP: null,
       selectedChart: null,
       selectedFilter: null,
-      facilityId: null,
-      facilityIdData: null,
-      divisionData: null,
-      districtData: null,
-      // facilityIdEO: null,
-      division: null,
-      district: null,
-      card: {},
       filterWithFacilityId: false,
       filterWithFacilityIdEO: false,
       filterWithFacilityIdMF: false,
       filterWithFacilityIdFP: false,
-      opdEmergency: {
-        label: "OPD-Emergency",
-        value: "opd-emergency"
-      },
-      maleFemale: {
-        label: "Male-Female",
-        value: "male-female"
-      },
-      paidFree: {
-        label: "Paid-Free",
-        value: "paid-free"
-      },
+      selectedChartEO: null,
+      selectedChartMF: null,
+      selectedChartFP: null,
       divisionList: [{ value: 'Dhaka', label: 'Dhaka' },
       { value: 'Rajshahi', label: 'Rajshahi' },
       { value: 'Rangpur', label: 'Rangpur' },
@@ -140,12 +333,16 @@ class DataView extends React.Component<any, any> {
       { value: 'Mymensingh', label: 'Mymensingh' },
       { value: 'Barisal', label: 'Barisal' },],
       districtList: '',
+      divisionData: null,
+      districtData: null,
+      divisionChart: null,
+      districtChart: null,
+      card: {},
+
     };
-    this.onSearchChange = this.onSearchChange.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
     this.mySubmitHandler = this.mySubmitHandler.bind(this);
   }
-
 
   componentDidMount() {
     let date_ob = new Date();
@@ -159,7 +356,8 @@ class DataView extends React.Component<any, any> {
     };
 
     this.getRegData(this.dataConfig);
-    this.getSumData(this.dataConfig);
+    // this.getRegData(this.dataConfig);
+
     this.dataConfigEO = {
       division: null,
       district: null,
@@ -169,6 +367,7 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegDataEO(this.dataConfigEO);
     this.getSumDataEO(this.dataConfigEO);
+
     this.dataConfigMF = {
       division: null,
       district: null,
@@ -178,6 +377,7 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegDataMF(this.dataConfigMF);
     this.getSumDataMF(this.dataConfigMF);
+
     this.dataConfigFP = {
       division: null,
       district: null,
@@ -188,15 +388,10 @@ class DataView extends React.Component<any, any> {
     this.getRegDataFP(this.dataConfigFP);
     this.getSumDataFP(this.dataConfigFP);
     this.timerID = setInterval(
-      () => {
-        this.getRegData(this.dataConfig)
-        this.getRegDataEO(this.dataConfigEO)
-        this.getRegDataMF(this.dataConfigMF)
-        this.getRegDataFP(this.dataConfigFP)
-      },
+      () => this.getRegData(this.dataConfig),
       5 * 60 * 1000
     );
-
+    this.getSumData(this.dataConfig);
     CollectorService.getAllCard().then(
       (response): any => {
         if (response) {
@@ -211,11 +406,128 @@ class DataView extends React.Component<any, any> {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
-  getRegData(data: any) {
-    // console.log(data);
+  // emergency-opd
+  getRegDataEO(data: any) {
+    console.log(data);
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
-        // console.log(res)
+        console.log(res.data);
+        if (data.facilityId !== null) {
+          this.dataToExportEO = res.data.content;
+          console.log(this.dataToExportEO)
+          this.setState({
+            filterWithFacilityIdEO: true,
+          });
+        }
+
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
+
+  getSumDataEO(data: any) {
+    console.log(data);
+    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+      (response): any => {
+        console.log(response.data);
+        if (data.facilityId === null) {
+          this.dataToExportEO = response.data.content;
+          this.setState({
+            filterWithFacilityIdEO: false,
+          });
+        }
+      }
+    );
+  }
+
+  //male female
+  getRegDataMF(data: any) {
+    console.log(data);
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
+        console.log(res.data);
+        if (data.facilityId !== null) {
+          this.dataToExportMF = res.data.content;
+          // console.log(this.dataToExportEO)
+          this.setState({
+            filterWithFacilityIdMF: true,
+          });
+        }
+
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
+
+  getSumDataMF(data: any) {
+    console.log(data);
+    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+      (response): any => {
+        console.log(response.data);
+        if (data.facilityId === null) {
+          this.dataToExportMF = response.data.content;
+          this.setState({
+            filterWithFacilityIdMF: false,
+          });
+        }
+      }
+    );
+  }
+
+  //free paid
+  getRegDataFP(data: any) {
+    console.log(data);
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
+        console.log(res.data);
+        if (data.facilityId !== null) {
+          this.dataToExportFP = res.data.content;
+          // console.log(this.dataToExportEO)
+          this.setState({
+            filterWithFacilityIdFP: true,
+          });
+        }
+
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
+
+  getSumDataFP(data: any) {
+    console.log(data);
+    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
+      (response): any => {
+        console.log(response.data);
+        if (data.facilityId === null) {
+          this.dataToExportFP = response.data.content;
+          this.setState({
+            filterWithFacilityIdFP: false,
+          });
+        }
+      }
+    );
+  }
+
+
+  getRegData(data: any) {
+    console.log(JSON.stringify(data));
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
         const resultObj = {
           opdTotal: 0,
           emergencyTotal: 0,
@@ -224,12 +536,10 @@ class DataView extends React.Component<any, any> {
           collectionTotal: 0,
         };
         const resultData = res.data.content;
-        // console.log(resultData)
         if (data.facilityId !== null) {
           this.dataToExport = res.data.content;
           this.setState({
             filterWithFacilityId: true,
-            // filterWithFacilityIdEO: true,
           });
         }
         let opdSum = 0;
@@ -294,7 +604,6 @@ class DataView extends React.Component<any, any> {
           this.dataToExport = response.data.content;
           this.setState({
             filterWithFacilityId: false,
-            // filterWithFacilityIdEO: false,
           });
         }
       }
@@ -302,229 +611,7 @@ class DataView extends React.Component<any, any> {
   }
 
 
-
-  //for charts
-
-  //for emergency-opd
-  getRegDataEO(data: any) {
-    console.log(data);
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
-        console.log(res.data);
-        if (data.facilityId !== null) {
-          this.dataToExportEO = res.data.content;
-          this.setState({
-            filterWithFacilityIdEO: true,
-          });
-        }
-
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
-
-  getSumDataEO(data: any) {
-    console.log(data);
-    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
-      (response): any => {
-        console.log(response.data);
-        if (data.facilityId === null) {
-          this.dataToExportEO = response.data.content;
-          this.setState({
-            filterWithFacilityIdEO: false,
-          });
-        }
-      }
-    );
-  }
-  changeHandlerEO = (event: any) => {
-    let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
-
-    if (nam === "startDate") {
-      startDate = event.target.value;
-      // console.log(startDate);
-      this.dataConfigEO.startDate = this.formateDate(startDate);
-    }
-    if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigEO.endDate = this.formateDate(endDate);
-    }
-    // console.log(this.dataConfig);
-  };
-  mySubmitHandlerEO = (event: any) => {
-    event.preventDefault();
-    // console.log(event.target.value);
-    let facilityId = this.state.facilityId;
-    let startDate = this.dataConfigEO.startDate;
-    let endDate = this.dataConfigEO.endDate;
-    let division = this.state.division;
-    let district = this.state.district;
-    this.dataConfigEO = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    this.getRegDataEO(this.dataConfigEO);
-    this.getSumDataEO(this.dataConfigEO);
-
-  };
-
-
-  //for male-female
-  getRegDataMF(data: any) {
-    // console.log(data);
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
-        // console.log(res.data.content)
-        if (data.facilityId !== null) {
-          this.dataToExportMF = res.data.content;
-          // console.log(res.data.content)
-          this.setState({
-            filterWithFacilityIdMF: true,
-          });
-        }
-
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
-
-  getSumDataMF(data: any) {
-    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
-      (response): any => {
-        if (data.facilityId === null) {
-          this.dataToExportMF = response.data.content;
-          this.setState({
-            filterWithFacilityIdMF: false,
-          });
-        }
-      }
-    );
-  }
-  changeHandlerMF = (event: any) => {
-    let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
-
-    if (nam === "startDate") {
-      startDate = event.target.value;
-      // console.log(startDate);
-      this.dataConfigMF.startDate = this.formateDate(startDate);
-    }
-    if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigMF.endDate = this.formateDate(endDate);
-    }
-    // console.log(this.dataConfig);
-  };
-  mySubmitHandlerMF = (event: any) => {
-    event.preventDefault();
-    // console.log(event.target.value);
-    let facilityId = this.state.facilityId;
-    let startDate = this.dataConfigMF.startDate;
-    let endDate = this.dataConfigMF.endDate;
-    let division = this.state.division;
-    let district = this.state.district;
-    this.dataConfigMF = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    this.getRegDataMF(this.dataConfigMF);
-    this.getSumDataMF(this.dataConfigMF);
-
-  };
-
-
-  //for free-paid
-  getRegDataFP(data: any) {
-    // console.log(JSON.stringify(data));
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
-        // console.log(res.data.content);
-        if (data.facilityId !== null) {
-          this.dataToExportFP = res.data.content;
-          this.setState({
-            filterWithFacilityIdFP: true,
-          });
-        }
-
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
-
-  getSumDataFP(data: any) {
-    CollectorService.getAllDataByfIdAndDatewithsum(data).then(
-      (response): any => {
-        if (data.facilityId === null) {
-          this.dataToExportFP = response.data.content;
-          this.setState({
-            filterWithFacilityIdFP: false,
-          });
-        }
-      }
-    );
-  }
-  changeHandlerFP = (event: any) => {
-    let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
-
-    if (nam === "startDate") {
-      startDate = event.target.value;
-      // console.log(startDate);
-      this.dataConfigFP.startDate = this.formateDate(startDate);
-    }
-    if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigFP.endDate = this.formateDate(endDate);
-    }
-    // console.log(this.dataConfig);
-  };
-  mySubmitHandlerFP = (event: any) => {
-    event.preventDefault();
-    // console.log(event.target.value);
-    let facilityId = this.state.facilityId;
-    let startDate = this.dataConfigFP.startDate;
-    let endDate = this.dataConfigFP.endDate;
-    let division = this.state.division;
-    let district = this.state.district;
-    this.dataConfigFP = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    this.getRegDataFP(this.dataConfigFP);
-    this.getSumDataFP(this.dataConfigFP);
-
-  };
-
-
-  //for district
+  //for district Info
   fetchDistrict = (inputValue: any, callback: any) => {
     setTimeout(() => {
       CollectorService.getAllDistrictList(inputValue)
@@ -553,8 +640,7 @@ class DataView extends React.Component<any, any> {
         });
     }, 1000);
   };
-
-  //for facility
+  //for facility Info
   fetchFacility = (inputValue: any, callback: any) => {
     setTimeout(() => {
       CollectorService.getAllFacilityList(inputValue)
@@ -582,14 +668,16 @@ class DataView extends React.Component<any, any> {
         });
     }, 1000);
   };
-  onSearchChange = (selectedOption: any) => {
-    // console.log(selectedOption);
+
+
+  //for data view
+  onSearchFacilityData = (selectedOption: any) => {
+
     if (selectedOption) {
-      this.setState({
-        selectedOption,
-        facilityIdData: selectedOption.value
-      });
+      this.dataConfig.facilityId = selectedOption.value;
+
     }
+
 
   }
 
@@ -602,9 +690,8 @@ class DataView extends React.Component<any, any> {
       });
     }
 
+
   }
-
-
   onSearchChangeDis = (selectedOption: any) => {
     // console.log(selectedOption);
     if (selectedOption) {
@@ -614,24 +701,71 @@ class DataView extends React.Component<any, any> {
       });
     }
 
+
   }
-  onSearchChangeChart = (selectedOption: any) => {
-    // console.log(selectedOption);
-    if (selectedOption) {
-      this.setState({
-        selectedOption,
-        facilityId: selectedOption.value
-      });
+
+  handleChangeEO = () => {
+    let facilityId = this.dataConfigEO.facilityId;
+    let startDate = this.dataConfigEO.startDate;
+    let endDate = this.dataConfigEO.endDate;
+    let district = this.dataConfigEO.districtChart;
+    let division = this.dataConfigEO.divisionChart;
+    let date_ob = new Date();
+    let dateNow = this.formateNowDate(date_ob);
+
+    console.log(this.dataConfigEO);
+    if (facilityId === null || facilityId === "") {
+      this.dataConfigEO = {
+        division: division,
+        district: district,
+        facilityId: null,
+        startDate: startDate || dateNow,
+        endDate: endDate || dateNow,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+    if (facilityId !== null && startDate !== "" && endDate !== "") {
+      this.dataConfigEO = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
     }
 
+    if (facilityId !== null && startDate === "" && endDate === "") {
+      this.dataConfigEO = {
+        division: division,
+        district: district,
+        facilityId: facilityId,
+        startDate: dateNow,
+        endDate: dateNow,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
+    }
+  }
 
 
+  //for chart
+  onSearchFacilityChart = (selectedOption: any) => {
+
+    if (selectedOption) {
+
+      this.dataConfigEO.facilityId = selectedOption.value;
+      this.dataConfigMF.facilityId = selectedOption.value;
+      this.dataConfigFP.facilityId = selectedOption.value;
+    }
     this.dataConfigEO = {
       facilityId: selectedOption.value,
       startDate: this.dataConfigEO.startDate,
       endDate: this.dataConfigEO.endDate,
-      division: this.state.division,
-      district: this.state.district,
+      division: this.state.divisionChart,
+      district: this.state.districtChart,
     };
     this.getRegDataEO(this.dataConfigEO);
     this.getSumDataEO(this.dataConfigEO);
@@ -641,8 +775,8 @@ class DataView extends React.Component<any, any> {
       facilityId: selectedOption.value,
       startDate: this.dataConfigMF.startDate,
       endDate: this.dataConfigMF.endDate,
-      division: this.dataConfigMF.division,
-      district: this.dataConfigMF.district,
+      division: this.dataConfigMF.divisionChart,
+      district: this.dataConfigMF.districtChart,
     };
     this.getRegDataMF(this.dataConfigMF);
     this.getSumDataMF(this.dataConfigMF);
@@ -652,75 +786,38 @@ class DataView extends React.Component<any, any> {
       facilityId: selectedOption.value,
       startDate: this.dataConfigFP.startDate,
       endDate: this.dataConfigFP.endDate,
-      division: this.dataConfigFP.division,
-      district: this.dataConfigFP.district,
+      division: this.dataConfigFP.divisionChart,
+      district: this.dataConfigFP.districtChart,
     };
     this.getRegDataFP(this.dataConfigFP);
     this.getSumDataFP(this.dataConfigFP);
 
 
+
   }
-  onSearchDistrict = (selectedOption: any) => {
-    // console.log(selectedOption);
-    if (selectedOption) {
-      this.setState({
-        selectedOption,
-        district: selectedOption.value
-      });
-    }
 
-
-    this.dataConfigEO = {
-      facilityId: this.state.facilityId,
-      startDate: this.dataConfigEO.startDate,
-      endDate: this.dataConfigEO.endDate,
-      division: this.state.division,
-      district: selectedOption.value,
-    };
-    this.getRegDataEO(this.dataConfigEO);
-    this.getSumDataEO(this.dataConfigEO);
-
-    this.dataConfigMF = {
-      facilityId: this.state.facilityId,
-      startDate: this.dataConfigMF.startDate,
-      endDate: this.dataConfigMF.endDate,
-      division: this.state.division,
-      district: selectedOption.value,
-    };
-    this.getRegDataMF(this.dataConfigMF);
-    this.getSumDataMF(this.dataConfigMF);
-
-    this.dataConfigFP = {
-      facilityId: this.state.facilityId,
-      startDate: this.dataConfigFP.startDate,
-      endDate: this.dataConfigFP.endDate,
-      division: this.state.division,
-      district: selectedOption.value,
-    };
-    this.getRegDataFP(this.dataConfigFP);
-    this.getSumDataFP(this.dataConfigFP);
-  }
-  //for division
-  onSearchDivision = (selectedOption: any) => {
+  onSearchDivisionChart = (selectedOption: any) => {
 
     if (selectedOption) {
+
       this.setState({
         selectedOption,
-        division: selectedOption.value
+        divisionChart: selectedOption.value
       });
+
     }
     this.dataConfigEO = {
-      facilityId: this.state.facilityId,
+      facilityId: this.dataConfigEO.facilityId,
       startDate: this.dataConfigEO.startDate,
       endDate: this.dataConfigEO.endDate,
       division: selectedOption.value,
-      district: this.state.district,
+      district: this.state.districtChart,
     };
     this.getRegDataEO(this.dataConfigEO);
     this.getSumDataEO(this.dataConfigEO);
 
     this.dataConfigMF = {
-      facilityId: this.state.facilityId,
+      facilityId: this.dataConfigMF.facilityId,
       startDate: this.dataConfigMF.startDate,
       endDate: this.dataConfigMF.endDate,
       division: selectedOption.value,
@@ -730,17 +827,60 @@ class DataView extends React.Component<any, any> {
     this.getSumDataMF(this.dataConfigMF);
 
     this.dataConfigFP = {
-      facilityId: this.state.facilityId,
+      facilityId: this.dataConfigFP.facilityId,
       startDate: this.dataConfigFP.startDate,
       endDate: this.dataConfigFP.endDate,
       division: selectedOption.value,
-      district: this.state.district,
+      district: this.state.districtChart,
     };
     this.getRegDataFP(this.dataConfigFP);
     this.getSumDataFP(this.dataConfigFP);
+
+
   }
+  onSearchDistrictChart = (selectedOption: any) => {
+
+    if (selectedOption) {
+
+      this.setState({
+        selectedOption,
+        districtChart: selectedOption.value
+      });
+
+    }
+
+    this.dataConfigEO = {
+      facilityId: this.dataConfigEO.facilityId,
+      startDate: this.dataConfigEO.startDate,
+      endDate: this.dataConfigEO.endDate,
+      division: this.state.divisionChart,
+      district: selectedOption.value,
+    };
+    this.getRegDataEO(this.dataConfigEO);
+    this.getSumDataEO(this.dataConfigEO);
+
+    this.dataConfigMF = {
+      facilityId: this.dataConfigMF.facilityId,
+      startDate: this.dataConfigMF.startDate,
+      endDate: this.dataConfigMF.endDate,
+      division: this.state.divisionChart,
+      district: selectedOption.value,
+    };
+    this.getRegDataMF(this.dataConfigMF);
+    this.getSumDataMF(this.dataConfigMF);
+
+    this.dataConfigFP = {
+      facilityId: this.dataConfigFP.facilityId,
+      startDate: this.dataConfigFP.startDate,
+      endDate: this.dataConfigFP.endDate,
+      division: this.state.divisionChart,
+      district: selectedOption.value,
+    };
+    this.getRegDataFP(this.dataConfigFP);
+    this.getSumDataFP(this.dataConfigFP);
 
 
+  }
   render() {
     const {
       error,
@@ -748,6 +888,7 @@ class DataView extends React.Component<any, any> {
       items,
       dateOfToday,
       showing,
+
       selectedChartEO,
       selectedChartMF,
       selectedChartFP,
@@ -766,22 +907,7 @@ class DataView extends React.Component<any, any> {
       { value: "scatter", label: "Area Chart" },
     ];
 
-    const handleChartTypeChangeEO = (selectedChartEO) => {
-      this.setState({ selectedChartEO }
-      );
-    };
-    const handleChartTypeChangeMF = (selectedChartMF) => {
-      this.setState({ selectedChartMF }
-      );
-    };
-    const handleChartTypeChangeFP = (selectedChartFP) => {
-      this.setState({ selectedChartFP }
-      );
-    };
-
     //end analytical view
-
-
     const customStyles = {
       control: (provided, state) => ({
         ...provided,
@@ -811,6 +937,18 @@ class DataView extends React.Component<any, any> {
         // height: '33px',
       }),
     }
+    const handleChartTypeChangeEO = (selectedChartEO) => {
+      this.setState({ selectedChartEO }
+      );
+    };
+    const handleChartTypeChangeMF = (selectedChartMF) => {
+      this.setState({ selectedChartMF }
+      );
+    };
+    const handleChartTypeChangeFP = (selectedChartFP) => {
+      this.setState({ selectedChartFP }
+      );
+    };
     if (error) {
       return (
         <div className="text-center font-weight-bold">
@@ -830,8 +968,6 @@ class DataView extends React.Component<any, any> {
               SHR DASHBOARD
             </h4>
           </div>
-
-
           <div className="mt-1">
             <div className="text-center"><h5 style={{ fontWeight: 'bold', fontSize: '20px' }} className="text-danger"><u>Todays Report</u></h5></div>
             <div className="row d-flex justify-content-center">
@@ -913,71 +1049,70 @@ class DataView extends React.Component<any, any> {
               </div>
             </div>
           </div>
-          <div>
-            <div className="d-flex justify-content-start mt-4">
-              <div
-                className=" pl-0 pr-0 pt-1"
-                id="dataView"
-                style={{ display: showing ? "none" : "block" }}
-              >
-                <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
-                  <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+          <div className="d-flex justify-content-start mt-4">
+            <div
+              className=" pl-0 pr-0 pt-1"
+              id="dataView"
+              style={{ display: showing ? "none" : "block" }}
+            >
+              <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+                <div className="form-group col-12 ml-1 pl-0 filter d-flex">
 
-                    <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                        Division
-                      </label>
-                      <div style={{ width: '180px' }} >
+                  <div className="d-flex">
+                    <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                      Division
+                    </label>
+                    <div style={{ width: '180px' }} >
 
-                        < Select
-                          styles={customStyles}
-                          name="division"
-                          options={this.state.divisionList}
-                          onChange={(e: any) => {
-                            this.onSearchChangeDiv(e);
-                          }}
-                          defaultInputValue={this.state.divisionName}
-                          isSearchable={true}
-                        />
-                      </div>
+                      < Select
+                        styles={customStyles}
+                        name="division"
+                        options={this.state.divisionList}
+                        onChange={(e: any) => {
+                          this.onSearchChangeDiv(e);
+                        }}
+                        defaultInputValue={this.state.divisionName}
+                        isSearchable={true}
+                      />
                     </div>
-                    <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                        District
-                      </label>
-                      <div style={{ width: '180px' }} >
-                        <AsyncSelect
-                          styles={customStyles}
-                          name='districtName'
-                          defaultValue={this.state.districtList}
-                          loadOptions={this.fetchDistrict}
-                          placeholder="District Name"
-                          onChange={(e: any) => {
-                            this.onSearchChangeDis(e);
-                          }}
-                          defaultOptions={false}
-                        />
+                  </div>
+                  <div className="d-flex">
+                    <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                      District
+                    </label>
+                    <div style={{ width: '180px' }} >
+                      <AsyncSelect
+                        styles={customStyles}
+                        name='districtName'
+                        defaultValue={this.state.districtList}
+                        loadOptions={this.fetchDistrict}
+                        placeholder="District Name"
+                        onChange={(e: any) => {
+                          this.onSearchChangeDis(e);
+                        }}
+                        defaultOptions={false}
+                      />
 
-                      </div>
                     </div>
-                    <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
-                        Facility Name
-                      </label>
-                      <div style={{ width: '180px' }} >
-                        <AsyncSelect
-                          styles={customStyles}
-                          name='facilityId'
-                          value={this.state.facilityList}
-                          loadOptions={this.fetchFacility}
-                          placeholder="Facility Name"
-                          onChange={(e: any) => {
-                            this.onSearchChange(e);
-                          }}
-                          defaultOptions={false}
-                        />
-                      </div>
-                      {/* <input
+                  </div>
+                  <div className="d-flex">
+                    <label className="label ml-2 mr-1 p-1  text-info font-weight-bold">
+                      Facility Name
+                    </label>
+                    <div style={{ width: '180px' }} >
+                      <AsyncSelect
+                        styles={customStyles}
+                        name='facilityId'
+                        value={this.state.facilityList}
+                        loadOptions={this.fetchFacility}
+                        placeholder="Facility Name"
+                        onChange={(e: any) => {
+                          this.onSearchFacilityData(e);
+                        }}
+                        defaultOptions={false}
+                      />
+                    </div>
+                    {/* <input
                           className="text p-1 text-info"
                           onChange={this.changeHandler}
                           placeholder="Facility Name"
@@ -985,129 +1120,128 @@ class DataView extends React.Component<any, any> {
                           name="facilityId"
                           id="facilityId"
                         /> */}
-                    </div>
-                    <div className="d-flex">
-                      <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                        Start Date
-                      </label>
-                      <input
-                        className="text m-1 p-1"
-                        onChange={this.changeHandler}
-                        pattern="MM-dd-yyyy"
-                        type="date"
-                        name="startDate"
-                        id="startDate"
-                        defaultValue={dateOfToday}
-                      />
-                    </div>
-                    <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                        End Date
-                      </label>
-                      <input
-                        className="text m-1 p-1"
-                        onChange={this.changeHandler}
-                        pattern="MM-dd-yyyy"
-                        type="date"
-                        name="endDate"
-                        id="endDate"
-                        defaultValue={dateOfToday}
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="btn btn-info font-weight-bold mb-1 mt-1"
-                    >
-                      Filter
-                    </button>
-
                   </div>
-                </form>
-              </div>
-              <div >
-                <div
-                  className="col-12  pt-0"
-                  id="dataView"
-                  style={{ display: showing ? "block" : "none" }}
-                >
-                  <div className="d-flex  ">
-                    <div className="d-flex ">
-                      <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
-                        Division
-                      </label>
-                      <div style={{ width: '180px' }} >
-
-                        < Select
-                          styles={customStyles}
-                          name="division"
-                          options={this.state.divisionList}
-                          onChange={(e: any) => {
-                            this.onSearchDivision(e);
-                          }}
-                          defaultInputValue={this.state.divisionName}
-                          isSearchable={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                        District
-                      </label>
-                      <div style={{ width: '180px' }} >
-                        <AsyncSelect
-                          styles={customStyles}
-                          name='districtName'
-                          defaultValue={this.state.districtList}
-                          loadOptions={this.fetchDistrict}
-                          placeholder="District Name"
-                          onChange={(e: any) => {
-                            this.onSearchDistrict(e);
-                          }}
-                          defaultOptions={false}
-                        />
-
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                        Facility Name
-                      </label>
-                      <div style={{ width: '180px' }} >
-                        <AsyncSelect
-                          styles={customStyles}
-                          name='facilityName'
-                          defaultValue={this.state.facilityList}
-                          loadOptions={this.fetchFacility}
-                          placeholder="Facility Name"
-                          onChange={(e: any) => {
-                            this.onSearchChangeChart(e);
-                          }}
-                          defaultOptions={false}
-                        />
-                      </div>
-
-                    </div>
+                  <div className="d-flex">
+                    <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                      Start Date
+                    </label>
+                    <input
+                      className="text m-1 p-1"
+                      onChange={this.changeHandler}
+                      pattern="MM-dd-yyyy"
+                      type="date"
+                      name="startDate"
+                      id="startDate"
+                      defaultValue={dateOfToday}
+                    />
                   </div>
+                  <div className="d-flex">
+                    <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                      End Date
+                    </label>
+                    <input
+                      className="text m-1 p-1"
+                      onChange={this.changeHandler}
+                      pattern="MM-dd-yyyy"
+                      type="date"
+                      name="endDate"
+                      id="endDate"
+                      defaultValue={dateOfToday}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-info font-weight-bold mb-1 mt-1"
+                  >
+                    Filter
+                  </button>
 
                 </div>
-              </div>
-              <div className="mt-2 ">
-                <button
-                  className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
-                  onClick={() => this.setState({ showing: !showing })}
-                >
-                  {showing ? "Data View" : "Analytical View"}
-                </button>
+              </form>
+            </div>
+            <div >
+              <div
+                className="col-12  pt-0"
+                id="dataView"
+                style={{ display: showing ? "block" : "none" }}
+              >
+                <div className="d-flex  ">
+                  <div className="d-flex ">
+                    <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
+                      Division
+                    </label>
+                    <div style={{ width: '180px' }} >
+
+                      < Select
+                        styles={customStyles}
+                        name="division"
+                        options={this.state.divisionList}
+                        onChange={(e: any) => {
+                          this.onSearchDivisionChart(e);
+                        }}
+                        defaultInputValue={this.state.divisionName}
+                        isSearchable={true}
+                      />
+                    </div>
+                  </div>
+                  <div className="d-flex">
+                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
+                      District
+                    </label>
+                    <div style={{ width: '180px' }} >
+                      <AsyncSelect
+                        styles={customStyles}
+                        name='districtName'
+                        defaultValue={this.state.districtList}
+                        loadOptions={this.fetchDistrict}
+                        placeholder="District Name"
+                        onChange={(e: any) => {
+                          this.onSearchDistrictChart(e);
+                        }}
+                        defaultOptions={false}
+                      />
+
+                    </div>
+                  </div>
+                  <div className="d-flex">
+                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
+                      Facility Name
+                    </label>
+                    <div style={{ width: '180px' }} >
+                      <AsyncSelect
+                        styles={customStyles}
+                        name='facilityName'
+                        defaultValue={this.state.facilityList}
+                        loadOptions={this.fetchFacility}
+                        placeholder="Facility Name"
+                        onChange={(e: any) => {
+                          this.onSearchFacilityChart(e);
+                        }}
+                        defaultOptions={false}
+                      />
+                    </div>
+
+                  </div>
+                </div>
+
               </div>
             </div>
-
+            <div className="mt-2 ">
+              <button
+                className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
+                onClick={() => this.setState({ showing: !showing })}
+              >
+                {showing ? "Data View" : "Analytical View"}
+              </button>
+            </div>
+          </div>
+          <div>
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="dataView"
               style={{ display: showing ? "none" : "block" }}
             >
-
               <ReactFlexyTable
                 className="table table-stripped table-hover table-sm tableReg"
                 data={items}
@@ -1124,22 +1258,18 @@ class DataView extends React.Component<any, any> {
                 downloadExcelText={"Download"}
               />
             </div>
+
+
+
+
+
+          </div>
+          <div >
             <div
-              className="col-12 pl-0 pr-0 pt-0"
-              id="analyticView"
+              className="col-12  pt-0"
+              id="dataView"
               style={{ display: showing ? "block" : "none" }}
             >
-              <div className="row">
-
-                <div className="col-2 p-0 ml-2">
-                  {/* <Select
-                    value={selectedFilter || filterOptions[0]}
-                    onChange={handleFilterTypeChange}
-                    options={filterOptions}
-                    placeholder="Select Filter Type"
-                  /> */}
-                </div>
-              </div>
               <div style={{
                 border: '1px solid lightGray', borderRadius: '20px',
                 padding: '15px', boxShadow: '5px 5px 20px gray'
@@ -1149,7 +1279,10 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerEO}>
+                    <form className="form-inline m-0 p-0 "
+                      onSubmit={this.mySubmitHandlerEO}
+                    // onSubmit={this.mySubmitHandler}
+                    >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
@@ -1169,6 +1302,7 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerEO}
+                            // onChange={this.changeHandler}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -1183,6 +1317,7 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerEO}
+                            // onChange={this.changeHandler}
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -1205,8 +1340,10 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExportEO}
+                    // data={this.dataToExport}
                     chartType={selectedChartEO}
                     filterType={this.state.opdEmergency}
+                    // dateWiseFilter={this.state.filterWithFacilityIdEO}
                     dateWiseFilter={this.state.filterWithFacilityIdEO}
                   />
                 </div>
@@ -1220,7 +1357,11 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerMF}>
+                    <form className="form-inline m-0 p-0 "
+                      // onSubmit={this.mySubmitHandlerMF}
+                      onSubmit={this.mySubmitHandlerMF}
+
+                    >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
@@ -1239,6 +1380,8 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerMF}
+                            // onChange={this.changeHandler}
+
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -1253,6 +1396,8 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerMF}
+                            // onChange={this.changeHandler}
+
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -1275,9 +1420,12 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExportMF}
+                    // data={this.dataToExport}
+
                     chartType={selectedChartMF}
                     filterType={this.state.maleFemale}
                     dateWiseFilter={this.state.filterWithFacilityIdMF}
+                  // dateWiseFilter={this.state.filterWithFacilityId}
                   />
                 </div>
               </div>
@@ -1290,7 +1438,11 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div >
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandlerFP}>
+                    <form className="form-inline m-0 p-0 "
+                      onSubmit={this.mySubmitHandlerFP}
+                    // onSubmit={this.mySubmitHandler}
+
+                    >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
                           <Select
@@ -1309,6 +1461,8 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerFP}
+                            // onChange={this.changeHandler}
+
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="startDate"
@@ -1323,6 +1477,8 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerFP}
+                            // onChange={this.changeHandler}
+
                             pattern="MM-dd-yyyy"
                             type="date"
                             name="endDate"
@@ -1345,22 +1501,20 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExportFP}
+                    // data={this.dataToExport}
+
                     chartType={selectedChartFP}
                     filterType={this.state.paidFree}
                     dateWiseFilter={this.state.filterWithFacilityIdFP}
+                  // dateWiseFilter={this.state.filterWithFacilityId}
                   />
                 </div>
               </div>
-              <div>
-
-              </div>
-
-              <div>
-
-              </div>
             </div>
           </div>
-        </div >
+
+        </div>
+
       );
     }
   }

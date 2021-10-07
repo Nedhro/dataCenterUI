@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://shrdashboard.dghs.gov.bd:5984';
+const baseUrl = 'http://localhost:5984';
 
 class CollectorService {
 
