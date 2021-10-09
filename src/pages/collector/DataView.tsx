@@ -25,49 +25,20 @@ class DataView extends React.Component<any, any> {
   changeHandler = (event: any) => {
     let nam = event.target.name;
     // let facilityId = null;
-    let startDate = "";
-    let endDate = "";
+    let startDateInput = "";
+    let endDateInput = "";
 
     if (nam === "startDate") {
-      startDate = event.target.value;
-      console.log(startDate);
-      this.dataConfig.startDate = this.formateDate(startDate);
+      startDateInput = event.target.value;
+      console.log(startDateInput);
+      this.dataConfig.startDate = this.formateDate(startDateInput);
     }
     if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfig.endDate = this.formateDate(endDate);
+      endDateInput = event.target.value;
+      this.dataConfig.endDate = this.formateDate(endDateInput);
     }
     console.log(this.dataConfig);
-  };
 
-  formateNowDate = (data: any) => {
-    let formattedNowDate = "";
-    let date = ("0" + data.getDate()).slice(-2);
-    let month = ("0" + (data.getMonth() + 1)).slice(-2);
-    let year = data.getFullYear();
-    formattedNowDate = month + "-" + date + "-" + year;
-    return formattedNowDate;
-  };
-  formateDefaultDate = (data: any) => {
-    //2021-02-17
-    let formattedNowDate = "";
-    let date = ("0" + data.getDate()).slice(-2);
-    let month = ("0" + (data.getMonth() + 1)).slice(-2);
-    let year = data.getFullYear();
-    formattedNowDate = year + "-" + month + "-" + date;
-    return formattedNowDate;
-  };
-
-  formateDate = (data: any) => {
-    let formattedDate = "";
-    let dateArray = data.split("-");
-    formattedDate = dateArray[1] + "-" + dateArray[2] + "-" + dateArray[0];
-    return formattedDate;
-  };
-
-  mySubmitHandler = (event: any) => {
-    event.preventDefault();
-    console.log(event.target.value);
     let facilityId = this.dataConfig.facilityId;
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
@@ -112,24 +83,94 @@ class DataView extends React.Component<any, any> {
     }
   };
 
+  formateNowDate = (data: any) => {
+    let formattedNowDate = "";
+    let date = ("0" + data.getDate()).slice(-2);
+    let month = ("0" + (data.getMonth() + 1)).slice(-2);
+    let year = data.getFullYear();
+    formattedNowDate = month + "-" + date + "-" + year;
+    return formattedNowDate;
+  };
+  formateDefaultDate = (data: any) => {
+    //2021-02-17
+    let formattedNowDate = "";
+    let date = ("0" + data.getDate()).slice(-2);
+    let month = ("0" + (data.getMonth() + 1)).slice(-2);
+    let year = data.getFullYear();
+    formattedNowDate = year + "-" + month + "-" + date;
+    return formattedNowDate;
+  };
+
+  formateDate = (data: any) => {
+    let formattedDate = "";
+    let dateArray = data.split("-");
+    formattedDate = dateArray[1] + "-" + dateArray[2] + "-" + dateArray[0];
+    return formattedDate;
+  };
+
+  // mySubmitHandler = (event: any) => {
+  //   event.preventDefault();
+  //   console.log(event.target.value);
+  //   let facilityId = this.dataConfig.facilityId;
+  //   let startDate = this.dataConfig.startDate;
+  //   let endDate = this.dataConfig.endDate;
+  //   let district = this.state.districtData;
+  //   let division = this.state.divisionData;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfig = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegData(this.dataConfig);
+  //     this.getSumData(this.dataConfig);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfig = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegData(this.dataConfig);
+  //     this.getSumData(this.dataConfig);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfig = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegData(this.dataConfig);
+  //     this.getSumData(this.dataConfig);
+  //   }
+  // };
+
   //Emergency opd
   changeHandlerEO = (event: any) => {
     let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
+    let startDateEO = "";
+    let endDateEO = "";
 
     if (nam === "startDate") {
-      startDate = event.target.value;
+      startDateEO = event.target.value;
 
-      this.dataConfigEO.startDate = this.formateDate(startDate);
+      this.dataConfigEO.startDate = this.formateDate(startDateEO);
     }
     if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigEO.endDate = this.formateDate(endDate);
+      endDateEO = event.target.value;
+      this.dataConfigEO.endDate = this.formateDate(endDateEO);
     }
-  };
-  mySubmitHandlerEO = (event: any) => {
-    event.preventDefault();
+
     let facilityId = this.dataConfigEO.facilityId;
     let startDate = this.dataConfigEO.startDate;
     let endDate = this.dataConfigEO.endDate;
@@ -174,27 +215,70 @@ class DataView extends React.Component<any, any> {
       this.getSumDataEO(this.dataConfigEO);
     }
 
-
   };
+  // mySubmitHandlerEO = (event: any) => {
+  //   event.preventDefault();
+  //   let facilityId = this.dataConfigEO.facilityId;
+  //   let startDate = this.dataConfigEO.startDate;
+  //   let endDate = this.dataConfigEO.endDate;
+  //   let district = this.state.districtChart;
+  //   let division = this.state.divisionChart;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+
+  //   console.log(this.dataConfigEO);
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigEO = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigEO = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigEO = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+
+
+  // };
   //male female
   changeHandlerMF = (event: any) => {
     let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
+    let startDateMF = "";
+    let endDateMF = "";
 
     if (nam === "startDate") {
-      startDate = event.target.value;
+      startDateMF = event.target.value;
 
-      this.dataConfigMF.startDate = this.formateDate(startDate);
+      this.dataConfigMF.startDate = this.formateDate(startDateMF);
     }
     if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigMF.endDate = this.formateDate(endDate);
+      endDateMF = event.target.value;
+      this.dataConfigMF.endDate = this.formateDate(endDateMF);
     }
-  };
-  mySubmitHandlerMF = (event: any) => {
-    event.preventDefault();
-
     let facilityId = this.dataConfigMF.facilityId;
     let startDate = this.dataConfigMF.startDate;
     let endDate = this.dataConfigMF.endDate;
@@ -237,29 +321,70 @@ class DataView extends React.Component<any, any> {
       this.getRegDataMF(this.dataConfigMF);
       this.getSumDataMF(this.dataConfigMF);
     }
-
-
   };
+  // mySubmitHandlerMF = (event: any) => {
+  //   event.preventDefault();
+
+  //   let facilityId = this.dataConfigMF.facilityId;
+  //   let startDate = this.dataConfigMF.startDate;
+  //   let endDate = this.dataConfigMF.endDate;
+  //   let district = this.state.districtChart;
+  //   let division = this.state.divisionChart;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigMF = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigMF = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigMF = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+
+
+  // };
   //free paid
   changeHandlerFP = (event: any) => {
     let nam = event.target.name;
-    let startDate = "";
-    let endDate = "";
+    let startDateFP = "";
+    let endDateFP = "";
 
     if (nam === "startDate") {
-      startDate = event.target.value;
+      startDateFP = event.target.value;
 
-      this.dataConfigFP.startDate = this.formateDate(startDate);
+      this.dataConfigFP.startDate = this.formateDate(startDateFP);
     }
     if (nam === "endDate") {
-      endDate = event.target.value;
-      this.dataConfigFP.endDate = this.formateDate(endDate);
+      endDateFP = event.target.value;
+      this.dataConfigFP.endDate = this.formateDate(endDateFP);
     }
-
-  };
-  mySubmitHandlerFP = (event: any) => {
-    event.preventDefault();
-
     let facilityId = this.dataConfigFP.facilityId;
     let startDate = this.dataConfigFP.startDate;
     let endDate = this.dataConfigFP.endDate;
@@ -303,8 +428,55 @@ class DataView extends React.Component<any, any> {
       this.getSumDataFP(this.dataConfigFP);
     }
 
-
   };
+  // mySubmitHandlerFP = (event: any) => {
+  //   event.preventDefault();
+
+  //   let facilityId = this.dataConfigFP.facilityId;
+  //   let startDate = this.dataConfigFP.startDate;
+  //   let endDate = this.dataConfigFP.endDate;
+  //   let district = this.state.districtChart;
+  //   let division = this.state.divisionChart;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigFP = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataFP(this.dataConfigFP);
+  //     this.getSumDataFP(this.dataConfigFP);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigFP = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataFP(this.dataConfigFP);
+  //     this.getSumDataFP(this.dataConfigFP);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigFP = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataFP(this.dataConfigFP);
+  //     this.getSumDataFP(this.dataConfigFP);
+  //   }
+
+
+  // };
   constructor(props: any) {
     super(props);
     this.state = {
@@ -341,7 +513,7 @@ class DataView extends React.Component<any, any> {
 
     };
     this.changeHandler = this.changeHandler.bind(this);
-    this.mySubmitHandler = this.mySubmitHandler.bind(this);
+    // this.mySubmitHandler = this.mySubmitHandler.bind(this);
   }
 
   componentDidMount() {
@@ -1034,7 +1206,9 @@ class DataView extends React.Component<any, any> {
               id="dataView"
               style={{ display: showing ? "none" : "block" }}
             >
-              <form className="form-inline m-0 p-0 " onSubmit={this.mySubmitHandler}>
+              <form className="form-inline m-0 p-0 "
+              // onSubmit={this.mySubmitHandler}
+              >
                 <div className="form-group col-12 ml-1 pl-0 filter d-flex">
 
                   <div className="d-flex">
@@ -1129,12 +1303,12 @@ class DataView extends React.Component<any, any> {
                     />
                   </div>
 
-                  <button
+                  {/* <button
                     type="submit"
                     className="btn btn-info font-weight-bold mb-1 mt-1"
                   >
                     Filter
-                  </button>
+                  </button> */}
 
                 </div>
               </form>
@@ -1259,7 +1433,7 @@ class DataView extends React.Component<any, any> {
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 "
-                      onSubmit={this.mySubmitHandlerEO}
+                    // onSubmit={this.mySubmitHandlerEO}
                     // onSubmit={this.mySubmitHandler}
                     >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
@@ -1305,12 +1479,12 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
 
-                        <button
+                        {/* <button
                           type="submit"
                           className="btn btn-info font-weight-bold mb-1 mt-1"
                         >
                           Filter
-                        </button>
+                        </button> */}
 
                       </div>
                     </form>
@@ -1337,8 +1511,8 @@ class DataView extends React.Component<any, any> {
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 "
-                      // onSubmit={this.mySubmitHandlerMF}
-                      onSubmit={this.mySubmitHandlerMF}
+                    // onSubmit={this.mySubmitHandlerMF}
+                    // onSubmit={this.mySubmitHandlerMF}
 
                     >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
@@ -1384,13 +1558,13 @@ class DataView extends React.Component<any, any> {
                             defaultValue={dateOfToday}
                           />
                         </div>
-
+                        {/* 
                         <button
                           type="submit"
                           className="btn btn-info font-weight-bold mb-1 mt-1"
                         >
                           Filter
-                        </button>
+                        </button> */}
 
                       </div>
                     </form>
@@ -1418,7 +1592,7 @@ class DataView extends React.Component<any, any> {
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 "
-                      onSubmit={this.mySubmitHandlerFP}
+                    // onSubmit={this.mySubmitHandlerFP}
                     // onSubmit={this.mySubmitHandler}
 
                     >
@@ -1466,12 +1640,12 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
 
-                        <button
+                        {/* <button
                           type="submit"
                           className="btn btn-info font-weight-bold mb-1 mt-1"
                         >
                           Filter
-                        </button>
+                        </button> */}
 
                       </div>
                     </form>
