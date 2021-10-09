@@ -517,6 +517,29 @@ class DataView extends React.Component<any, any> {
   }
 
   componentDidMount() {
+    // let person = [{ name: "john" }, { name: "jane" }, { name: "imelda" }, { name: "john" }];
+
+    // function removeDuplicates(data, key) {
+
+    //   return [
+    //     ...new Map(data.map(item => [key(item), item])).values()
+    //   ]
+
+    // };
+
+    // console.log(removeDuplicates(person, item => item.name));
+    let days = ["senin", "senin", "selasa", "selasa", "rabu", "kamis", "rabu"];
+    // let fullname = [{name: "john"}, {name: "jane"}, {name: "imelda"}, {name: "john"},{name: "jane"}];
+
+    // REMOVE DUPLICATE FOR ARRAY LITERAL
+    // const arrOne = new Set(days);
+    // console.log(arrOne);
+
+    const arrTwo = days.filter((item, index) => days.indexOf(item) === index);
+    console.log(arrTwo);
+
+
+
     let date_ob = new Date();
     let dateNow = this.formateNowDate(date_ob);
     this.dataConfig = {
@@ -708,6 +731,8 @@ class DataView extends React.Component<any, any> {
           collectionTotal: 0,
         };
         const resultData = res.data.content;
+        console.log(res.data.content);
+
         if (data.facilityId !== null) {
           this.dataToExport = res.data.content;
           this.setState({

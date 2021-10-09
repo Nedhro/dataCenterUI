@@ -25,7 +25,7 @@ class CoordinateChart extends React.Component<ChartProps, any> {
   xAxisValue: any;
 
   componentWillReceiveProps(_nextProps: ChartProps) {
-    console.log(_nextProps);
+    // console.log(_nextProps);
     this.chartType = _nextProps.chartType?.value;
     this.filterType = _nextProps.filterType?.value;
     this.filterWithDateAndFacility = _nextProps.dateWiseFilter;
