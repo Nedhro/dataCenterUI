@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:5984';
+const baseUrl = 'http://shrdashboard.dghs.gov.bd:5984';
 
 class CollectorService {
 
@@ -15,6 +15,9 @@ class CollectorService {
     }
     getAllFacilityList(data: Object) {
         return axios.get(baseUrl + '/facilityName/' + data);
+    }
+    getAllCard() {
+        return axios.get(baseUrl + '/getTotalsForCards');
     }
 }
 
