@@ -3,16 +3,16 @@ import '../static/scss/Custom.scss';
 
 function Footer() {
   return (
-      <div className="container-fluid">
-        <div className="footer col-12">
-            <span><b>Powered By : </b></span>
-            <span className="font-weight-bold">
-              <a href="https://ctechbd.com/">
-                Crystal Technology Bangladesh Ltd.
-              </a>
-            </span>
-        </div>
+    <div className="container">
+      <div className="footer">
+        <span>Copyright &copy; {new Date().getFullYear()} <a href="https://www.dghs.gov.bd/" target="blank"> MIS, DGHS</a></span> &nbsp;
+        <span>Technical assistance by :&nbsp;
+          <a href="https://ctechbd.com/" target="blank">
+            Crystal Technology Bangladesh Ltd.
+          </a>
+        </span>
       </div>
+    </div>
   );
 }
 
