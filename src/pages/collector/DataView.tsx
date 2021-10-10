@@ -6,7 +6,7 @@ import ReactFlexyTable from "react-flexy-table";
 import "react-flexy-table/dist/index.css";
 import CoordinateChart from "../charts/CoordinateChart";
 import Select from "react-select";
-// import AsyncSelect from "react-select/async";
+import AsyncSelect from "react-select/async";
 import totalPatient from "../../icons/totalPatient.png"
 import opdPatient from "../../icons/opdPatient.png"
 import emergencyPatient from "../../icons/emergencyPatient.png"
@@ -24,6 +24,7 @@ class DataView extends React.Component<any, any> {
   dataToExportFP: any;
   changeHandler = (event: any) => {
     let nam = event.target.name;
+    // let facilityId = null;
     let startDateInput = "";
     let endDateInput = "";
 
@@ -35,7 +36,6 @@ class DataView extends React.Component<any, any> {
       endDateInput = event.target.value;
       this.dataConfig.endDate = this.formateDate(endDateInput);
     }
-
     let facilityId = this.dataConfig.facilityId;
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
@@ -105,7 +105,52 @@ class DataView extends React.Component<any, any> {
     return formattedDate;
   };
 
+  // mySubmitHandler = (event: any) => {
+  //   event.preventDefault();
+  //
+  //   let facilityId = this.dataConfig.facilityId;
+  //   let startDate = this.dataConfig.startDate;
+  //   let endDate = this.dataConfig.endDate;
+  //   let district = this.state.districtData;
+  //   let division = this.state.divisionData;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
 
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfig = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegData(this.dataConfig);
+  //     this.getSumData(this.dataConfig);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfig = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegData(this.dataConfig);
+  //     this.getSumData(this.dataConfig);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfig = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegData(this.dataConfig);
+  //     this.getSumData(this.dataConfig);
+  //   }
+  // };
 
   //Emergency opd
   changeHandlerEO = (event: any) => {
@@ -166,7 +211,52 @@ class DataView extends React.Component<any, any> {
     }
 
   };
+  // mySubmitHandlerEO = (event: any) => {
+  //   event.preventDefault();
+  //   let facilityId = this.dataConfigEO.facilityId;
+  //   let startDate = this.dataConfigEO.startDate;
+  //   let endDate = this.dataConfigEO.endDate;
+  //   let district = this.state.districtChart;
+  //   let division = this.state.divisionChart;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigEO = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigEO = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
 
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigEO = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataEO(this.dataConfigEO);
+  //     this.getSumDataEO(this.dataConfigEO);
+  //   }
+
+
+  // };
   //male female
   changeHandlerMF = (event: any) => {
     let nam = event.target.name;
@@ -225,7 +315,54 @@ class DataView extends React.Component<any, any> {
       this.getSumDataMF(this.dataConfigMF);
     }
   };
+  // mySubmitHandlerMF = (event: any) => {
+  //   event.preventDefault();
 
+  //   let facilityId = this.dataConfigMF.facilityId;
+  //   let startDate = this.dataConfigMF.startDate;
+  //   let endDate = this.dataConfigMF.endDate;
+  //   let district = this.state.districtChart;
+  //   let division = this.state.divisionChart;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigMF = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigMF = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigMF = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataMF(this.dataConfigMF);
+  //     this.getSumDataMF(this.dataConfigMF);
+  //   }
+
+
+  // };
   //free paid
   changeHandlerFP = (event: any) => {
     let nam = event.target.name;
@@ -285,7 +422,54 @@ class DataView extends React.Component<any, any> {
     }
 
   };
+  // mySubmitHandlerFP = (event: any) => {
+  //   event.preventDefault();
 
+  //   let facilityId = this.dataConfigFP.facilityId;
+  //   let startDate = this.dataConfigFP.startDate;
+  //   let endDate = this.dataConfigFP.endDate;
+  //   let district = this.state.districtChart;
+  //   let division = this.state.divisionChart;
+  //   let date_ob = new Date();
+  //   let dateNow = this.formateNowDate(date_ob);
+
+  //   if (facilityId === null || facilityId === "") {
+  //     this.dataConfigFP = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: null,
+  //       startDate: startDate || dateNow,
+  //       endDate: endDate || dateNow,
+  //     };
+  //     this.getRegDataFP(this.dataConfigFP);
+  //     this.getSumDataFP(this.dataConfigFP);
+  //   }
+  //   if (facilityId !== null && startDate !== "" && endDate !== "") {
+  //     this.dataConfigFP = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //     };
+  //     this.getRegDataFP(this.dataConfigFP);
+  //     this.getSumDataFP(this.dataConfigFP);
+  //   }
+
+  //   if (facilityId !== null && startDate === "" && endDate === "") {
+  //     this.dataConfigFP = {
+  //       division: division,
+  //       district: district,
+  //       facilityId: facilityId,
+  //       startDate: dateNow,
+  //       endDate: dateNow,
+  //     };
+  //     this.getRegDataFP(this.dataConfigFP);
+  //     this.getSumDataFP(this.dataConfigFP);
+  //   }
+
+
+  // };
   constructor(props: any) {
     super(props);
     this.state = {
@@ -304,18 +488,16 @@ class DataView extends React.Component<any, any> {
       selectedChartEO: null,
       selectedChartMF: null,
       selectedChartFP: null,
-      divisionListData: [],
-      districtListData: [],
-      facilityListData: [],
-      divisionListChart: [],
-      districtListChart: [],
-      facilityListChart: [],
-      allList: [],
-      divisionNameData: '',
-      // divisionNameChart: 'Select...',
-      divisionNameChart: '',
-      districtNameChart: '',
-      facilityNameChart: '',
+      divisionList: [{ value: 'Dhaka', label: 'Dhaka' },
+      { value: 'Rajshahi', label: 'Rajshahi' },
+      { value: 'Rangpur', label: 'Rangpur' },
+      { value: 'Sylhet', label: 'Sylhet' },
+      { value: 'Khulna', label: 'Khulna' },
+      { value: 'Chattogram', label: 'Chattogram' },
+      { value: 'Chittagong', label: 'Chittagong' },
+      { value: 'Mymensingh', label: 'Mymensingh' },
+      { value: 'Barisal', label: 'Barisal' },],
+      districtList: '',
       divisionData: null,
       districtData: null,
       divisionChart: null,
@@ -324,6 +506,7 @@ class DataView extends React.Component<any, any> {
 
     };
     this.changeHandler = this.changeHandler.bind(this);
+    // this.mySubmitHandler = this.mySubmitHandler.bind(this);
   }
 
   componentDidMount() {
@@ -338,6 +521,8 @@ class DataView extends React.Component<any, any> {
     };
 
     this.getRegData(this.dataConfig);
+    // this.getRegData(this.dataConfig);
+
     this.dataConfigEO = {
       division: null,
       district: null,
@@ -381,66 +566,6 @@ class DataView extends React.Component<any, any> {
         }
       }
     );
-    CollectorService.getAllRegistrationCollectionData(this.dataConfig).then(
-      (res): any => {
-        const resultData = res.data.content;
-        const all = resultData.map(item => item.facilityInfo)
-
-        const tempArr2 = resultData.map(item => item.facilityInfo.facilityDivision)
-        const division = tempArr2.filter((item, index) => tempArr2.indexOf(item) === index);
-        const tempArr = resultData.map(item => item.facilityInfo.facilityDistrict)
-        const district = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
-        const tempArr3 = resultData.map(item => item.facilityInfo.facilityName)
-        const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-
-        const tempArrayDis: any = [];
-        if (district.length) {
-          district.forEach((element: any) => {
-            tempArrayDis.push({
-              label: `${element}`,
-              value: element,
-            });
-          })
-
-          this.setState({
-            districtListData: tempArrayDis,
-            districtListChart: tempArrayDis,
-          })
-        }
-        const tempArrayFacility: any = [];
-        if (facility.length) {
-          facility.forEach((element: any) => {
-            tempArrayFacility.push({
-              label: `${element}`,
-              value: element,
-            });
-          })
-
-          this.setState({
-            facilityListData: tempArrayFacility,
-            facilityListChart: tempArrayFacility,
-          })
-        }
-        const tempArrayDiv: any = [];
-        if (division.length) {
-          division.forEach((element: any) => {
-            tempArrayDiv.push({
-              label: `${element}`,
-              value: element,
-            });
-          })
-
-          this.setState({
-            divisionListData: tempArrayDiv,
-            divisionListChart: tempArrayDiv,
-          })
-        }
-
-        this.setState({
-          allList: all,
-        })
-      }
-    );
   }
   componentWillUnmount() {
     clearInterval(this.timerID);
@@ -481,7 +606,6 @@ class DataView extends React.Component<any, any> {
 
   //male female
   getRegDataMF(data: any) {
-    // console.log(data);
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
         if (data.facilityId !== null) {
@@ -560,7 +684,6 @@ class DataView extends React.Component<any, any> {
           collectionTotal: 0,
         };
         const resultData = res.data.content;
-
         if (data.facilityId !== null) {
           this.dataToExport = res.data.content;
           this.setState({
@@ -592,7 +715,7 @@ class DataView extends React.Component<any, any> {
 
         const datafinal = resultData?.map((data: any) => {
           let config = {
-            "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+            "Facility Name (Id)": data.facilityId || "N/A",
             "Total Patient": data.totalPatient || 0,
             OPD: data.numberOfOpdPatient || 0,
             Emergency: data.numberOfEmergencyPatient || 0,
@@ -636,178 +759,119 @@ class DataView extends React.Component<any, any> {
   }
 
 
+  //for district Info
+  fetchDistrict = (inputValue: any, callback: any) => {
+    setTimeout(() => {
+      CollectorService.getAllDistrictList(inputValue)
+        .then((data: any) => {
+          const tempArray: any = [];
+          if (data.data.content) {
+            if (data.data.content.length) {
+              data.data.content.forEach((element: any) => {
+                tempArray.push({
+                  label: `${element}`,
+                  value: element,
+                });
+
+              });
+            } else {
+              tempArray.push({
+                label: `${data.data.content}`,
+                value: data.data.content,
+              });
+            }
+          }
+          callback(tempArray);
+        })
+        .catch((error) => {
+          console.log(error, "catch the hoop");
+        });
+    }, 1000);
+  };
+  //for facility Info
+  fetchFacility = (inputValue: any, callback: any) => {
+    setTimeout(() => {
+      CollectorService.getAllFacilityList(inputValue)
+        .then((data: any) => {
+          const tempArray: any = [];
+          if (data.data.content) {
+            if (data.data.content.length) {
+              data.data.content.forEach((element: any) => {
+                tempArray.push({
+                  label: `${element}`,
+                  value: element,
+                });
+              });
+            } else {
+              tempArray.push({
+                label: `${data.data.content}`,
+                value: data.data.content,
+              });
+            }
+          }
+          callback(tempArray);
+        })
+        .catch((error) => {
+          console.log(error, "catch the hoop");
+        });
+    }, 1000);
+  };
+
 
   //for data view
   onSearchFacilityData = (selectedOption: any) => {
 
-    if (selectedOption !== null) {
+    if (selectedOption) {
       this.dataConfig.facilityId = selectedOption.value;
-      this.dataConfig = {
-        facilityId: selectedOption.value,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: this.state.divisionData,
-        district: this.state.districtData,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
-    else if (selectedOption === null) {
-      this.dataConfig.facilityId = selectedOption;
-      this.dataConfig = {
-        facilityId: selectedOption,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: this.state.divisionData,
-        district: this.state.districtData,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
 
+    }
+    this.dataConfig = {
+      facilityId: selectedOption.value,
+      startDate: this.dataConfig.startDate,
+      endDate: this.dataConfig.endDate,
+      division: this.state.divisionData,
+      district: this.state.districtData,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
 
   }
 
-  onSearchDivisionData = (selectedOption: any) => {
-
-    // console.log(selectedOption);
-    if (selectedOption !== null) {
+  onSearchChangeDiv = (selectedOption: any) => {
+    if (selectedOption) {
       this.setState({
         selectedOption,
         divisionData: selectedOption.value
       });
-      this.dataConfig = {
-        facilityId: this.dataConfig.facilityId,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: selectedOption.value,
-        district: this.state.districtData,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-
-      const all = this.state.allList;
-      let tempDis = all.filter(item => item.facilityDivision === selectedOption.value);
-      const tempArr = tempDis.map(item => item.facilityDistrict);
-      const district = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
-      const tempArr3 = tempDis.map(item => item.facilityName);
-      const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-
-      const tempArrayDis: any = [];
-      if (district.length) {
-        district.forEach((element: any) => {
-          tempArrayDis.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          districtListData: tempArrayDis,
-        })
-      }
-      const tempArrayFacility: any = [];
-      if (facility.length) {
-        facility.forEach((element: any) => {
-          tempArrayFacility.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          facilityListData: tempArrayFacility,
-        })
-      }
-    } else if (selectedOption === null) {
-      this.setState({
-        selectedOption,
-        divisionData: selectedOption
-      });
-      this.dataConfig = {
-        facilityId: this.dataConfig.facilityId,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: selectedOption,
-        district: this.state.districtData,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-
-      const all = this.state.allList;
-      // let tempDis = all.filter(item => item.facilityDivision === selectedOption.value);
-      const tempArr = all.map(item => item.facilityDistrict);
-      const district = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
-      const tempArr3 = all.map(item => item.facilityName);
-      const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-
-      const tempArrayDis: any = [];
-      if (district.length) {
-        district.forEach((element: any) => {
-          tempArrayDis.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          districtListData: tempArrayDis,
-        })
-      }
-      const tempArrayFacility: any = [];
-      if (facility.length) {
-        facility.forEach((element: any) => {
-          tempArrayFacility.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          facilityListData: tempArrayFacility,
-        })
-      }
-
-
     }
-
+    this.dataConfig = {
+      facilityId: this.dataConfig.facilityId,
+      startDate: this.dataConfig.startDate,
+      endDate: this.dataConfig.endDate,
+      division: selectedOption.value,
+      district: this.state.districtData,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
   }
-  onSearchDistrictData = (selectedOption: any) => {
-    // console.log(selectedOption);
-    if (selectedOption !== null) {
+  onSearchChangeDis = (selectedOption: any) => {
+    if (selectedOption) {
       this.setState({
         selectedOption,
         districtData: selectedOption.value
       });
-      this.dataConfig = {
-        facilityId: this.dataConfig.facilityId,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: this.state.divisionData,
-        district: selectedOption.value,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-
     }
-
-    else if (selectedOption === null) {
-      this.setState({
-        selectedOption,
-        districtData: selectedOption
-      });
-      this.dataConfig = {
-        facilityId: this.dataConfig.facilityId,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: this.state.divisionData,
-        district: selectedOption,
-      };
-      this.getRegData(this.dataConfig);
-      this.getSumData(this.dataConfig);
-    }
+    this.dataConfig = {
+      facilityId: this.dataConfig.facilityId,
+      startDate: this.dataConfig.startDate,
+      endDate: this.dataConfig.endDate,
+      division: this.state.divisionData,
+      district: selectedOption.value,
+    };
+    this.getRegData(this.dataConfig);
+    this.getSumData(this.dataConfig);
 
   }
 
@@ -815,435 +879,130 @@ class DataView extends React.Component<any, any> {
   //for chart
   onSearchFacilityChart = (selectedOption: any) => {
 
-    if (selectedOption !== null) {
-      this.setState({
-        districtNameChart: {
-          label: selectedOption.value,
-          value: selectedOption.value,
-        },
-      })
+    if (selectedOption) {
 
       this.dataConfigEO.facilityId = selectedOption.value;
       this.dataConfigMF.facilityId = selectedOption.value;
       this.dataConfigFP.facilityId = selectedOption.value;
-
-      this.dataConfigEO = {
-        facilityId: selectedOption.value,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: this.state.divisionChart,
-        district: this.state.districtChart,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-
-      this.dataConfigMF = {
-        facilityId: selectedOption.value,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: this.dataConfigMF.divisionChart,
-        district: this.dataConfigMF.districtChart,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-
-
-      this.dataConfigFP = {
-        facilityId: selectedOption.value,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: this.dataConfigFP.divisionChart,
-        district: this.dataConfigFP.districtChart,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
     }
-    else if (selectedOption === null) {
-      this.dataConfigEO.facilityId = selectedOption;
-      this.dataConfigMF.facilityId = selectedOption;
-      this.dataConfigFP.facilityId = selectedOption;
-      this.setState({
-        districtNameChart: '',
-      })
-      this.dataConfigEO = {
-        facilityId: selectedOption,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: this.state.divisionChart,
-        district: this.state.districtChart,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
+    this.dataConfigEO = {
+      facilityId: selectedOption.value,
+      startDate: this.dataConfigEO.startDate,
+      endDate: this.dataConfigEO.endDate,
+      division: this.state.divisionChart,
+      district: this.state.districtChart,
+    };
+    this.getRegDataEO(this.dataConfigEO);
+    this.getSumDataEO(this.dataConfigEO);
 
 
-      this.dataConfigMF = {
-        facilityId: selectedOption,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: this.dataConfigMF.divisionChart,
-        district: this.dataConfigMF.districtChart,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
+    this.dataConfigMF = {
+      facilityId: selectedOption.value,
+      startDate: this.dataConfigMF.startDate,
+      endDate: this.dataConfigMF.endDate,
+      division: this.dataConfigMF.divisionChart,
+      district: this.dataConfigMF.districtChart,
+    };
+    this.getRegDataMF(this.dataConfigMF);
+    this.getSumDataMF(this.dataConfigMF);
 
 
-      this.dataConfigFP = {
-        facilityId: selectedOption,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: this.dataConfigFP.divisionChart,
-        district: this.dataConfigFP.districtChart,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
-    }
-
+    this.dataConfigFP = {
+      facilityId: selectedOption.value,
+      startDate: this.dataConfigFP.startDate,
+      endDate: this.dataConfigFP.endDate,
+      division: this.dataConfigFP.divisionChart,
+      district: this.dataConfigFP.districtChart,
+    };
+    this.getRegDataFP(this.dataConfigFP);
+    this.getSumDataFP(this.dataConfigFP);
 
 
 
   }
 
   onSearchDivisionChart = (selectedOption: any) => {
-    // console.log(this.state.allList)
 
-    if (selectedOption !== null) {
+    if (selectedOption) {
 
       this.setState({
         selectedOption,
         divisionChart: selectedOption.value
       });
-      this.setState({
-        divisionNameChart: {
-          label: selectedOption.value,
-          value: selectedOption.value,
-        },
-      })
-      this.setState({
-        districtNameChart: ''
-      })
-
-      const all = this.state.allList
-      let tempDis = all.filter(item => item.facilityDivision === selectedOption.value)
-      // console.log(tempDis)
-      const tempArr = tempDis.map(item => item.facilityDistrict)
-      const district = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
-      const tempArr3 = tempDis.map(item => item.facilityName)
-      const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-
-      const tempArrayDis: any = [];
-      if (district.length) {
-        district.forEach((element: any) => {
-          tempArrayDis.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          districtListChart: tempArrayDis,
-        })
-      }
-      const tempArrayFacility: any = [];
-      if (facility.length) {
-        facility.forEach((element: any) => {
-          tempArrayFacility.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          facilityListChart: tempArrayFacility,
-        })
-      }
-
-
-
-
-      this.dataConfigEO = {
-        facilityId: this.dataConfigEO.facilityId,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: selectedOption.value,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-      this.dataConfigMF = {
-        facilityId: this.dataConfigMF.facilityId,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: selectedOption.value,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-
-      this.dataConfigFP = {
-        facilityId: this.dataConfigFP.facilityId,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: selectedOption.value,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
 
     }
-    else if (selectedOption === null) {
-      this.setState({
-        selectedOption,
-        divisionChart: selectedOption
-      });
-      this.setState({
-        divisionNameChart: '',
-      })
-      this.setState({
-        districtNameChart: '',
-      })
+    this.dataConfigEO = {
+      facilityId: this.dataConfigEO.facilityId,
+      startDate: this.dataConfigEO.startDate,
+      endDate: this.dataConfigEO.endDate,
+      division: selectedOption.value,
+      district: this.state.districtChart,
+    };
+    this.getRegDataEO(this.dataConfigEO);
+    this.getSumDataEO(this.dataConfigEO);
 
-      const all = this.state.allList
-      // let tempDis = all.filter(item => item.facilityDivision === selectedOption.value)
-      // console.log(tempDis)
-      const tempArr3 = all.map(item => item.facilityName)
-      const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-      const tempArr = all.map(item => item.facilityDistrict)
-      const district = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
+    this.dataConfigMF = {
+      facilityId: this.dataConfigMF.facilityId,
+      startDate: this.dataConfigMF.startDate,
+      endDate: this.dataConfigMF.endDate,
+      division: selectedOption.value,
+      district: this.state.district,
+    };
+    this.getRegDataMF(this.dataConfigMF);
+    this.getSumDataMF(this.dataConfigMF);
 
-
-      const tempArrayDis: any = [];
-      if (district.length) {
-        district.forEach((element: any) => {
-          tempArrayDis.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          districtListChart: tempArrayDis,
-        })
-      }
-      const tempArrayFacility: any = [];
-      if (facility.length) {
-        facility.forEach((element: any) => {
-          tempArrayFacility.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          facilityListChart: tempArrayFacility,
-        })
-      }
-
-
-
-
-
-      this.dataConfigEO = {
-        facilityId: this.dataConfigEO.facilityId,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: selectedOption,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-      this.dataConfigMF = {
-        facilityId: this.dataConfigMF.facilityId,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: selectedOption,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-
-      this.dataConfigFP = {
-        facilityId: this.dataConfigFP.facilityId,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: selectedOption,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
-    }
-
+    this.dataConfigFP = {
+      facilityId: this.dataConfigFP.facilityId,
+      startDate: this.dataConfigFP.startDate,
+      endDate: this.dataConfigFP.endDate,
+      division: selectedOption.value,
+      district: this.state.districtChart,
+    };
+    this.getRegDataFP(this.dataConfigFP);
+    this.getSumDataFP(this.dataConfigFP);
 
 
   }
   onSearchDistrictChart = (selectedOption: any) => {
-    console.log(selectedOption);
-    if (selectedOption !== null) {
+
+    if (selectedOption) {
 
       this.setState({
         selectedOption,
         districtChart: selectedOption.value
       });
-      this.setState({
-        districtNameChart: {
-          label: selectedOption.value,
-          value: selectedOption.value,
-        },
-      })
-      const all = this.state.allList;
-      console.log(all);
-      let tempDis = all.filter(item => item?.facilityDistrict === selectedOption.value);
-      const tempArr = tempDis.map(item => item.facilityDivision);
-      const division = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
-      const tempArr3 = tempDis.map(item => item.facilityName);
-      const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-      console.log(division[0], facility);
-      // this.setState({
-      //   divisionChart: division[0]
-      // })
-      if (division[0]) {
-        this.setState({
-          divisionNameChart: {
-            label: division[0],
-            value: division[0],
-          },
-        })
-      }
-      // this.setState({
-      //   divisionNameChart: division[0],
-      // })
-      // console.log(tempArrayDiv[0]);
 
-      const tempArrayFacility: any = [];
-      if (facility.length) {
-        facility.forEach((element: any) => {
-          tempArrayFacility.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          facilityListChart: tempArrayFacility,
-        })
-      }
-      this.dataConfigEO = {
-        facilityId: this.dataConfigEO.facilityId,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: division[0],
-        district: selectedOption.value,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-      this.dataConfigMF = {
-        facilityId: this.dataConfigMF.facilityId,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: division[0],
-        district: selectedOption.value,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-
-      this.dataConfigFP = {
-        facilityId: this.dataConfigFP.facilityId,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: division[0],
-        district: selectedOption.value,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
-    }
-    else if (selectedOption === null) {
-      this.setState({
-        selectedOption,
-        districtChart: selectedOption
-      });
-      const all = this.state.allList;
-      console.log(all);
-      this.setState({
-        districtNameChart: ''
-      })
-      // let tempDis = all.filter(item => item?.facilityDistrict === selectedOption);
-      const tempArr = all.map(item => item.facilityDivision);
-      const division = tempArr.filter((item, index) => tempArr.indexOf(item) === index);
-      const tempArr3 = all.map(item => item.facilityName);
-      const facility = tempArr3.filter((item, index) => tempArr3.indexOf(item) === index);
-      console.log(division[0], facility);
-      // const tempArrdis = all.map(item => item.facilityDistrict)
-      // const district = tempArrdis.filter((item, index) => tempArr.indexOf(item) === index);
-
-
-      // const tempArrayDis: any = [];
-      // if (district.length) {
-      //   district.forEach((element: any) => {
-      //     tempArrayDis.push({
-      //       label: `${element}`,
-      //       value: element,
-      //     });
-      //   })
-
-      //   this.setState({
-      //     districtListChart: tempArrayDis,
-      //   })
-      // }
-      this.setState({
-        divisionChart: division[0]
-      })
-      this.setState({
-        divisionNameChart: '',
-      })
-
-      const tempArrayFacility: any = [];
-      if (facility.length) {
-        facility.forEach((element: any) => {
-          tempArrayFacility.push({
-            label: `${element}`,
-            value: element,
-          });
-        })
-
-        this.setState({
-          facilityListChart: tempArrayFacility,
-        })
-      }
-      this.dataConfigEO = {
-        facilityId: this.dataConfigEO.facilityId,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: selectedOption,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-      this.dataConfigMF = {
-        facilityId: this.dataConfigMF.facilityId,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: selectedOption,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-
-      this.dataConfigFP = {
-        facilityId: this.dataConfigFP.facilityId,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: selectedOption,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
     }
 
+    this.dataConfigEO = {
+      facilityId: this.dataConfigEO.facilityId,
+      startDate: this.dataConfigEO.startDate,
+      endDate: this.dataConfigEO.endDate,
+      division: this.state.divisionChart,
+      district: selectedOption.value,
+    };
+    this.getRegDataEO(this.dataConfigEO);
+    this.getSumDataEO(this.dataConfigEO);
 
+    this.dataConfigMF = {
+      facilityId: this.dataConfigMF.facilityId,
+      startDate: this.dataConfigMF.startDate,
+      endDate: this.dataConfigMF.endDate,
+      division: this.state.divisionChart,
+      district: selectedOption.value,
+    };
+    this.getRegDataMF(this.dataConfigMF);
+    this.getSumDataMF(this.dataConfigMF);
+
+    this.dataConfigFP = {
+      facilityId: this.dataConfigFP.facilityId,
+      startDate: this.dataConfigFP.startDate,
+      endDate: this.dataConfigFP.endDate,
+      division: this.state.divisionChart,
+      district: selectedOption.value,
+    };
+    this.getRegDataFP(this.dataConfigFP);
+    this.getSumDataFP(this.dataConfigFP);
 
 
   }
@@ -1315,7 +1074,6 @@ class DataView extends React.Component<any, any> {
       this.setState({ selectedChartFP }
       );
     };
-    // console.log(this.state.divisionNameChart)
     if (error) {
       return (
         <div className="text-center font-weight-bold">
@@ -1423,6 +1181,7 @@ class DataView extends React.Component<any, any> {
               style={{ display: showing ? "none" : "block" }}
             >
               <form className="form-inline m-0 p-0 "
+              // onSubmit={this.mySubmitHandler}
               >
                 <div className="form-group col-12 ml-1 pl-0 filter d-flex">
 
@@ -1435,14 +1194,12 @@ class DataView extends React.Component<any, any> {
                       < Select
                         styles={customStyles}
                         name="division"
-                        options={this.state.divisionListData}
+                        options={this.state.divisionList}
                         onChange={(e: any) => {
-                          this.onSearchDivisionData(e);
+                          this.onSearchChangeDiv(e);
                         }}
-                        // defaultValue={{ label: "Select Dept", value: 0 }}
-                        defaultValue={this.state.divisionNameData}
+                        defaultInputValue={this.state.divisionName}
                         isSearchable={true}
-                        isClearable={true}
                       />
                     </div>
                   </div>
@@ -1451,15 +1208,16 @@ class DataView extends React.Component<any, any> {
                       District
                     </label>
                     <div style={{ width: '180px' }} >
-                      < Select
+                      <AsyncSelect
                         styles={customStyles}
-                        name="districtName"
-                        options={this.state.districtListData}
+                        name='districtName'
+                        defaultValue={this.state.districtList}
+                        loadOptions={this.fetchDistrict}
+                        placeholder="District Name"
                         onChange={(e: any) => {
-                          this.onSearchDistrictData(e);
+                          this.onSearchChangeDis(e);
                         }}
-                        isSearchable={true}
-                        isClearable={true}
+                        defaultOptions={false}
                       />
 
                     </div>
@@ -1469,19 +1227,26 @@ class DataView extends React.Component<any, any> {
                       Facility Name
                     </label>
                     <div style={{ width: '180px' }} >
-                      < Select
+                      <AsyncSelect
                         styles={customStyles}
-                        name="facilityId"
-                        options={this.state.facilityListData}
+                        name='facilityId'
+                        value={this.state.facilityList}
+                        loadOptions={this.fetchFacility}
+                        placeholder="Facility Name"
                         onChange={(e: any) => {
                           this.onSearchFacilityData(e);
                         }}
-                        isSearchable={true}
-                        isClearable={true}
+                        defaultOptions={false}
                       />
-
                     </div>
-
+                    {/* <input
+                          className="text p-1 text-info"
+                          onChange={this.changeHandler}
+                          placeholder="Facility Name"
+                          type="text"
+                          name="facilityId"
+                          id="facilityId"
+                        /> */}
                   </div>
                   <div className="d-flex">
                     <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
@@ -1512,7 +1277,12 @@ class DataView extends React.Component<any, any> {
                     />
                   </div>
 
-
+                  {/* <button
+                    type="submit"
+                    className="btn btn-info font-weight-bold mb-1 mt-1"
+                  >
+                    Filter
+                  </button> */}
 
                 </div>
               </form>
@@ -1533,14 +1303,12 @@ class DataView extends React.Component<any, any> {
                       < Select
                         styles={customStyles}
                         name="division"
-                        options={this.state.divisionListChart}
+                        options={this.state.divisionList}
                         onChange={(e: any) => {
                           this.onSearchDivisionChart(e);
                         }}
-                        // placeholder={this.state.divisionNameChart}
-                        value={this.state.divisionNameChart}
+                        defaultInputValue={this.state.divisionName}
                         isSearchable={true}
-                        isClearable={true}
                       />
                     </div>
                   </div>
@@ -1549,18 +1317,17 @@ class DataView extends React.Component<any, any> {
                       District
                     </label>
                     <div style={{ width: '180px' }} >
-                      < Select
+                      <AsyncSelect
                         styles={customStyles}
-                        name="districtName"
-                        options={this.state.districtListChart}
+                        name='districtName'
+                        defaultValue={this.state.districtList}
+                        loadOptions={this.fetchDistrict}
+                        placeholder="District Name"
                         onChange={(e: any) => {
                           this.onSearchDistrictChart(e);
                         }}
-                        value={this.state.districtNameChart}
-                        isSearchable={true}
-                        isClearable={true}
+                        defaultOptions={false}
                       />
-
 
                     </div>
                   </div>
@@ -1569,17 +1336,17 @@ class DataView extends React.Component<any, any> {
                       Facility Name
                     </label>
                     <div style={{ width: '180px' }} >
-                      < Select
+                      <AsyncSelect
                         styles={customStyles}
-                        name="facilityId"
-                        options={this.state.facilityListChart}
+                        name='facilityName'
+                        defaultValue={this.state.facilityList}
+                        loadOptions={this.fetchFacility}
+                        placeholder="Facility Name"
                         onChange={(e: any) => {
                           this.onSearchFacilityChart(e);
                         }}
-                        isSearchable={true}
-                        isClearable={true}
+                        defaultOptions={false}
                       />
-
                     </div>
 
                   </div>
@@ -1640,7 +1407,8 @@ class DataView extends React.Component<any, any> {
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 "
-
+                    // onSubmit={this.mySubmitHandlerEO}
+                    // onSubmit={this.mySubmitHandler}
                     >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
                         <div style={{ width: '250px' }}>
@@ -1685,6 +1453,12 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
 
+                        {/* <button
+                          type="submit"
+                          className="btn btn-info font-weight-bold mb-1 mt-1"
+                        >
+                          Filter
+                        </button> */}
 
                       </div>
                     </form>
@@ -1693,9 +1467,10 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExportEO}
-
+                    // data={this.dataToExport}
                     chartType={selectedChartEO}
                     filterType={this.state.opdEmergency}
+                    // dateWiseFilter={this.state.filterWithFacilityIdEO}
                     dateWiseFilter={this.state.filterWithFacilityIdEO}
                   />
                 </div>
@@ -1710,7 +1485,8 @@ class DataView extends React.Component<any, any> {
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 "
-
+                    // onSubmit={this.mySubmitHandlerMF}
+                    // onSubmit={this.mySubmitHandlerMF}
 
                     >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
@@ -1731,7 +1507,7 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerMF}
-
+                            // onChange={this.changeHandler}
 
                             pattern="MM-dd-yyyy"
                             type="date"
@@ -1747,7 +1523,7 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerMF}
-
+                            // onChange={this.changeHandler}
 
                             pattern="MM-dd-yyyy"
                             type="date"
@@ -1756,7 +1532,13 @@ class DataView extends React.Component<any, any> {
                             defaultValue={dateOfToday}
                           />
                         </div>
-
+                        {/* 
+                        <button
+                          type="submit"
+                          className="btn btn-info font-weight-bold mb-1 mt-1"
+                        >
+                          Filter
+                        </button> */}
 
                       </div>
                     </form>
@@ -1765,12 +1547,12 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExportMF}
-
+                    // data={this.dataToExport}
 
                     chartType={selectedChartMF}
                     filterType={this.state.maleFemale}
                     dateWiseFilter={this.state.filterWithFacilityIdMF}
-
+                  // dateWiseFilter={this.state.filterWithFacilityId}
                   />
                 </div>
               </div>
@@ -1784,7 +1566,8 @@ class DataView extends React.Component<any, any> {
                 <div >
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 "
-
+                    // onSubmit={this.mySubmitHandlerFP}
+                    // onSubmit={this.mySubmitHandler}
 
                     >
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
@@ -1805,7 +1588,7 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerFP}
-
+                            // onChange={this.changeHandler}
 
                             pattern="MM-dd-yyyy"
                             type="date"
@@ -1821,7 +1604,7 @@ class DataView extends React.Component<any, any> {
                           <input
                             className="text m-1 p-1"
                             onChange={this.changeHandlerFP}
-
+                            // onChange={this.changeHandler}
 
                             pattern="MM-dd-yyyy"
                             type="date"
@@ -1831,6 +1614,12 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
 
+                        {/* <button
+                          type="submit"
+                          className="btn btn-info font-weight-bold mb-1 mt-1"
+                        >
+                          Filter
+                        </button> */}
 
                       </div>
                     </form>
@@ -1839,12 +1628,12 @@ class DataView extends React.Component<any, any> {
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
                     data={this.dataToExportFP}
-
+                    // data={this.dataToExport}
 
                     chartType={selectedChartFP}
                     filterType={this.state.paidFree}
                     dateWiseFilter={this.state.filterWithFacilityIdFP}
-
+                  // dateWiseFilter={this.state.filterWithFacilityId}
                   />
                 </div>
               </div>
