@@ -1,6 +1,5 @@
-
 .tableReg {
-  overflow-x:auto;
+  overflow-x: auto;
 }
 
 .tableReg table {
@@ -10,12 +9,15 @@
   border: 1px solid #ddd;
 }
 
-.tableReg table th, td {
+.tableReg table th,
+td {
   text-align: left;
   padding: 8px;
 }
 
-.tableReg table tr:nth-child(even){background-color: ghostwhite}
+.tableReg table tr:nth-child(even) {
+  background-color: ghostwhite;
+}
 
 .filter .text {
   border: 1px solid #ddd;
@@ -25,24 +27,28 @@
 
 .footer {
   display: block;
-    position: fixed !important;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color:#046B86;
-    color: #9DBDBD;
-    text-align: center;
-  }
+  position: fixed !important;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #046b86;
+  color: #9dbdbd;
+  text-align: center;
+  font-weight: bold;
+}
 
-  .footer a {
-    color:whitesmoke;
-  }
+.footer a {
+  color: whitesmoke;
+}
+
+.footer a:hover {
+  color: #ddd;
+}
 
 .headerImage {
   display: block;
   width: 100%;
-  min-width: 320px;
-  height: 105px;
+  height: 150px;
   margin-left: auto;
   margin-right: auto;
 }
