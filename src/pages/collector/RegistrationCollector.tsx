@@ -29,7 +29,6 @@ class RegistrationCollector extends React.Component<any, any>{
          endDate = event.target.value;
          this.dataConfig.endDate = this.formateDate(endDate);
         }
-        console.log(this.dataConfig);
     }
 
     formateNowDate = (data : any) =>{
@@ -50,7 +49,6 @@ class RegistrationCollector extends React.Component<any, any>{
 
     mySubmitHandler = (event: any) => {
         event.preventDefault();
-        console.log(event.target.value);
         let facilityId = this.dataConfig.facilityId;
         let startDate = this.dataConfig.startDate;
         let endDate = this.dataConfig.endDate;
@@ -123,7 +121,6 @@ class RegistrationCollector extends React.Component<any, any>{
         clearInterval(this.timerID);
       }
     getRegData(data: any) {
-        console.log(JSON.stringify(data))
         CollectorService.getAllRegistrationCollectionData(data)
         .then(
             (res): any=>{
@@ -135,7 +132,6 @@ class RegistrationCollector extends React.Component<any, any>{
                     "collectionTotal": 0
                 };
                 const resultData = res.data.content;
-                console.log(resultData);
                 let opdSum = 0;
                 let emergencySum = 0;
                 let freeSum = 0;
@@ -158,7 +154,7 @@ class RegistrationCollector extends React.Component<any, any>{
                 resultObj.paidSum = paidSum;
                 resultObj.freeSum = freeSum;
                 resultObj.collectionTotal = collectionSum;
-                console.log(resultObj);
+            
                 this.setState({
                     isLoaded: true,
                     items: res.data.content,

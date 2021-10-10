@@ -30,15 +30,12 @@ class DataView extends React.Component<any, any> {
 
     if (nam === "startDate") {
       startDateInput = event.target.value;
-      console.log(startDateInput);
       this.dataConfig.startDate = this.formateDate(startDateInput);
     }
     if (nam === "endDate") {
       endDateInput = event.target.value;
       this.dataConfig.endDate = this.formateDate(endDateInput);
     }
-    console.log(this.dataConfig);
-
     let facilityId = this.dataConfig.facilityId;
     let startDate = this.dataConfig.startDate;
     let endDate = this.dataConfig.endDate;
@@ -110,7 +107,7 @@ class DataView extends React.Component<any, any> {
 
   // mySubmitHandler = (event: any) => {
   //   event.preventDefault();
-  //   console.log(event.target.value);
+  //
   //   let facilityId = this.dataConfig.facilityId;
   //   let startDate = this.dataConfig.startDate;
   //   let endDate = this.dataConfig.endDate;
@@ -178,8 +175,6 @@ class DataView extends React.Component<any, any> {
     let division = this.state.divisionChart;
     let date_ob = new Date();
     let dateNow = this.formateNowDate(date_ob);
-
-    console.log(this.dataConfigEO);
     if (facilityId === null || facilityId === "") {
       this.dataConfigEO = {
         division: division,
@@ -225,8 +220,6 @@ class DataView extends React.Component<any, any> {
   //   let division = this.state.divisionChart;
   //   let date_ob = new Date();
   //   let dateNow = this.formateNowDate(date_ob);
-
-  //   console.log(this.dataConfigEO);
   //   if (facilityId === null || facilityId === "") {
   //     this.dataConfigEO = {
   //       division: division,
@@ -571,7 +564,6 @@ class DataView extends React.Component<any, any> {
             card: response.data.content
           })
         }
-        // console.log(response);
       }
     );
   }
@@ -580,13 +572,10 @@ class DataView extends React.Component<any, any> {
   }
   // emergency-opd
   getRegDataEO(data: any) {
-    console.log(data);
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
-        console.log(res.data);
         if (data.facilityId !== null) {
           this.dataToExportEO = res.data.content;
-          console.log(this.dataToExportEO)
           this.setState({
             filterWithFacilityIdEO: true,
           });
@@ -603,10 +592,8 @@ class DataView extends React.Component<any, any> {
   }
 
   getSumDataEO(data: any) {
-    console.log(data);
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
-        console.log(response.data);
         if (data.facilityId === null) {
           this.dataToExportEO = response.data.content;
           this.setState({
@@ -619,13 +606,10 @@ class DataView extends React.Component<any, any> {
 
   //male female
   getRegDataMF(data: any) {
-    console.log(data);
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
-        console.log(res.data);
         if (data.facilityId !== null) {
           this.dataToExportMF = res.data.content;
-          // console.log(this.dataToExportEO)
           this.setState({
             filterWithFacilityIdMF: true,
           });
@@ -642,10 +626,8 @@ class DataView extends React.Component<any, any> {
   }
 
   getSumDataMF(data: any) {
-    console.log(data);
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
-        console.log(response.data);
         if (data.facilityId === null) {
           this.dataToExportMF = response.data.content;
           this.setState({
@@ -658,13 +640,10 @@ class DataView extends React.Component<any, any> {
 
   //free paid
   getRegDataFP(data: any) {
-    console.log(data);
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
-        console.log(res.data);
         if (data.facilityId !== null) {
           this.dataToExportFP = res.data.content;
-          // console.log(this.dataToExportEO)
           this.setState({
             filterWithFacilityIdFP: true,
           });
@@ -681,10 +660,8 @@ class DataView extends React.Component<any, any> {
   }
 
   getSumDataFP(data: any) {
-    console.log(data);
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
-        console.log(response.data);
         if (data.facilityId === null) {
           this.dataToExportFP = response.data.content;
           this.setState({
@@ -697,7 +674,6 @@ class DataView extends React.Component<any, any> {
 
 
   getRegData(data: any) {
-    console.log(JSON.stringify(data));
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
         const resultObj = {
@@ -863,7 +839,6 @@ class DataView extends React.Component<any, any> {
   }
 
   onSearchChangeDiv = (selectedOption: any) => {
-    // console.log(selectedOption);
     if (selectedOption) {
       this.setState({
         selectedOption,
@@ -882,7 +857,6 @@ class DataView extends React.Component<any, any> {
 
   }
   onSearchChangeDis = (selectedOption: any) => {
-    // console.log(selectedOption);
     if (selectedOption) {
       this.setState({
         selectedOption,
