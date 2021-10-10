@@ -10,12 +10,12 @@ class CollectorService {
     getAllDataByfIdAndDatewithsum(data: Object) {
         return axios.post(baseUrl + '/getAllDataByfIdAndDatewithsum', data);
     }
-    getAllDistrictList(data: Object) {
-        return axios.get(baseUrl + '/district/' + data);
-    }
-    getAllFacilityList(data: Object) {
-        return axios.get(baseUrl + '/facilityName/' + data);
-    }
+    // getAllDistrictList(data: Object) {
+    //     return axios.get(baseUrl + '/district/' + data);
+    // }
+    // getAllFacilityList(data: Object) {
+    //     return axios.get(baseUrl + '/facilityName/' + data);
+    // }
     getAllCard() {
         return axios.get(baseUrl + '/getTotalsForCards');
     }
