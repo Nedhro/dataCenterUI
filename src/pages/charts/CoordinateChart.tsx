@@ -25,7 +25,6 @@ class CoordinateChart extends React.Component<ChartProps, any> {
   xAxisValue: any;
 
   componentWillReceiveProps(_nextProps: ChartProps) {
-    // console.log(_nextProps);
     this.chartType = _nextProps.chartType?.value;
     this.filterType = _nextProps.filterType?.value;
     this.filterWithDateAndFacility = _nextProps.dateWiseFilter;
@@ -60,7 +59,6 @@ class CoordinateChart extends React.Component<ChartProps, any> {
     let data2: any = [];
     let xAxisValue: any = [];
     this.chartData?.map((res, key) => {
-      // console.log(res);
       facilityList.push(res.facilityId);
       if (this.filterType === 'opd-emergency') {
         data1?.push(res.numberOfOpdPatient);
