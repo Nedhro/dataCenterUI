@@ -120,12 +120,6 @@ class DataView extends React.Component<any, any> {
     this.getSumDataFP(this.dataConfigFP);
     this.timerID = setInterval(() => {
       this.getRegData(this.dataConfig);
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
       CollectorService.getAllCard().then((response): any => {
         if (response) {
           this.setState({
