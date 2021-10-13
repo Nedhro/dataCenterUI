@@ -14,10 +14,9 @@ import femalePatient from "../../icons/femalePatient.png";
 class DataView extends React.Component<any, any> {
   /*
    * EO: Emergency-OPD
-   * MF: Male-Femeale
+   * MF: Male-Female
    * FP: Free-Paid
    * */
-
   dataConfig: any = {};
   dataConfigEO: any = {};
   dataConfigMF: any = {};
@@ -122,8 +121,11 @@ class DataView extends React.Component<any, any> {
     this.timerID = setInterval(() => {
       this.getRegData(this.dataConfig);
       this.getRegDataEO(this.dataConfigEO);
+      this.getSumDataEO(this.dataConfigEO);
       this.getRegDataMF(this.dataConfigMF);
+      this.getSumDataMF(this.dataConfigMF);
       this.getRegDataFP(this.dataConfigFP);
+      this.getSumDataFP(this.dataConfigFP);
       CollectorService.getAllCard().then((response): any => {
         if (response) {
           this.setState({
@@ -234,32 +236,7 @@ class DataView extends React.Component<any, any> {
     formattedDate = dateArray[1] + "-" + dateArray[2] + "-" + dateArray[0];
     return formattedDate;
   };
-  changeHandler = (event: any) => {
-    let nam = event.target.name;
-    let startDateInput = "";
-    let endDateInput = "";
-    if (nam === "startDate") {
-      startDateInput = event.target.value;
-      this.dataConfig.startDate = this.formateDate(startDateInput);
-    }
-    if (nam === "endDate") {
-      endDateInput = event.target.value;
-      this.dataConfig.endDate = this.formateDate(endDateInput);
-    }
-    let facilityId = this.dataConfig.facilityId;
-    let startDate = this.dataConfig.startDate;
-    let endDate = this.dataConfig.endDate;
-    let district = this.state.districtData;
-    let division = this.state.divisionData;
-    this.dataConfig = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    this.getRegData(this.dataConfig);
-  };
+
   //Emergency opd
   changeHandlerEO = (event: any) => {
     let nam = event.target.name;
@@ -276,17 +253,40 @@ class DataView extends React.Component<any, any> {
     let facilityId = this.dataConfigEO.facilityId;
     let startDate = this.dataConfigEO.startDate;
     let endDate = this.dataConfigEO.endDate;
-    let district = this.state.districtChart;
-    let division = this.state.divisionChart;
-    this.dataConfigEO = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
+    
+    if(facilityId !== null){
+      this.dataConfigEO = {
+        division: this.state.divisionChart,
+        district: this.state.districtChart,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataEO(this.dataConfigEO); 
+    }
+    if(facilityId === null){
+      this.dataConfigEO = {
+        division: null,
+        district: null,
+        facilityId: null,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getSumDataEO(this.dataConfigEO);
+    }
+    CollectorService.getAllDataByfIdAndDatewithsum({
+      division: null,
+      district: null,
+      facilityId: null,
       startDate: startDate,
       endDate: endDate,
-    };
-    this.getRegDataEO(this.dataConfigEO);
-    this.getSumDataEO(this.dataConfigEO);
+    }).then(
+      (response): any => {
+        this.setState({
+          EOList: response.data.content,
+        });
+      }
+    );
   };
   //male female
   changeHandlerMF = (event: any) => {
@@ -306,17 +306,39 @@ class DataView extends React.Component<any, any> {
     let facilityId = this.dataConfigMF.facilityId;
     let startDate = this.dataConfigMF.startDate;
     let endDate = this.dataConfigMF.endDate;
-    let district = this.state.districtChart;
-    let division = this.state.divisionChart;
-    this.dataConfigMF = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
+    if(facilityId !== null){
+      this.dataConfigMF = {
+        division: this.state.divisionChart,
+        district: this.state.districtChart,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataMF(this.dataConfigMF); 
+    }
+    if(facilityId === null){
+      this.dataConfigMF = {
+        division: null,
+        district: null,
+        facilityId: null,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getSumDataMF(this.dataConfigMF);
+    }
+    CollectorService.getAllDataByfIdAndDatewithsum({
+      division: null,
+      district: null,
+      facilityId: null,
       startDate: startDate,
       endDate: endDate,
-    };
-    this.getRegDataMF(this.dataConfigMF);
-    this.getSumDataMF(this.dataConfigMF);
+    }).then(
+      (response): any => {
+        this.setState({
+          MFList: response.data.content,
+        });
+      }
+    );
   };
   //free paid
   changeHandlerFP = (event: any) => {
@@ -334,24 +356,180 @@ class DataView extends React.Component<any, any> {
     let facilityId = this.dataConfigFP.facilityId;
     let startDate = this.dataConfigFP.startDate;
     let endDate = this.dataConfigFP.endDate;
-    let district = this.state.districtChart;
-    let division = this.state.divisionChart;
-    this.dataConfigFP = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
+        if(facilityId !== null){
+      this.dataConfigFP = {
+        division: this.state.divisionChart,
+        district: this.state.districtChart,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataFP(this.dataConfigFP); 
+    }
+    if(facilityId === null){
+      this.dataConfigFP = {
+        division: null,
+        district: null,
+        facilityId: null,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getSumDataFP(this.dataConfigFP);
+    }
+    CollectorService.getAllDataByfIdAndDatewithsum({
+      division: null,
+      district: null,
+      facilityId: null,
+      startDate: startDate,
+      endDate: endDate,
+    }).then(
+      (response): any => {
+        this.setState({
+          FPList: response.data.content,
+        });
+      }
+    );
+  };
+  //data view
+  changeHandler = (event: any) => {
+    let nam = event.target.name;
+    let startDateInput = "";
+    let endDateInput = "";
+    if (nam === "startDate") {
+      startDateInput = event.target.value;
+      this.dataConfig.startDate = this.formateDate(startDateInput);
+    }
+    if (nam === "endDate") {
+      endDateInput = event.target.value;
+      this.dataConfig.endDate = this.formateDate(endDateInput);
+    }
+    let startDate = this.dataConfig.startDate;
+    let endDate = this.dataConfig.endDate;
+    this.dataConfig = {
+      division: null,
+      district: null,
+      facilityId: null,
       startDate: startDate,
       endDate: endDate,
     };
-    this.getRegDataFP(this.dataConfigFP);
-    this.getSumDataFP(this.dataConfigFP);
+    this.getRegData(this.dataConfig);
   };
+  //data view
+  getRegData(data: any) {
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
+        if (this.state.divisionNameData.value === undefined) {
+          const resultData = res.data.content;
+          const dataFinal = resultData?.map((data: any) => {
+            let config = {
+              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+              "Total Patient": data.totalPatient || 0,
+              "OPD": data.numberOfOpdPatient || 0,
+              "Emergency": data.numberOfEmergencyPatient || 0,
+              "Male": data.numberOfMalePatient || 0,
+              "Female": data.numberOfFemalePatient || 0,
+              "Paid": data.numberOfPaidPatient || 0,
+              "Free": data.numberOfFreePatient || 0,
+              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+              "Date": data.sentTime || "N/A",
+            };
+            return config;
+          });
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
+        else if (this.state.divisionNameData.value !== undefined) {
+          let allRecord = res.data.content;
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameData.value)
+          const dataFinal = resultData?.map((data: any) => {
+            let config = {
+              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+              "Total Patient": data.totalPatient || 0,
+              "OPD": data.numberOfOpdPatient || 0,
+              "Emergency": data.numberOfEmergencyPatient || 0,
+              "Male": data.numberOfMalePatient || 0,
+              "Female": data.numberOfFemalePatient || 0,
+              "Paid": data.numberOfPaidPatient || 0,
+              "Free": data.numberOfFreePatient || 0,
+              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+              "Date": data.sentTime || "N/A",
+            };
+            return config;
+          });
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
+        else if (this.state.districtNameData.value !== undefined && this.state.districtNameData.value !== undefined) {
+          let allRecord = res.data.content;
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameData.value)
+          const dataFinal = resultData?.map((data: any) => {
+            let config = {
+              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+              "Total Patient": data.totalPatient || 0,
+              "OPD": data.numberOfOpdPatient || 0,
+              "Emergency": data.numberOfEmergencyPatient || 0,
+              "Male": data.numberOfMalePatient || 0,
+              "Female": data.numberOfFemalePatient || 0,
+              "Paid": data.numberOfPaidPatient || 0,
+              "Free": data.numberOfFreePatient || 0,
+              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+              "Date": data.sentTime || "N/A",
+            };
+            return config;
+          });
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
+        if (this.state.facilityNameData.value !== undefined) {
+          let allRecord = res.data.content;
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityName === this.state.facilityNameData.value)
+          const dataFinal = resultData?.map((data: any) => {
+            let config = {
+              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+              "Total Patient": data.totalPatient || 0,
+              "OPD": data.numberOfOpdPatient || 0,
+              "Emergency": data.numberOfEmergencyPatient || 0,
+              "Male": data.numberOfMalePatient || 0,
+              "Female": data.numberOfFemalePatient || 0,
+              "Paid": data.numberOfPaidPatient || 0,
+              "Free": data.numberOfFreePatient || 0,
+              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+              "Date": data.sentTime || "N/A",
+            };
+            return config;
+          });
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
 
+        this.setState({
+          isLoaded: true,
+          dateOfToday: this.formateDefaultDate(new Date()),
+          dataList: res.data.content,
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
   //emergency-opd
   getRegDataEO(data: any) {
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
         if (data.facilityId !== null) {
+          console.log(res.data.content)
           this.dataToExportEO = res.data.content;
           this.setState({
             filterWithFacilityIdEO: true,
@@ -370,7 +548,19 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          this.dataToExportEO = response.data.content;
+          if (this.state.divisionNameChart.value === undefined) {
+            this.dataToExportEO = response.data.content;
+          }
+          else if (this.state.divisionNameChart.value !== undefined) {
+            let allEORecord = response.data.content;
+            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameChart.value)
+            this.dataToExportEO = EOData;
+          }
+          else if (this.state.districtNameChart.value !== undefined) {
+            let allEORecord = response.data.content;
+            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameChart.value)
+            this.dataToExportEO = EOData;
+          }
           this.setState({
             filterWithFacilityIdEO: false,
             EOList: response.data.content,
@@ -402,7 +592,19 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          this.dataToExportMF = response.data.content;
+          if (this.state.divisionNameChart.value === undefined) {
+            this.dataToExportMF = response.data.content;
+          }
+          else if (this.state.divisionNameChart.value !== undefined) {
+            let allMFRecord = response.data.content;
+            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameChart.value)
+            this.dataToExportMF = MFData;
+          }
+          else if (this.state.districtNameChart.value !== undefined) {
+            let allMFRecord = response.data.content;
+            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameChart.value)
+            this.dataToExportMF = MFData;
+          }
           this.setState({
             filterWithFacilityIdMF: false,
             MFList: response.data.content,
@@ -434,7 +636,19 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          this.dataToExportFP = response.data.content;
+          if (this.state.divisionNameChart.value === undefined) {
+            this.dataToExportFP = response.data.content;
+          }
+          else if (this.state.divisionNameChart.value !== undefined) {
+            let allFPRecord = response.data.content;
+            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameChart.value)
+            this.dataToExportFP = FPData;
+          }
+          else if (this.state.districtNameChart.value !== undefined) {
+            let allFPRecord = response.data.content;
+            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameChart.value)
+            this.dataToExportFP = FPData;
+          }
           this.setState({
             filterWithFacilityIdFP: false,
             FPList: response.data.content,
@@ -443,42 +657,7 @@ class DataView extends React.Component<any, any> {
       }
     );
   }
-  //data view
-  getRegData(data: any) {
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
-        const resultData = res.data.content;
-        const dataFinal = resultData?.map((data: any) => {
-          let config = {
-            "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-            "Total Patient": data.totalPatient || 0,
-            "OPD": data.numberOfOpdPatient || 0,
-            "Emergency": data.numberOfEmergencyPatient || 0,
-            "Male": data.numberOfMalePatient || 0,
-            "Female": data.numberOfFemalePatient || 0,
-            "Paid": data.numberOfPaidPatient || 0,
-            "Free": data.numberOfFreePatient || 0,
-            "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-            "Date": data.sentTime || "N/A",
-          };
-          return config;
-        });
-        var date = new Date();
-        this.setState({
-          isLoaded: true,
-          items: dataFinal,
-          dateOfToday: this.formateDefaultDate(date),
-          dataList: resultData,
-        });
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
+
 
   //for data view
   //facility
@@ -558,15 +737,29 @@ class DataView extends React.Component<any, any> {
           },
         });
       }
-      this.dataConfig.facilityId = selectedOption.value;
-      this.dataConfig = {
-        facilityId: selectedOption.value,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: this.state.divisionData,
-        district: this.state.districtData,
-      };
-      this.getRegData(this.dataConfig);
+      let allDataRecord = this.state.dataList;
+      const resultData = allDataRecord.filter(
+        (item) => item.facilityId === selectedOption.value
+      );
+      const dataFinal = resultData?.map((data: any) => {
+        let config = {
+          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+          "Total Patient": data.totalPatient || 0,
+          OPD: data.numberOfOpdPatient || 0,
+          Emergency: data.numberOfEmergencyPatient || 0,
+          Male: data.numberOfMalePatient || 0,
+          Female: data.numberOfFemalePatient || 0,
+          Paid: data.numberOfPaidPatient || 0,
+          Free: data.numberOfFreePatient || 0,
+          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+          Date: data.sentTime || "N/A",
+        };
+        return config;
+      });
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     } else if (selectedOption === null) {
       this.setState({
         districtNameData: "",
@@ -608,15 +801,26 @@ class DataView extends React.Component<any, any> {
           facilityListData: tempArrayFacility,
         });
       }
-      this.dataConfig.facilityId = selectedOption;
-      this.dataConfig = {
-        facilityId: null,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegData(this.dataConfig);
+      const resultData = this.state.dataList;
+      const dataFinal = resultData?.map((data: any) => {
+        let config = {
+          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+          "Total Patient": data.totalPatient || 0,
+          OPD: data.numberOfOpdPatient || 0,
+          Emergency: data.numberOfEmergencyPatient || 0,
+          Male: data.numberOfMalePatient || 0,
+          Female: data.numberOfFemalePatient || 0,
+          Paid: data.numberOfPaidPatient || 0,
+          Free: data.numberOfFreePatient || 0,
+          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+          Date: data.sentTime || "N/A",
+        };
+        return config;
+      });
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     }
   };
   //division
@@ -629,11 +833,7 @@ class DataView extends React.Component<any, any> {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-      });
-      this.setState({
         districtNameData: "",
-      });
-      this.setState({
         facilityNameData: "",
       });
       const all = this.state.allList;
@@ -691,11 +891,9 @@ class DataView extends React.Component<any, any> {
         };
         return config;
       });
-      var date = new Date();
       this.setState({
         isLoaded: true,
         items: dataFinal,
-        dateOfToday: this.formateDefaultDate(date),
       });
     } else if (selectedOption === null) {
       this.setState({
@@ -739,14 +937,27 @@ class DataView extends React.Component<any, any> {
           facilityListData: tempArrayFacility,
         });
       }
-      this.dataConfig = {
-        facilityId: null,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegData(this.dataConfig);
+
+      const resultData = this.state.dataList;
+      const dataFinal = resultData?.map((data: any) => {
+        let config = {
+          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+          "Total Patient": data.totalPatient || 0,
+          OPD: data.numberOfOpdPatient || 0,
+          Emergency: data.numberOfEmergencyPatient || 0,
+          Male: data.numberOfMalePatient || 0,
+          Female: data.numberOfFemalePatient || 0,
+          Paid: data.numberOfPaidPatient || 0,
+          Free: data.numberOfFreePatient || 0,
+          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+          Date: data.sentTime || "N/A",
+        };
+        return config;
+      });
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     }
   };
   //district
@@ -831,11 +1042,9 @@ class DataView extends React.Component<any, any> {
         };
         return config;
       });
-      var date = new Date();
       this.setState({
         isLoaded: true,
         items: dataFinal,
-        dateOfToday: this.formateDefaultDate(date),
       });
     } else if (selectedOption === null) {
       this.setState({
@@ -879,14 +1088,26 @@ class DataView extends React.Component<any, any> {
           facilityListData: tempArrayFacility,
         });
       }
-      this.dataConfig = {
-        facilityId: null,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegData(this.dataConfig);
+      const resultData = this.state.dataList;
+      const dataFinal = resultData?.map((data: any) => {
+        let config = {
+          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+          "Total Patient": data.totalPatient || 0,
+          OPD: data.numberOfOpdPatient || 0,
+          Emergency: data.numberOfEmergencyPatient || 0,
+          Male: data.numberOfMalePatient || 0,
+          Female: data.numberOfFemalePatient || 0,
+          Paid: data.numberOfPaidPatient || 0,
+          Free: data.numberOfFreePatient || 0,
+          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+          Date: data.sentTime || "N/A",
+        };
+        return config;
+      });
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     }
   };
   //for chart
@@ -978,7 +1199,6 @@ class DataView extends React.Component<any, any> {
         district: this.state.districtChart,
       };
       this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
       this.dataConfigMF = {
         facilityId: selectedOption.value,
         startDate: this.dataConfigMF.startDate,
@@ -987,7 +1207,6 @@ class DataView extends React.Component<any, any> {
         district: this.dataConfigMF.districtChart,
       };
       this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
       this.dataConfigFP = {
         facilityId: selectedOption.value,
         startDate: this.dataConfigFP.startDate,
@@ -996,7 +1215,6 @@ class DataView extends React.Component<any, any> {
         district: this.dataConfigFP.districtChart,
       };
       this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
     } else if (selectedOption === null) {
       this.dataConfigEO.facilityId = selectedOption;
       this.dataConfigMF.facilityId = selectedOption;
@@ -1052,7 +1270,6 @@ class DataView extends React.Component<any, any> {
         division: null,
         district: null,
       };
-      this.getRegDataEO(this.dataConfigEO);
       this.getSumDataEO(this.dataConfigEO);
       this.dataConfigMF = {
         facilityId: null,
@@ -1061,7 +1278,6 @@ class DataView extends React.Component<any, any> {
         division: null,
         district: null,
       };
-      this.getRegDataMF(this.dataConfigMF);
       this.getSumDataMF(this.dataConfigMF);
       this.dataConfigFP = {
         facilityId: null,
@@ -1070,7 +1286,6 @@ class DataView extends React.Component<any, any> {
         division: null,
         district: null,
       };
-      this.getRegDataFP(this.dataConfigFP);
       this.getSumDataFP(this.dataConfigFP);
     }
   };
@@ -1086,7 +1301,13 @@ class DataView extends React.Component<any, any> {
         },
         districtNameChart: "",
         facilityNameChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       let allList = all.filter(
         (item) => item.facilityDivision === selectedOption.value
@@ -1139,7 +1360,8 @@ class DataView extends React.Component<any, any> {
         (item) => item.facilityInfo.facilityDivision === selectedOption.value
       );
       this.dataToExportFP = FPData;
-    } else if (selectedOption === null) {
+    }
+    else if (selectedOption === null) {
       this.setState({
         selectedOption,
         divisionNameChart: "",
@@ -1147,7 +1369,13 @@ class DataView extends React.Component<any, any> {
         divisionChart: null,
         districtChart: null,
         facilityNameChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
       const facility = tempFacility.filter(
@@ -1183,34 +1411,12 @@ class DataView extends React.Component<any, any> {
           facilityListChart: tempArrayFacility,
         });
       }
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-      this.dataConfigFP = {
-        facilityId: null,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
+      let allEORecord = this.state.EOList;
+      this.dataToExportEO = allEORecord;
+      let allMFRecord = this.state.MFList;
+      this.dataToExportMF = allMFRecord;
+      let allFPRecord = this.state.FPList;
+      this.dataToExportFP = allFPRecord;
     }
   };
   //district
@@ -1224,7 +1430,13 @@ class DataView extends React.Component<any, any> {
           value: selectedOption.value,
         },
         facilityNameChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       let allList = all.filter(
         (item) => item?.facilityDistrict === selectedOption.value
@@ -1299,7 +1511,13 @@ class DataView extends React.Component<any, any> {
         divisionNameChart: "",
         facilityNameChart: "",
         districtChart: null,
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+       this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
       const facility = tempFacility.filter(
@@ -1333,33 +1551,12 @@ class DataView extends React.Component<any, any> {
           facilityListChart: tempArrayFacility,
         });
       }
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-      this.dataConfigFP = {
-        facilityId: null,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
+      let allEORecord = this.state.EOList;
+      this.dataToExportEO = allEORecord;
+      let allMFRecord = this.state.MFList;
+      this.dataToExportMF = allMFRecord;
+      let allFPRecord = this.state.FPList;
+      this.dataToExportFP = allFPRecord;
     }
   };
 
@@ -1610,7 +1807,7 @@ class DataView extends React.Component<any, any> {
             <div
               className=" pl-0 pr-0 pt-1"
               id="dataView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ? "block" : "none" }}
             >
               <form className="form-inline m-0 p-0 ">
                 <div className="form-group col-12  pl-0 filter d-flex">
@@ -1707,7 +1904,7 @@ class DataView extends React.Component<any, any> {
               <div
                 className="col-12  pt-0 "
                 id="dataView"
-                style={{ display: showing ? "block" : "none" }}
+                style={{ display: showing ? "none" : "block" }}
               >
                 <div className="d-flex  ">
                   <div className="d-flex ">
@@ -1772,7 +1969,7 @@ class DataView extends React.Component<any, any> {
                 className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                 onClick={() => this.setState({ showing: !showing })}
               >
-                {showing ? "Data View" : "Analytical View"}
+                {showing ? "Analytical View" : "Data View"}
               </button>
             </div>
           </div>
@@ -1780,7 +1977,7 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="dataView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ? "block" : "none" }}
             >
               <ReactFlexyTable
                 className="table table-stripped table-hover table-sm tableReg"
@@ -1803,7 +2000,7 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12  pt-0"
               id="dataView"
-              style={{ display: showing ? "block" : "none" }}
+              style={{ display: showing ? "none" : "block" }}
             >
               <div
                 style={{
