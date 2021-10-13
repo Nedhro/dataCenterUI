@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.scss';
-import DataView from './pages/collector/DataView';
-//import RegistrationCollector from './pages/collector/RegistrationCollector';
+import DashBoard from './pages/collector/DashBoard';
+// import DataView from './pages/collector/DataView';
 
 function App() {
   return (
     <div className="App">
-    {/* <RegistrationCollector/> */}
-    <DataView/>
+    {/* <DataView/> */}
+    <DashBoard/>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import Carousel from "react-bootstrap/Carousel";
 import CollectorService from "../../service/CollectorService";
 import "../../static/scss/Custom.scss";
 import "../../static/scss/Table.scss";
@@ -11,7 +12,7 @@ import opdPatient from "../../icons/opdPatient.png";
 import emergencyPatient from "../../icons/emergencyPatient.png";
 import malePatient from "../../icons/malePatient.png";
 import femalePatient from "../../icons/femalePatient.png";
-class DataView extends React.Component<any, any> {
+class DashBoard extends React.Component<any, any> {
   /*
    * EO: Emergency-OPD
    * MF: Male-Female
@@ -40,6 +41,7 @@ class DataView extends React.Component<any, any> {
       filterWithFacilityIdEO: false,
       filterWithFacilityIdMF: false,
       filterWithFacilityIdFP: false,
+      selectedFacilityName: null,
       selectedChartEO: null,
       selectedChartMF: null,
       selectedChartFP: null,
@@ -898,6 +900,7 @@ class DataView extends React.Component<any, any> {
           label: selectedOption.value,
           value: selectedOption.value,
         },
+        selectedFacilityName: selectedOption.value
       });
       const all = this.state.allList;
       let allList = all.filter(
@@ -1373,6 +1376,7 @@ class DataView extends React.Component<any, any> {
       selectedChartEO,
       selectedChartMF,
       selectedChartFP,
+      selectedFacilityName
     } = this.state;
     const tableTitle = "SHR_Dashboard_" + dateOfToday.toString();
     const downloadExcelProps = {
@@ -1808,215 +1812,215 @@ class DataView extends React.Component<any, any> {
               <div
                 style={{
                   border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderRadius: "10px",
+                  background: "#c4cbcc",
+                  boxShadow: "2px 2px 10px gray",
                 }}
               >
-                <div className="p-3 text-dark text-center">
-                  <h2>
-                    <u>Emergency-OPD</u>
-                  </h2>
-                </div>
-                <div>
-                  <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 ">
-                      <div className="form-group col-12 ml-1 pl-0 filter d-flex">
-                        <div style={{ width: "250px" }}>
-                          <Select
-                            styles={customStyles}
-                            value={selectedChartEO || chartOptions[0]}
-                            onChange={handleChartTypeChangeEO}
-                            options={chartOptions}
-                            placeholder="Select Chart Type"
-                          />
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
-                          </label>
-                          <input
-                            className="text m-1 p-1"
-                            onChange={this.changeHandlerEO}
-                            pattern="MM-dd-yyyy"
-                            type="date"
-                            name="startDate"
-                            id="startDate"
-                            defaultValue={dateOfToday}
-                            max={dateOfToday}
-                          />
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
-                          </label>
-                          <input
-                            className="text m-1 p-1"
-                            onChange={this.changeHandlerEO}
-                            pattern="MM-dd-yyyy"
-                            type="date"
-                            name="endDate"
-                            id="endDate"
-                            defaultValue={dateOfToday}
-                            max={dateOfToday}
-                          />
-                        </div>
+                <Carousel className="container-fluid" pause="hover" controls={true} indicators={false}>
+                  {/* Opd Emergency */}
+                  <Carousel.Item interval={5000}>
+                    <div>
+                      <div className="text-dark text-center">
+                        <h2>
+                          <u>Emergency-OPD</u>
+                        </h2>
                       </div>
-                    </form>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-12 col-sm-12">
-                    <div className="d-flex justify-content-center">
-                      <CoordinateChart
-                        data={this.dataToExportEO}
-                        chartType={selectedChartEO}
-                        filterType={this.state.opdEmergency}
-                        dateWiseFilter={this.state.filterWithFacilityIdEO}
-                      />
+
+                      <div className="d-flex justify-content-center">
+                        <form className="form-inline">
+                          <div className="form-group col-12 filter d-flex">
+                            <div style={{ width: "250px" }}>
+                              <Select
+                                styles={customStyles}
+                                value={selectedChartEO || chartOptions[0]}
+                                onChange={handleChartTypeChangeEO}
+                                options={chartOptions}
+                                placeholder="Select Chart Type"
+                              />
+                            </div>
+                            <div className="d-flex">
+                              <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                                Start Date
+                              </label>
+                              <input
+                                className="text m-1 p-1"
+                                onChange={this.changeHandlerEO}
+                                pattern="MM-dd-yyyy"
+                                type="date"
+                                name="startDate"
+                                id="startDate"
+                                defaultValue={dateOfToday}
+                                max={dateOfToday}
+                              />
+                            </div>
+                            <div className="d-flex">
+                              <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                                End Date
+                              </label>
+                              <input
+                                className="text m-1 p-1"
+                                onChange={this.changeHandlerEO}
+                                pattern="MM-dd-yyyy"
+                                type="date"
+                                name="endDate"
+                                id="endDate"
+                                defaultValue={dateOfToday}
+                                max={dateOfToday}
+                              />
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+
+                      <div className="d-flex justify-content-center">
+                        <CoordinateChart
+                          data={this.dataToExportEO}
+                          chartType={selectedChartEO}
+                          filterType={this.state.opdEmergency}
+                          dateWiseFilter={this.state.filterWithFacilityIdEO}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
-                  marginTop: "20px",
-                }}
-              >
-                <div className="p-3 text-dark text-center">
-                  <h2>
-                    <u>Male-Female</u>
-                  </h2>
-                </div>
-                <div>
-                  <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 ">
-                      <div className="form-group col-12 ml-1 pl-0 filter d-flex">
-                        <div style={{ width: "250px" }}>
-                          <Select
-                            styles={customStyles}
-                            value={selectedChartMF || chartOptions[0]}
-                            onChange={handleChartTypeChangeMF}
-                            options={chartOptions}
-                            placeholder="Select Chart Type"
-                          />
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
-                          </label>
-                          <input
-                            className="text m-1 p-1"
-                            onChange={this.changeHandlerMF}
-                            pattern="MM-dd-yyyy"
-                            type="date"
-                            name="startDate"
-                            id="startDate"
-                            defaultValue={dateOfToday}
-                            max={dateOfToday}
-                          />
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
-                          </label>
-                          <input
-                            className="text m-1 p-1"
-                            onChange={this.changeHandlerMF}
-                            pattern="MM-dd-yyyy"
-                            type="date"
-                            name="endDate"
-                            id="endDate"
-                            defaultValue={dateOfToday}
-                            max={dateOfToday}
-                          />
-                        </div>
+                    <Carousel.Caption>
+                      <h5 style={{marginTop:"-200px"}} className="text-center text-dark">{selectedFacilityName}</h5>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                  {/* Male Female */}
+                  <Carousel.Item interval={5000}>
+                    <div>
+                      <div className="text-dark text-center">
+                        <h2>
+                          <u>Male-Female</u>
+                        </h2>
                       </div>
-                    </form>
-                  </div>
-                </div>
-                <div className="d-flex justify-content-center">
-                  <CoordinateChart
-                    data={this.dataToExportMF}
-                    chartType={selectedChartMF}
-                    filterType={this.state.maleFemale}
-                    dateWiseFilter={this.state.filterWithFacilityIdMF}
-                  />
-                </div>
-              </div>
-              <div
-                style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
-                  marginTop: "20px",
-                }}
-              >
-                <div className="p-3 text-dark text-center">
-                  <h2>
-                    <u>Free-Paid</u>
-                  </h2>
-                </div>
-                <div>
-                  <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 ">
-                      <div className="form-group col-12 ml-1 pl-0 filter d-flex">
-                        <div style={{ width: "250px" }}>
-                          <Select
-                            styles={customStyles}
-                            value={selectedChartFP || chartOptions[0]}
-                            onChange={handleChartTypeChangeFP}
-                            options={chartOptions}
-                            placeholder="Select Chart Type"
-                          />
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
-                          </label>
-                          <input
-                            className="text m-1 p-1"
-                            onChange={this.changeHandlerFP}
-                            pattern="MM-dd-yyyy"
-                            type="date"
-                            name="startDate"
-                            id="startDate"
-                            defaultValue={dateOfToday}
-                            max={dateOfToday}
-                          />
-                        </div>
-                        <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
-                          </label>
-                          <input
-                            className="text m-1 p-1"
-                            onChange={this.changeHandlerFP}
-                            pattern="MM-dd-yyyy"
-                            type="date"
-                            name="endDate"
-                            id="endDate"
-                            defaultValue={dateOfToday}
-                            max={dateOfToday}
-                          />
-                        </div>
+
+                      <div className="d-flex justify-content-center">
+                        <form className="form-inline">
+                          <div className="form-group col-12 filter d-flex">
+                            <div style={{ width: "250px" }}>
+                              <Select
+                                styles={customStyles}
+                                value={selectedChartMF || chartOptions[0]}
+                                onChange={handleChartTypeChangeMF}
+                                options={chartOptions}
+                                placeholder="Select Chart Type"
+                              />
+                            </div>
+                            <div className="d-flex">
+                              <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                                Start Date
+                              </label>
+                              <input
+                                className="text m-1 p-1"
+                                onChange={this.changeHandlerMF}
+                                pattern="MM-dd-yyyy"
+                                type="date"
+                                name="startDate"
+                                id="startDate"
+                                defaultValue={dateOfToday}
+                                max={dateOfToday}
+                              />
+                            </div>
+                            <div className="d-flex">
+                              <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                                End Date
+                              </label>
+                              <input
+                                className="text m-1 p-1"
+                                onChange={this.changeHandlerMF}
+                                pattern="MM-dd-yyyy"
+                                type="date"
+                                name="endDate"
+                                id="endDate"
+                                defaultValue={dateOfToday}
+                                max={dateOfToday}
+                              />
+                            </div>
+                          </div>
+                        </form>
                       </div>
-                    </form>
-                  </div>
-                </div>
-                <div className="d-flex justify-content-center">
-                  <CoordinateChart
-                    data={this.dataToExportFP}
-                    chartType={selectedChartFP}
-                    filterType={this.state.paidFree}
-                    dateWiseFilter={this.state.filterWithFacilityIdFP}
-                  />
-                </div>
+
+                      <div className="d-flex justify-content-center">
+                        <CoordinateChart
+                          data={this.dataToExportMF}
+                          chartType={selectedChartMF}
+                          filterType={this.state.maleFemale}
+                          dateWiseFilter={this.state.filterWithFacilityIdMF} />
+                      </div>
+                    </div>
+                    <Carousel.Caption >
+                      <h5 style={{marginTop:"-200px"}} className="text-center text-dark">{selectedFacilityName}</h5>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                  {/* Free Paid */}
+                  <Carousel.Item interval={5000}>
+                    <div>
+                      <div className="text-dark text-center">
+                        <h2>
+                          <u>Free-Paid</u>
+                        </h2>
+                      </div>
+                      <div className="d-flex justify-content-center">
+                        <form className="form-inline">
+                          <div className="form-group col-12 filter d-flex">
+                            <div style={{ width: "250px" }}>
+                              <Select
+                                styles={customStyles}
+                                value={selectedChartFP || chartOptions[0]}
+                                onChange={handleChartTypeChangeFP}
+                                options={chartOptions}
+                                placeholder="Select Chart Type"
+                              />
+                            </div>
+                            <div className="d-flex">
+                              <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                                Start Date
+                              </label>
+                              <input
+                                className="text m-1 p-1"
+                                onChange={this.changeHandlerFP}
+                                pattern="MM-dd-yyyy"
+                                type="date"
+                                name="startDate"
+                                id="startDate"
+                                defaultValue={dateOfToday}
+                                max={dateOfToday}
+                              />
+                            </div>
+                            <div className="d-flex">
+                              <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                                End Date
+                              </label>
+                              <input
+                                className="text m-1 p-1"
+                                onChange={this.changeHandlerFP}
+                                pattern="MM-dd-yyyy"
+                                type="date"
+                                name="endDate"
+                                id="endDate"
+                                defaultValue={dateOfToday}
+                                max={dateOfToday}
+                              />
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+
+                      <div className="d-flex justify-content-center">
+                        <CoordinateChart
+                          data={this.dataToExportFP}
+                          chartType={selectedChartFP}
+                          filterType={this.state.paidFree}
+                          dateWiseFilter={this.state.filterWithFacilityIdFP}
+                        />
+                      </div>
+                    </div>
+                    <Carousel.Caption>
+                      <h5 style={{marginTop:"-200px"}} className="text-center text-dark">{selectedFacilityName}</h5>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                </Carousel>
               </div>
             </div>
           </div>
@@ -2025,4 +2029,4 @@ class DataView extends React.Component<any, any> {
     }
   }
 }
-export default DataView;
+export default DashBoard;
