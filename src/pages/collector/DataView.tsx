@@ -6,12 +6,18 @@ import ReactFlexyTable from "react-flexy-table";
 import "react-flexy-table/dist/index.css";
 import CoordinateChart from "../charts/CoordinateChart";
 import Select from "react-select";
-import totalPatient from "../../icons/totalPatient.png"
-import opdPatient from "../../icons/opdPatient.png"
-import emergencyPatient from "../../icons/emergencyPatient.png"
-import malePatient from "../../icons/malePatient.png"
-import femalePatient from "../../icons/femalePatient.png"
+import totalPatient from "../../icons/totalPatient.png";
+import opdPatient from "../../icons/opdPatient.png";
+import emergencyPatient from "../../icons/emergencyPatient.png";
+import malePatient from "../../icons/malePatient.png";
+import femalePatient from "../../icons/femalePatient.png";
 class DataView extends React.Component<any, any> {
+  /*
+   * EO: Emergency-OPD
+   * MF: Male-Femeale
+   * FP: Free-Paid
+   * */
+
   dataConfig: any = {};
   dataConfigEO: any = {};
   dataConfigMF: any = {};
@@ -48,12 +54,12 @@ class DataView extends React.Component<any, any> {
       MFList: [],
       FPList: [],
       dataList: [],
-      divisionNameChart: '',
-      districtNameChart: '',
-      facilityNameChart: '',
-      divisionNameData: '',
-      districtNameData: '',
-      facilityNameData: '',
+      divisionNameChart: "",
+      districtNameChart: "",
+      facilityNameChart: "",
+      divisionNameData: "",
+      districtNameData: "",
+      facilityNameData: "",
       divisionData: null,
       districtData: null,
       divisionChart: null,
@@ -61,15 +67,15 @@ class DataView extends React.Component<any, any> {
       card: {},
       opdEmergency: {
         label: "OPD-Emergency",
-        value: "opd-emergency"
+        value: "opd-emergency",
       },
       maleFemale: {
         label: "Male-Female",
-        value: "male-female"
+        value: "male-female",
       },
       paidFree: {
         label: "Paid-Free",
-        value: "paid-free"
+        value: "paid-free",
       },
     };
     this.changeHandler = this.changeHandler.bind(this);
@@ -113,43 +119,48 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegDataFP(this.dataConfigFP);
     this.getSumDataFP(this.dataConfigFP);
-    this.timerID = setInterval(
-      () => {
-        this.getRegData(this.dataConfig)
-        this.getRegDataEO(this.dataConfigEO)
-        this.getRegDataMF(this.dataConfigMF)
-        this.getRegDataFP(this.dataConfigFP)
-        CollectorService.getAllCard().then(
-          (response): any => {
-            if (response) {
-              this.setState({
-                card: response.data.content
-              })
-            }
-          }
-        );
-      },
-      5 * 60 * 1000
-    );
-    CollectorService.getAllCard().then(
-      (response): any => {
+    this.timerID = setInterval(() => {
+      this.getRegData(this.dataConfig);
+      this.getRegDataEO(this.dataConfigEO);
+      this.getRegDataMF(this.dataConfigMF);
+      this.getRegDataFP(this.dataConfigFP);
+      CollectorService.getAllCard().then((response): any => {
         if (response) {
           this.setState({
-            card: response.data.content
-          })
+            card: response.data.content,
+          });
         }
+      });
+    }, 5 * 60 * 1000);
+    CollectorService.getAllCard().then((response): any => {
+      if (response) {
+        this.setState({
+          card: response.data.content,
+        });
       }
-    );
+    });
     CollectorService.getAllRegistrationCollectionData(this.dataConfig).then(
       (res): any => {
         const resultData = res.data.content;
-        const all = resultData.map(item => item.facilityInfo)
-        const tempDistrict = resultData.map(item => item.facilityInfo.facilityDistrict)
-        const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
-        const tempDivision = resultData.map(item => item.facilityInfo.facilityDivision)
-        const division = tempDivision.filter((item, index) => tempDivision.indexOf(item) === index);
-        const tempFacility = resultData.map(item => item.facilityInfo.facilityName)
-        const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
+        const all = resultData.map((item) => item.facilityInfo);
+        const tempDistrict = resultData.map(
+          (item) => item.facilityInfo.facilityDistrict
+        );
+        const district = tempDistrict.filter(
+          (item, index) => tempDistrict.indexOf(item) === index
+        );
+        const tempDivision = resultData.map(
+          (item) => item.facilityInfo.facilityDivision
+        );
+        const division = tempDivision.filter(
+          (item, index) => tempDivision.indexOf(item) === index
+        );
+        const tempFacility = resultData.map(
+          (item) => item.facilityInfo.facilityName
+        );
+        const facility = tempFacility.filter(
+          (item, index) => tempFacility.indexOf(item) === index
+        );
         const tempArrayDis: any = [];
         if (district.length) {
           district.forEach((element: any) => {
@@ -157,11 +168,11 @@ class DataView extends React.Component<any, any> {
               label: `${element}`,
               value: element,
             });
-          })
+          });
           this.setState({
             districtListData: tempArrayDis,
             districtListChart: tempArrayDis,
-          })
+          });
         }
         const tempArrayFacility: any = [];
         if (facility.length) {
@@ -170,12 +181,12 @@ class DataView extends React.Component<any, any> {
               label: `${element}`,
               value: element,
             });
-          })
+          });
 
           this.setState({
             facilityListData: tempArrayFacility,
             facilityListChart: tempArrayFacility,
-          })
+          });
         }
         const tempArrayDiv: any = [];
         if (division.length) {
@@ -184,16 +195,16 @@ class DataView extends React.Component<any, any> {
               label: `${element}`,
               value: element,
             });
-          })
+          });
           this.setState({
             divisionListData: tempArrayDiv,
             divisionListChart: tempArrayDiv,
-          })
+          });
         }
         this.setState({
           allList: all,
           chartList: res.data.content,
-        })
+        });
       }
     );
   }
@@ -362,7 +373,7 @@ class DataView extends React.Component<any, any> {
           this.dataToExportEO = response.data.content;
           this.setState({
             filterWithFacilityIdEO: false,
-            EOList: response.data.content
+            EOList: response.data.content,
           });
         }
       }
@@ -394,7 +405,7 @@ class DataView extends React.Component<any, any> {
           this.dataToExportMF = response.data.content;
           this.setState({
             filterWithFacilityIdMF: false,
-            MFList: response.data.content
+            MFList: response.data.content,
           });
         }
       }
@@ -426,7 +437,7 @@ class DataView extends React.Component<any, any> {
           this.dataToExportFP = response.data.content;
           this.setState({
             filterWithFacilityIdFP: false,
-            FPList: response.data.content
+            FPList: response.data.content,
           });
         }
       }
@@ -441,14 +452,14 @@ class DataView extends React.Component<any, any> {
           let config = {
             "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
             "Total Patient": data.totalPatient || 0,
-            OPD: data.numberOfOpdPatient || 0,
-            Emergency: data.numberOfEmergencyPatient || 0,
-            Male: data.numberOfMalePatient || 0,
-            Female: data.numberOfFemalePatient || 0,
-            Paid: data.numberOfPaidPatient || 0,
-            Free: data.numberOfFreePatient || 0,
+            "OPD": data.numberOfOpdPatient || 0,
+            "Emergency": data.numberOfEmergencyPatient || 0,
+            "Male": data.numberOfMalePatient || 0,
+            "Female": data.numberOfFemalePatient || 0,
+            "Paid": data.numberOfPaidPatient || 0,
+            "Free": data.numberOfFreePatient || 0,
             "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-            Date: data.sentTime || "N/A",
+            "Date": data.sentTime || "N/A",
           };
           return config;
         });
@@ -457,7 +468,7 @@ class DataView extends React.Component<any, any> {
           isLoaded: true,
           items: dataFinal,
           dateOfToday: this.formateDefaultDate(date),
-          dataList: resultData
+          dataList: resultData,
         });
       },
       (error) => {
@@ -480,17 +491,33 @@ class DataView extends React.Component<any, any> {
         },
       });
       const all = this.state.allList;
-      let allList = all.filter(item => item?.facilityName === selectedOption.value);
-      const tempDiv = allList.map(item => item.facilityDivision);
-      const division = tempDiv.filter((item, index) => tempDiv.indexOf(item) === index);
-      const tempDis = allList.map(item => item.facilityDistrict);
-      const district = tempDis.filter((item, index) => tempDis.indexOf(item) === index);
-      const facilityDistrict = all.filter(item => item?.facilityDistrict === district[0]);
-      const tempFacility = facilityDistrict.map(item => item.facilityName)
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDistrictList = all.filter(item => item?.facilityDivision === division[0]);
-      const tempDistrict = tempDistrictList.map(item => item.facilityDistrict)
-      const districtList = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      let allList = all.filter(
+        (item) => item?.facilityName === selectedOption.value
+      );
+      const tempDiv = allList.map((item) => item.facilityDivision);
+      const division = tempDiv.filter(
+        (item, index) => tempDiv.indexOf(item) === index
+      );
+      const tempDis = allList.map((item) => item.facilityDistrict);
+      const district = tempDis.filter(
+        (item, index) => tempDis.indexOf(item) === index
+      );
+      const facilityDistrict = all.filter(
+        (item) => item?.facilityDistrict === district[0]
+      );
+      const tempFacility = facilityDistrict.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDistrictList = all.filter(
+        (item) => item?.facilityDivision === division[0]
+      );
+      const tempDistrict = tempDistrictList.map(
+        (item) => item.facilityDistrict
+      );
+      const districtList = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (districtList.length) {
         districtList.forEach((element: any) => {
@@ -498,10 +525,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListData: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -510,10 +537,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListData: tempArrayFacility,
-        })
+        });
       }
       if (division[0]) {
         this.setState({
@@ -521,7 +548,7 @@ class DataView extends React.Component<any, any> {
             label: division[0],
             value: division[0],
           },
-        })
+        });
       }
       if (district[0]) {
         this.setState({
@@ -529,7 +556,7 @@ class DataView extends React.Component<any, any> {
             label: district[0],
             value: district[0],
           },
-        })
+        });
       }
       this.dataConfig.facilityId = selectedOption.value;
       this.dataConfig = {
@@ -540,18 +567,21 @@ class DataView extends React.Component<any, any> {
         district: this.state.districtData,
       };
       this.getRegData(this.dataConfig);
-    }
-    else if (selectedOption === null) {
+    } else if (selectedOption === null) {
       this.setState({
-        districtNameData: '',
-        divisionNameData: '',
-        facilityNameData: ''
+        districtNameData: "",
+        divisionNameData: "",
+        facilityNameData: "",
       });
       const all = this.state.allList;
-      const tempFacility = all.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDistrict = all.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      const tempFacility = all.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDistrict = all.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -559,12 +589,12 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListData: tempArrayDis,
           divisionData: null,
-          districtData: null
-        })
+          districtData: null,
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -573,10 +603,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListData: tempArrayFacility,
-        })
+        });
       }
       this.dataConfig.facilityId = selectedOption;
       this.dataConfig = {
@@ -588,7 +618,7 @@ class DataView extends React.Component<any, any> {
       };
       this.getRegData(this.dataConfig);
     }
-  }
+  };
   //division
   onSearchDivisionData = (selectedOption: any) => {
     if (selectedOption !== null) {
@@ -601,17 +631,23 @@ class DataView extends React.Component<any, any> {
         },
       });
       this.setState({
-        districtNameData: ''
-      })
+        districtNameData: "",
+      });
       this.setState({
-        facilityNameData: ''
-      })
+        facilityNameData: "",
+      });
       const all = this.state.allList;
-      let tempAll = all.filter(item => item.facilityDivision === selectedOption.value);
-      const tempDistrict = tempAll.map(item => item.facilityDistrict);
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
-      const tempFacility = tempAll.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
+      let tempAll = all.filter(
+        (item) => item.facilityDivision === selectedOption.value
+      );
+      const tempDistrict = tempAll.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
+      const tempFacility = tempAll.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -619,10 +655,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListData: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -631,13 +667,15 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListData: tempArrayFacility,
-        })
+        });
       }
       let allDataRecord = this.state.dataList;
-      const resultData = allDataRecord.filter(item => item.facilityInfo.facilityDivision === selectedOption.value)
+      const resultData = allDataRecord.filter(
+        (item) => item.facilityInfo.facilityDivision === selectedOption.value
+      );
       const dataFinal = resultData?.map((data: any) => {
         let config = {
           "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
@@ -659,21 +697,24 @@ class DataView extends React.Component<any, any> {
         items: dataFinal,
         dateOfToday: this.formateDefaultDate(date),
       });
-    }
-    else if (selectedOption === null) {
+    } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        divisionNameData: '',
-        districtNameData: '',
+        divisionNameData: "",
+        districtNameData: "",
         divisionData: null,
         districtData: null,
-        facilityNameData: ''
+        facilityNameData: "",
       });
       const all = this.state.allList;
-      const tempDistrict = all.map(item => item.facilityDistrict);
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
-      const tempFacility = all.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
+      const tempDistrict = all.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
+      const tempFacility = all.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -681,10 +722,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListData: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -693,10 +734,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListData: tempArrayFacility,
-        })
+        });
       }
       this.dataConfig = {
         facilityId: null,
@@ -707,7 +748,7 @@ class DataView extends React.Component<any, any> {
       };
       this.getRegData(this.dataConfig);
     }
-  }
+  };
   //district
   onSearchDistrictData = (selectedOption: any) => {
     if (selectedOption !== null) {
@@ -718,17 +759,27 @@ class DataView extends React.Component<any, any> {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        facilityNameData: ''
+        facilityNameData: "",
       });
       const all = this.state.allList;
-      let allList = all.filter(item => item?.facilityDistrict === selectedOption.value);
-      const facilityDivision = allList.map(item => item.facilityDivision);
-      const division = facilityDivision.filter((item, index) => facilityDivision.indexOf(item) === index);
-      const tempFacility = allList.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDivision = all.filter(item => item?.facilityDivision === division[0]);
-      const tempDistrict = tempDivision.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      let allList = all.filter(
+        (item) => item?.facilityDistrict === selectedOption.value
+      );
+      const facilityDivision = allList.map((item) => item.facilityDivision);
+      const division = facilityDivision.filter(
+        (item, index) => facilityDivision.indexOf(item) === index
+      );
+      const tempFacility = allList.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDivision = all.filter(
+        (item) => item?.facilityDivision === division[0]
+      );
+      const tempDistrict = tempDivision.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayFacility: any = [];
       if (facility.length) {
         facility.forEach((element: any) => {
@@ -736,10 +787,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListData: tempArrayFacility,
-        })
+        });
       }
       const tempArrayDis: any = [];
       if (district.length) {
@@ -748,10 +799,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListData: tempArrayDis,
-        })
+        });
       }
       if (division[0]) {
         this.setState({
@@ -759,10 +810,12 @@ class DataView extends React.Component<any, any> {
             label: division[0],
             value: division[0],
           },
-        })
+        });
       }
       let allDataRecord = this.state.dataList;
-      const resultData = allDataRecord.filter(item => item.facilityInfo.facilityDistrict === selectedOption.value)
+      const resultData = allDataRecord.filter(
+        (item) => item.facilityInfo.facilityDistrict === selectedOption.value
+      );
       const dataFinal = resultData?.map((data: any) => {
         let config = {
           "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
@@ -784,22 +837,24 @@ class DataView extends React.Component<any, any> {
         items: dataFinal,
         dateOfToday: this.formateDefaultDate(date),
       });
-
-    }
-    else if (selectedOption === null) {
+    } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        districtNameData: '',
+        districtNameData: "",
         divisionData: null,
         districtData: null,
-        divisionNameData: '',
-        facilityNameData: ''
+        divisionNameData: "",
+        facilityNameData: "",
       });
       const all = this.state.allList;
-      const tempFacility = all.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDistrict = all.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      const tempFacility = all.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDistrict = all.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -807,10 +862,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListData: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -819,10 +874,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListData: tempArrayFacility,
-        })
+        });
       }
       this.dataConfig = {
         facilityId: null,
@@ -833,7 +888,7 @@ class DataView extends React.Component<any, any> {
       };
       this.getRegData(this.dataConfig);
     }
-  }
+  };
   //for chart
   //facility
   onSearchFacilityChart = (selectedOption: any) => {
@@ -843,19 +898,35 @@ class DataView extends React.Component<any, any> {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-      })
+      });
       const all = this.state.allList;
-      let allList = all.filter(item => item?.facilityName === selectedOption.value);
-      const tempDivision = allList.map(item => item.facilityDivision);
-      const division = tempDivision.filter((item, index) => tempDivision.indexOf(item) === index);
-      const facilityDistrict = allList.map(item => item.facilityDistrict);
-      const district = facilityDistrict.filter((item, index) => facilityDistrict.indexOf(item) === index);
-      const tempArr = all.filter(item => item?.facilityDistrict === district[0]);
-      const tempFacility = tempArr.map(item => item.facilityName)
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDistrictList = all.filter(item => item?.facilityDivision === division[0]);
-      const tempDistrict = tempDistrictList.map(item => item.facilityDistrict)
-      const districtList = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      let allList = all.filter(
+        (item) => item?.facilityName === selectedOption.value
+      );
+      const tempDivision = allList.map((item) => item.facilityDivision);
+      const division = tempDivision.filter(
+        (item, index) => tempDivision.indexOf(item) === index
+      );
+      const facilityDistrict = allList.map((item) => item.facilityDistrict);
+      const district = facilityDistrict.filter(
+        (item, index) => facilityDistrict.indexOf(item) === index
+      );
+      const tempArr = all.filter(
+        (item) => item?.facilityDistrict === district[0]
+      );
+      const tempFacility = tempArr.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDistrictList = all.filter(
+        (item) => item?.facilityDivision === division[0]
+      );
+      const tempDistrict = tempDistrictList.map(
+        (item) => item.facilityDistrict
+      );
+      const districtList = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (districtList.length) {
         districtList.forEach((element: any) => {
@@ -863,10 +934,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListChart: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -875,10 +946,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListChart: tempArrayFacility,
-        })
+        });
       }
       if (division[0]) {
         this.setState({
@@ -886,7 +957,7 @@ class DataView extends React.Component<any, any> {
             label: division[0],
             value: division[0],
           },
-        })
+        });
       }
       if (district[0]) {
         this.setState({
@@ -894,7 +965,7 @@ class DataView extends React.Component<any, any> {
             label: district[0],
             value: district[0],
           },
-        })
+        });
       }
       this.dataConfigEO.facilityId = selectedOption.value;
       this.dataConfigMF.facilityId = selectedOption.value;
@@ -926,26 +997,28 @@ class DataView extends React.Component<any, any> {
       };
       this.getRegDataFP(this.dataConfigFP);
       this.getSumDataFP(this.dataConfigFP);
-
-    }
-    else if (selectedOption === null) {
+    } else if (selectedOption === null) {
       this.dataConfigEO.facilityId = selectedOption;
       this.dataConfigMF.facilityId = selectedOption;
       this.dataConfigFP.facilityId = selectedOption;
       this.setState({
-        districtNameChart: '',
-      })
+        districtNameChart: "",
+      });
       this.setState({
-        facilityNameChart: ''
-      })
+        facilityNameChart: "",
+      });
       this.setState({
-        divisionNameChart: '',
-      })
+        divisionNameChart: "",
+      });
       const all = this.state.allList;
-      const allList = all.map(item => item.facilityName);
-      const facility = allList.filter((item, index) => allList.indexOf(item) === index);
-      const tempDistrict = all.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      const allList = all.map((item) => item.facilityName);
+      const facility = allList.filter(
+        (item, index) => allList.indexOf(item) === index
+      );
+      const tempDistrict = all.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -953,12 +1026,12 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListChart: tempArrayDis,
           divisionChart: null,
-          districtChart: null
-        })
+          districtChart: null,
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -967,10 +1040,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListChart: tempArrayFacility,
-        })
+        });
       }
       this.dataConfigEO = {
         facilityId: null,
@@ -1000,7 +1073,7 @@ class DataView extends React.Component<any, any> {
       this.getRegDataFP(this.dataConfigFP);
       this.getSumDataFP(this.dataConfigFP);
     }
-  }
+  };
   //division
   onSearchDivisionChart = (selectedOption: any) => {
     if (selectedOption !== null) {
@@ -1011,15 +1084,21 @@ class DataView extends React.Component<any, any> {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        districtNameChart: '',
-        facilityNameChart: ''
+        districtNameChart: "",
+        facilityNameChart: "",
       });
-      const all = this.state.allList
-      let allList = all.filter(item => item.facilityDivision === selectedOption.value)
-      const tempDistrict = allList.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
-      const tempFacility = allList.map(item => item.facilityName)
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
+      const all = this.state.allList;
+      let allList = all.filter(
+        (item) => item.facilityDivision === selectedOption.value
+      );
+      const tempDistrict = allList.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
+      const tempFacility = allList.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -1027,11 +1106,11 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
 
         this.setState({
           districtListChart: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -1040,35 +1119,44 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListChart: tempArrayFacility,
-        })
+        });
       }
       let allEORecord = this.state.EOList;
-      const EOData = allEORecord.filter(item => item.facilityInfo.facilityDivision === selectedOption.value)
+      const EOData = allEORecord.filter(
+        (item) => item.facilityInfo.facilityDivision === selectedOption.value
+      );
       this.dataToExportEO = EOData;
       let allMFRecord = this.state.MFList;
-      const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDivision === selectedOption.value)
+      const MFData = allMFRecord.filter(
+        (item) => item.facilityInfo.facilityDivision === selectedOption.value
+      );
       this.dataToExportMF = MFData;
       let allFPRecord = this.state.FPList;
-      const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDivision === selectedOption.value)
+      const FPData = allFPRecord.filter(
+        (item) => item.facilityInfo.facilityDivision === selectedOption.value
+      );
       this.dataToExportFP = FPData;
-    }
-    else if (selectedOption === null) {
+    } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        divisionNameChart: '',
-        districtNameChart: '',
+        divisionNameChart: "",
+        districtNameChart: "",
         divisionChart: null,
         districtChart: null,
-        facilityNameChart: ''
+        facilityNameChart: "",
       });
-      const all = this.state.allList
-      const tempFacility = all.map(item => item.facilityName)
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDistrict = all.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      const all = this.state.allList;
+      const tempFacility = all.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDistrict = all.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -1076,11 +1164,11 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
 
         this.setState({
           districtListChart: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -1089,11 +1177,11 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
 
         this.setState({
           facilityListChart: tempArrayFacility,
-        })
+        });
       }
       this.dataConfigEO = {
         facilityId: null,
@@ -1124,7 +1212,7 @@ class DataView extends React.Component<any, any> {
       this.getRegDataFP(this.dataConfigFP);
       this.getSumDataFP(this.dataConfigFP);
     }
-  }
+  };
   //district
   onSearchDistrictChart = (selectedOption: any) => {
     if (selectedOption !== null) {
@@ -1135,17 +1223,27 @@ class DataView extends React.Component<any, any> {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        facilityNameChart: ''
+        facilityNameChart: "",
       });
       const all = this.state.allList;
-      let allList = all.filter(item => item?.facilityDistrict === selectedOption.value);
-      const tempDivisionList = allList.map(item => item.facilityDivision);
-      const division = tempDivisionList.filter((item, index) => tempDivisionList.indexOf(item) === index);
-      const tempFacility = allList.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDivision = all.filter(item => item?.facilityDivision === division[0]);
-      const tempDistrict = tempDivision.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      let allList = all.filter(
+        (item) => item?.facilityDistrict === selectedOption.value
+      );
+      const tempDivisionList = allList.map((item) => item.facilityDivision);
+      const division = tempDivisionList.filter(
+        (item, index) => tempDivisionList.indexOf(item) === index
+      );
+      const tempFacility = allList.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDivision = all.filter(
+        (item) => item?.facilityDivision === division[0]
+      );
+      const tempDistrict = tempDivision.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -1153,10 +1251,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListChart: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -1165,10 +1263,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListChart: tempArrayFacility,
-        })
+        });
       }
       if (division[0]) {
         this.setState({
@@ -1176,32 +1274,41 @@ class DataView extends React.Component<any, any> {
             label: division[0],
             value: division[0],
           },
-        })
+        });
       }
       let allEORecord = this.state.EOList;
-      const EOData = allEORecord.filter(item => item.facilityInfo.facilityDistrict === selectedOption.value)
+      const EOData = allEORecord.filter(
+        (item) => item.facilityInfo.facilityDistrict === selectedOption.value
+      );
       this.dataToExportEO = EOData;
       let allMFRecord = this.state.MFList;
-      const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDistrict === selectedOption.value)
+      const MFData = allMFRecord.filter(
+        (item) => item.facilityInfo.facilityDistrict === selectedOption.value
+      );
       this.dataToExportMF = MFData;
       let allFPRecord = this.state.FPList;
-      const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDistrict === selectedOption.value)
+      const FPData = allFPRecord.filter(
+        (item) => item.facilityInfo.facilityDistrict === selectedOption.value
+      );
       this.dataToExportFP = FPData;
-    }
-    else if (selectedOption === null) {
+    } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        districtNameChart: '',
+        districtNameChart: "",
         divisionChart: null,
-        divisionNameChart: '',
-        facilityNameChart: '',
-        districtChart: null
+        divisionNameChart: "",
+        facilityNameChart: "",
+        districtChart: null,
       });
       const all = this.state.allList;
-      const tempFacility = all.map(item => item.facilityName);
-      const facility = tempFacility.filter((item, index) => tempFacility.indexOf(item) === index);
-      const tempDistrict = all.map(item => item.facilityDistrict)
-      const district = tempDistrict.filter((item, index) => tempDistrict.indexOf(item) === index);
+      const tempFacility = all.map((item) => item.facilityName);
+      const facility = tempFacility.filter(
+        (item, index) => tempFacility.indexOf(item) === index
+      );
+      const tempDistrict = all.map((item) => item.facilityDistrict);
+      const district = tempDistrict.filter(
+        (item, index) => tempDistrict.indexOf(item) === index
+      );
       const tempArrayDis: any = [];
       if (district.length) {
         district.forEach((element: any) => {
@@ -1209,10 +1316,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           districtListChart: tempArrayDis,
-        })
+        });
       }
       const tempArrayFacility: any = [];
       if (facility.length) {
@@ -1221,10 +1328,10 @@ class DataView extends React.Component<any, any> {
             label: `${element}`,
             value: element,
           });
-        })
+        });
         this.setState({
           facilityListChart: tempArrayFacility,
-        })
+        });
       }
       this.dataConfigEO = {
         facilityId: null,
@@ -1254,7 +1361,7 @@ class DataView extends React.Component<any, any> {
       this.getRegDataFP(this.dataConfigFP);
       this.getSumDataFP(this.dataConfigFP);
     }
-  }
+  };
 
   render() {
     const {
@@ -1283,40 +1390,38 @@ class DataView extends React.Component<any, any> {
     const customStyles = {
       control: (provided, state) => ({
         ...provided,
-        marginTop: '2px',
-        borderRadius: '0px',
-        minHeight: '36px',
-        height: '30px',
+        marginTop: "2px",
+        borderRadius: "0px",
+        minHeight: "36px",
+        height: "30px",
         boxShadow: state.isFocused ? null : null,
-      }), valueContainer: (provided, state) => ({
+      }),
+      valueContainer: (provided, state) => ({
         ...provided,
-        height: '30px',
-        padding: '0 6px',
-        marginTop: '-6px',
+        height: "30px",
+        padding: "0 6px",
+        marginTop: "-6px",
       }),
 
       input: (provided, state) => ({
         ...provided,
-        margin: '-20px -2px',
+        margin: "-20px -2px",
       }),
-      indicatorSeparator: state => ({
-        display: 'none',
+      indicatorSeparator: (state) => ({
+        display: "none",
       }),
       indicatorsContainer: (provided, state) => ({
         ...provided,
       }),
-    }
+    };
     const handleChartTypeChangeEO = (selectedChartEO) => {
-      this.setState({ selectedChartEO }
-      );
+      this.setState({ selectedChartEO });
     };
     const handleChartTypeChangeMF = (selectedChartMF) => {
-      this.setState({ selectedChartMF }
-      );
+      this.setState({ selectedChartMF });
     };
     const handleChartTypeChangeFP = (selectedChartFP) => {
-      this.setState({ selectedChartFP }
-      );
+      this.setState({ selectedChartFP });
     };
     if (error) {
       return (
@@ -1329,82 +1434,173 @@ class DataView extends React.Component<any, any> {
     } else {
       return (
         <div className="container-fluid">
-          <div style={{ backgroundColor: '#066B86', height: '50px', marginLeft: '3px', marginTop: '-15px', }} >
+          <div
+            style={{
+              backgroundColor: "#066B86",
+              height: "50px",
+              marginLeft: "3px",
+              marginTop: "-15px",
+            }}
+          >
             <h4
               className="mb-0 mt-0 pb-0 pt-0 text-white"
-              style={{ textAlign: "center", marginTop: 0, marginBottom: 0, fontWeight: 'bold', fontSize: '30px' }}
-            > SHR DASHBOARD</h4>
+              style={{
+                textAlign: "center",
+                marginTop: 0,
+                marginBottom: 0,
+                fontWeight: "bold",
+                fontSize: "30px",
+              }}
+            >
+              {" "}
+              SHR DASHBOARD
+            </h4>
           </div>
           <div className="mt-1">
-            <div className="text-center"><h5 style={{ fontWeight: 'bold', fontSize: '20px' }} className="text-danger"><u>Todays Report</u></h5></div>
+            <div className="text-center">
+              <h5
+                style={{ fontWeight: "bold", fontSize: "20px" }}
+                className="text-danger"
+              >
+                <u>Todays Report</u>
+              </h5>
+            </div>
             <div className="row d-flex justify-content-center">
-              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
-                <div style={{
-                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
-                  padding: '15px'
-                }} className="d-flex justify-content-center row">
+              <div
+                style={{ padding: "0px 2px", margin: "0px 15px" }}
+                className="col-md-2"
+              >
+                <div
+                  style={{
+                    border: "1px solid lightGray",
+                    borderRadius: "20px",
+                    height: "100px",
+                    boxShadow: "5px 5px 20px gray",
+                    width: "250px",
+                    padding: "15px",
+                  }}
+                  className="d-flex justify-content-center row"
+                >
                   <div className="col-4">
                     <img src={totalPatient} alt="total-patient" />
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalPatient || 0}</h2>
+                    <h2 className="font-weight-bold text-info">
+                      {this.state.card.totalPatient || 0}
+                    </h2>
                     <small className="font-weight-bold">Total Patient</small>
                   </div>
                 </div>
               </div>
-              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
-                <div style={{
-                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
-                  padding: '15px'
-                }} className="d-flex justify-content-center row">
+              <div
+                style={{ padding: "0px 2px", margin: "0px 15px" }}
+                className="col-md-2"
+              >
+                <div
+                  style={{
+                    border: "1px solid lightGray",
+                    borderRadius: "20px",
+                    height: "100px",
+                    boxShadow: "5px 5px 20px gray",
+                    width: "250px",
+                    padding: "15px",
+                  }}
+                  className="d-flex justify-content-center row"
+                >
                   <div className="col-4">
                     <img alt="total-opd" src={opdPatient} />
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalOpdPatient || 0}</h2>
-                    <small className="font-weight-bold">Total OPD Patient</small>
+                    <h2 className="font-weight-bold text-info">
+                      {this.state.card.totalOpdPatient || 0}
+                    </h2>
+                    <small className="font-weight-bold">
+                      Total OPD Patient
+                    </small>
                   </div>
                 </div>
               </div>
-              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
-                <div style={{
-                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
-                  padding: '15px'
-                }} className="d-flex justify-content-center row">
+              <div
+                style={{ padding: "0px 2px", margin: "0px 15px" }}
+                className="col-md-2"
+              >
+                <div
+                  style={{
+                    border: "1px solid lightGray",
+                    borderRadius: "20px",
+                    height: "100px",
+                    boxShadow: "5px 5px 20px gray",
+                    width: "250px",
+                    padding: "15px",
+                  }}
+                  className="d-flex justify-content-center row"
+                >
                   <div className="col-4">
                     <img alt="total-emergency" src={emergencyPatient} />
                   </div>
                   <div className="col-8">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalEmergencyPatient || 0}</h2>
-                    <small className="font-weight-bold">Total Emergency Patient</small>
+                    <h2 className="font-weight-bold text-info">
+                      {this.state.card.totalEmergencyPatient || 0}
+                    </h2>
+                    <small className="font-weight-bold">
+                      Total Emergency Patient
+                    </small>
                   </div>
                 </div>
               </div>
-              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
-                <div style={{
-                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
-                  padding: '15px'
-                }} className="d-flex justify-content-center row">
+              <div
+                style={{ padding: "0px 2px", margin: "0px 15px" }}
+                className="col-md-2"
+              >
+                <div
+                  style={{
+                    border: "1px solid lightGray",
+                    borderRadius: "20px",
+                    height: "100px",
+                    boxShadow: "5px 5px 20px gray",
+                    width: "250px",
+                    padding: "15px",
+                  }}
+                  className="d-flex justify-content-center row"
+                >
                   <div className="col-4">
                     <img alt="total-male" src={malePatient} />
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalMalePatient || 0}</h2>
-                    <small className="font-weight-bold">Total Male Patient</small>
+                    <h2 className="font-weight-bold text-info">
+                      {this.state.card.totalMalePatient || 0}
+                    </h2>
+                    <small className="font-weight-bold">
+                      Total Male Patient
+                    </small>
                   </div>
                 </div>
               </div>
-              <div style={{ padding: '0px 2px', margin: '0px 15px' }} className="col-md-2">
-                <div style={{
-                  border: '1px solid lightGray', borderRadius: '20px', height: '100px', boxShadow: '5px 5px 20px gray', width: '250px',
-                  padding: '15px'
-                }} className="d-flex justify-content-center row ">
+              <div
+                style={{ padding: "0px 2px", margin: "0px 15px" }}
+                className="col-md-2"
+              >
+                <div
+                  style={{
+                    border: "1px solid lightGray",
+                    borderRadius: "20px",
+                    height: "100px",
+                    boxShadow: "5px 5px 20px gray",
+                    width: "250px",
+                    padding: "15px",
+                  }}
+                  className="d-flex justify-content-center row "
+                >
                   <div className="col-4">
                     <img alt="total-female" src={femalePatient} />
                   </div>
                   <div className="col-7">
-                    <h2 className="font-weight-bold text-info">{this.state.card.totalFemalePatient || 0}</h2>
-                    <small className="font-weight-bold">Total Female Patient</small>
+                    <h2 className="font-weight-bold text-info">
+                      {this.state.card.totalFemalePatient || 0}
+                    </h2>
+                    <small className="font-weight-bold">
+                      Total Female Patient
+                    </small>
                   </div>
                 </div>
               </div>
@@ -1416,15 +1612,14 @@ class DataView extends React.Component<any, any> {
               id="dataView"
               style={{ display: showing ? "none" : "block" }}
             >
-              <form className="form-inline m-0 p-0 "
-              >
+              <form className="form-inline m-0 p-0 ">
                 <div className="form-group col-12  pl-0 filter d-flex">
                   <div className="d-flex">
                     <label className="label  mr-1 p-1 text-info font-weight-bold">
                       Division
                     </label>
-                    <div style={{ width: '180px' }} >
-                      < Select
+                    <div style={{ width: "180px" }}>
+                      <Select
                         styles={customStyles}
                         name="division"
                         options={this.state.divisionListData}
@@ -1441,8 +1636,8 @@ class DataView extends React.Component<any, any> {
                     <label className="label  mr-1 p-1  text-info font-weight-bold">
                       District
                     </label>
-                    <div style={{ width: '180px' }} >
-                      < Select
+                    <div style={{ width: "180px" }}>
+                      <Select
                         styles={customStyles}
                         name="districtName"
                         options={this.state.districtListData}
@@ -1452,14 +1647,15 @@ class DataView extends React.Component<any, any> {
                         isSearchable={true}
                         isClearable={true}
                         value={this.state.districtNameData}
-                      /> </div>
+                      />{" "}
+                    </div>
                   </div>
                   <div className="d-flex">
                     <label className="label mr-1 p-1  text-info font-weight-bold">
                       Facility Name
                     </label>
-                    <div style={{ width: '180px' }} >
-                      < Select
+                    <div style={{ width: "180px" }}>
+                      <Select
                         styles={customStyles}
                         name="facilityId"
                         options={this.state.facilityListData}
@@ -1469,12 +1665,15 @@ class DataView extends React.Component<any, any> {
                         isSearchable={true}
                         isClearable={true}
                         value={this.state.facilityNameData}
-                      /> </div> </div>
+                      />{" "}
+                    </div>{" "}
+                  </div>
                   <div className="d-flex">
                     <label className="label p-1 mr-1 text-info font-weight-bold">
                       Start Date
                     </label>
-                    <input style={{ width: '160px' }}
+                    <input
+                      style={{ width: "160px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1490,7 +1689,7 @@ class DataView extends React.Component<any, any> {
                       End Date
                     </label>
                     <input
-                    style={{ width: '160px' }}
+                      style={{ width: "160px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1500,11 +1699,11 @@ class DataView extends React.Component<any, any> {
                       defaultValue={dateOfToday}
                       max={dateOfToday}
                     />
-                  </div> 
                   </div>
+                </div>
               </form>
             </div>
-            <div >
+            <div>
               <div
                 className="col-12  pt-0 "
                 id="dataView"
@@ -1515,8 +1714,8 @@ class DataView extends React.Component<any, any> {
                     <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
                       Division
                     </label>
-                    <div style={{ width: '180px' }} >
-                      < Select
+                    <div style={{ width: "180px" }}>
+                      <Select
                         styles={customStyles}
                         name="division"
                         options={this.state.divisionListChart}
@@ -1533,8 +1732,8 @@ class DataView extends React.Component<any, any> {
                     <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
                       District
                     </label>
-                    <div style={{ width: '180px' }} >
-                      < Select
+                    <div style={{ width: "180px" }}>
+                      <Select
                         styles={customStyles}
                         name="districtName"
                         options={this.state.districtListChart}
@@ -1544,14 +1743,15 @@ class DataView extends React.Component<any, any> {
                         value={this.state.districtNameChart}
                         isSearchable={true}
                         isClearable={true}
-                      /></div>
+                      />
+                    </div>
                   </div>
                   <div className="d-flex">
                     <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
                       Facility Name
                     </label>
-                    <div style={{ width: '180px' }} >
-                      < Select
+                    <div style={{ width: "180px" }}>
+                      <Select
                         styles={customStyles}
                         name="facilityId"
                         options={this.state.facilityListChart}
@@ -1561,8 +1761,11 @@ class DataView extends React.Component<any, any> {
                         value={this.state.facilityNameChart}
                         isSearchable={true}
                         isClearable={true}
-                      /> </div></div>
-                </div> </div>
+                      />{" "}
+                    </div>
+                  </div>
+                </div>{" "}
+              </div>
             </div>
             <div className="mt-2 ">
               <button
@@ -1596,24 +1799,30 @@ class DataView extends React.Component<any, any> {
               />
             </div>
           </div>
-          <div >
+          <div>
             <div
               className="col-12  pt-0"
               id="dataView"
               style={{ display: showing ? "block" : "none" }}
             >
-              <div style={{
-                border: '1px solid lightGray', borderRadius: '20px',
-                padding: '15px', boxShadow: '5px 5px 20px gray'
-              }}>
-                <div className='p-3 text-dark text-center'>
-                  <h2><u>Emergency-OPD</u></h2>
+              <div
+                style={{
+                  border: "1px solid lightGray",
+                  borderRadius: "20px",
+                  padding: "15px",
+                  boxShadow: "5px 5px 20px gray",
+                }}
+              >
+                <div className="p-3 text-dark text-center">
+                  <h2>
+                    <u>Emergency-OPD</u>
+                  </h2>
                 </div>
-                <div >
+                <div>
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " >
+                    <form className="form-inline m-0 p-0 ">
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
-                        <div style={{ width: '250px' }}>
+                        <div style={{ width: "250px" }}>
                           <Select
                             styles={customStyles}
                             value={selectedChartEO || chartOptions[0]}
@@ -1656,31 +1865,38 @@ class DataView extends React.Component<any, any> {
                     </form>
                   </div>
                 </div>
-           <div className="row">
-             <div className="col-md-12 col-sm-12">
-             <div className="d-flex justify-content-center">
-                  <CoordinateChart
-                    data={this.dataToExportEO}
-                    chartType={selectedChartEO}
-                    filterType={this.state.opdEmergency}
-                    dateWiseFilter={this.state.filterWithFacilityIdEO}
-                  />
+                <div className="row">
+                  <div className="col-md-12 col-sm-12">
+                    <div className="d-flex justify-content-center">
+                      <CoordinateChart
+                        data={this.dataToExportEO}
+                        chartType={selectedChartEO}
+                        filterType={this.state.opdEmergency}
+                        dateWiseFilter={this.state.filterWithFacilityIdEO}
+                      />
+                    </div>
+                  </div>
                 </div>
-             </div>
-           </div>
               </div>
-              <div style={{
-                border: '1px solid lightGray', borderRadius: '20px',
-                padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
-              }}>
-                <div className='p-3 text-dark text-center'>
-                  <h2><u>Male-Female</u></h2>
+              <div
+                style={{
+                  border: "1px solid lightGray",
+                  borderRadius: "20px",
+                  padding: "15px",
+                  boxShadow: "5px 5px 20px gray",
+                  marginTop: "20px",
+                }}
+              >
+                <div className="p-3 text-dark text-center">
+                  <h2>
+                    <u>Male-Female</u>
+                  </h2>
                 </div>
-                <div >
+                <div>
                   <div className=" p-0 ml-2">
                     <form className="form-inline m-0 p-0 ">
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
-                        <div style={{ width: '250px' }}>
+                        <div style={{ width: "250px" }}>
                           <Select
                             styles={customStyles}
                             value={selectedChartMF || chartOptions[0]}
@@ -1725,23 +1941,32 @@ class DataView extends React.Component<any, any> {
                 </div>
                 <div className="d-flex justify-content-center">
                   <CoordinateChart
-                    data={this.dataToExportMF} chartType={selectedChartMF}
+                    data={this.dataToExportMF}
+                    chartType={selectedChartMF}
                     filterType={this.state.maleFemale}
-                    dateWiseFilter={this.state.filterWithFacilityIdMF} />
+                    dateWiseFilter={this.state.filterWithFacilityIdMF}
+                  />
                 </div>
               </div>
-              <div style={{
-                border: '1px solid lightGray', borderRadius: '20px',
-                padding: '15px', boxShadow: '5px 5px 20px gray', marginTop: '20px'
-              }}>
-                <div className='p-3 text-dark text-center'>
-                  <h2><u>Free-Paid</u></h2>
+              <div
+                style={{
+                  border: "1px solid lightGray",
+                  borderRadius: "20px",
+                  padding: "15px",
+                  boxShadow: "5px 5px 20px gray",
+                  marginTop: "20px",
+                }}
+              >
+                <div className="p-3 text-dark text-center">
+                  <h2>
+                    <u>Free-Paid</u>
+                  </h2>
                 </div>
-                <div >
+                <div>
                   <div className=" p-0 ml-2">
-                    <form className="form-inline m-0 p-0 " >
+                    <form className="form-inline m-0 p-0 ">
                       <div className="form-group col-12 ml-1 pl-0 filter d-flex">
-                        <div style={{ width: '250px' }}>
+                        <div style={{ width: "250px" }}>
                           <Select
                             styles={customStyles}
                             value={selectedChartFP || chartOptions[0]}
