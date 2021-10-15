@@ -233,14 +233,14 @@ class DataView extends React.Component<any, any> {
 
   //Emergency opd
   changeHandlerEO = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateEO = "";
     let endDateEO = "";
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateEO = event.target.value;
       this.dataConfigEO.startDate = this.formateDate(startDateEO);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateEO = event.target.value;
       this.dataConfigEO.endDate = this.formateDate(endDateEO);
     }
@@ -284,16 +284,16 @@ class DataView extends React.Component<any, any> {
   };
   //male female
   changeHandlerMF = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateMF = "";
     let endDateMF = "";
 
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateMF = event.target.value;
 
       this.dataConfigMF.startDate = this.formateDate(startDateMF);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateMF = event.target.value;
       this.dataConfigMF.endDate = this.formateDate(endDateMF);
     }
@@ -336,14 +336,14 @@ class DataView extends React.Component<any, any> {
   };
   //free paid
   changeHandlerFP = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateFP = "";
     let endDateFP = "";
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateFP = event.target.value;
       this.dataConfigFP.startDate = this.formateDate(startDateFP);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateFP = event.target.value;
       this.dataConfigFP.endDate = this.formateDate(endDateFP);
     }
@@ -386,14 +386,14 @@ class DataView extends React.Component<any, any> {
   };
   //data view
   changeHandler = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateInput = "";
     let endDateInput = "";
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateInput = event.target.value;
       this.dataConfig.startDate = this.formateDate(startDateInput);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateInput = event.target.value;
       this.dataConfig.endDate = this.formateDate(endDateInput);
     }
@@ -1214,12 +1214,11 @@ class DataView extends React.Component<any, any> {
       this.dataConfigMF.facilityId = selectedOption;
       this.dataConfigFP.facilityId = selectedOption;
       this.setState({
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
         districtNameChart: "",
-      });
-      this.setState({
         facilityNameChart: "",
-      });
-      this.setState({
         divisionNameChart: "",
       });
       const all = this.state.allList;
@@ -1257,30 +1256,12 @@ class DataView extends React.Component<any, any> {
           facilityListChart: tempArrayFacility,
         });
       }
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: null,
-      };
-      this.getSumDataEO(this.dataConfigEO);
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: null,
-      };
-      this.getSumDataMF(this.dataConfigMF);
-      this.dataConfigFP = {
-        facilityId: null,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: null,
-      };
-      this.getSumDataFP(this.dataConfigFP);
+      let allEORecord = this.state.EOList;
+      this.dataToExportEO = allEORecord;
+      let allMFRecord = this.state.MFList;
+      this.dataToExportMF = allMFRecord;
+      let allFPRecord = this.state.FPList;
+      this.dataToExportFP = allFPRecord;
     }
   };
   //division
@@ -1806,7 +1787,7 @@ class DataView extends React.Component<any, any> {
               <form className="form-inline m-0 p-0 ">
                 <div className="form-group col-12  pl-0 filter d-flex">
                   <div className="d-flex">
-                    <label className="label  mr-1 p-1 text-info font-weight-bold">
+                    <label className="label mt-2 mr-1 p-1 text-info font-weight-bold">
                       Division
                     </label>
                     <div style={{ width: "180px" }}>
@@ -1824,7 +1805,7 @@ class DataView extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label  mr-1 p-1  text-info font-weight-bold">
+                    <label className="label mt-2  mr-1 p-1  text-info font-weight-bold">
                       District
                     </label>
                     <div style={{ width: "180px" }}>
@@ -1842,7 +1823,7 @@ class DataView extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label mr-1 p-1  text-info font-weight-bold">
+                    <label className="label mt-2 mr-1 p-1  text-info font-weight-bold">
                       Facility Name
                     </label>
                     <div style={{ width: "180px" }}>
@@ -1860,7 +1841,7 @@ class DataView extends React.Component<any, any> {
                     </div>{" "}
                   </div>
                   <div className="d-flex">
-                    <label className="label p-1 mr-1 text-info font-weight-bold">
+                    <label className="label mt-2 p-1 mr-1 text-info font-weight-bold">
                       Start Date
                     </label>
                     <input
@@ -1876,7 +1857,7 @@ class DataView extends React.Component<any, any> {
                     />
                   </div>
                   <div className="d-flex">
-                    <label className="label mr-1 p-1 text-info font-weight-bold">
+                    <label className="label mt-2 mr-1 p-1 text-info font-weight-bold">
                       End Date
                     </label>
                     <input
@@ -1998,10 +1979,14 @@ class DataView extends React.Component<any, any> {
             >
               <div
                 style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderTop: "5px solid #066B86",
+                  borderBottom: "5px solid #066B86",
+                  borderLeft: "2px solid #066B86",
+                  borderRight: "2px solid #066B86",
+                  borderRadius: "15px",
+                  height: "100%",
+                  // marginTop: "20px",
+                  // marginBottom: "20px",
                 }}
               >
                 <div className="p-3 text-dark text-center">
@@ -2023,7 +2008,7 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                          <label className="label ml-2 mt-1 p-1 mr-1 text-info font-weight-bold">
                             Start Date
                           </label>
                           <input
@@ -2038,7 +2023,7 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                          <label className="label ml-2 mt-1 mr-1 p-1 text-info font-weight-bold">
                             End Date
                           </label>
                           <input
@@ -2071,11 +2056,14 @@ class DataView extends React.Component<any, any> {
               </div>
               <div
                 style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderTop: "5px solid #066B86",
+                  borderBottom: "5px solid #066B86",
+                  borderLeft: "2px solid #066B86",
+                  borderRight: "2px solid #066B86",
+                  borderRadius: "15px",
+                  height: "100%",
                   marginTop: "20px",
+                  // marginBottom: "20px",
                 }}
               >
                 <div className="p-3 text-dark text-center">
@@ -2097,7 +2085,7 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                          <label className="label mt-1 ml-2 p-1 mr-1 text-info font-weight-bold">
                             Start Date
                           </label>
                           <input
@@ -2112,7 +2100,7 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                          <label className="label mt-1 ml-2 mr-1 p-1 text-info font-weight-bold">
                             End Date
                           </label>
                           <input
@@ -2141,11 +2129,14 @@ class DataView extends React.Component<any, any> {
               </div>
               <div
                 style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderTop: "5px solid #066B86",
+                  borderBottom: "5px solid #066B86",
+                  borderLeft: "2px solid #066B86",
+                  borderRight: "2px solid #066B86",
+                  borderRadius: "15px",
+                  height: "100%",
                   marginTop: "20px",
+                  marginBottom: "20px",
                 }}
               >
                 <div className="p-3 text-dark text-center">
@@ -2167,7 +2158,7 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
+                          <label className="label mt-1 ml-2 p-1 mr-1 text-info font-weight-bold">
                             Start Date
                           </label>
                           <input
@@ -2182,7 +2173,7 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
+                          <label className="label mt-1 ml-2 mr-1 p-1 text-info font-weight-bold">
                             End Date
                           </label>
                           <input
