@@ -59,7 +59,7 @@ class CoordinateChart extends React.Component<ChartProps, any> {
     let data2: any = [];
     let xAxisValue: any = [];
     this.chartData?.map((res, key) => {
-      facilityList.push(res.facilityId);
+      facilityList.push(res.facilityInfo.facilityShortname);
       if (this.filterType === 'opd-emergency') {
         data1?.push(res.numberOfOpdPatient);
         data2?.push(res.numberOfEmergencyPatient);
@@ -168,14 +168,14 @@ class CoordinateChart extends React.Component<ChartProps, any> {
     let config = { responsive: true }
     let layout = {
       // title: 'Analytical View',
-      autosize: false,
+      autoSize: true,
       width: 1350,
-      height: 630,
+      height: 550,
       margin: {
         l: 50,
         r: 50,
-        b: 300,
-        t: 100,
+        b: 180,
+        t: 50,
         pad: 2,
       },
       //   paper_bgcolor: "#7f7f7f",
