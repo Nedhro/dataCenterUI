@@ -207,6 +207,21 @@ class DataView extends React.Component<any, any> {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
+  tableData = (resultData: any) => resultData?.map((data: any) => {
+    let config = {
+      "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+      "Total Patient": data.totalPatient || 0,
+      "OPD": data.numberOfOpdPatient || 0,
+      "Emergency": data.numberOfEmergencyPatient || 0,
+      "Male": data.numberOfMalePatient || 0,
+      "Female": data.numberOfFemalePatient || 0,
+      "Paid": data.numberOfPaidPatient || 0,
+      "Free": data.numberOfFreePatient || 0,
+      "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+      "Date": data.sentTime || "N/A",
+    };
+    return config;
+  });
   formateNowDate = (data: any) => {
     let formattedNowDate = "";
     let date = ("0" + data.getDate()).slice(-2);
@@ -414,21 +429,7 @@ class DataView extends React.Component<any, any> {
       (res): any => {
         if (this.state.divisionNameData.value === undefined) {
           const resultData = res.data.content;
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
@@ -437,21 +438,7 @@ class DataView extends React.Component<any, any> {
         else if (this.state.divisionNameData.value !== undefined) {
           let allRecord = res.data.content;
           const resultData = allRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameData.value)
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
@@ -460,21 +447,7 @@ class DataView extends React.Component<any, any> {
         else if (this.state.districtNameData.value !== undefined && this.state.districtNameData.value !== undefined) {
           let allRecord = res.data.content;
           const resultData = allRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameData.value)
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
@@ -483,21 +456,7 @@ class DataView extends React.Component<any, any> {
         if (this.state.facilityNameData.value !== undefined) {
           let allRecord = res.data.content;
           const resultData = allRecord.filter(item => item.facilityInfo.facilityName === this.state.facilityNameData.value)
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
@@ -735,21 +694,7 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityId === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -796,21 +741,7 @@ class DataView extends React.Component<any, any> {
         });
       }
       const resultData = this.state.dataList;
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -870,21 +801,7 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityInfo.facilityDivision === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -933,21 +850,7 @@ class DataView extends React.Component<any, any> {
       }
 
       const resultData = this.state.dataList;
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -1021,21 +924,7 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityInfo.facilityDistrict === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -1083,21 +972,7 @@ class DataView extends React.Component<any, any> {
         });
       }
       const resultData = this.state.dataList;
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -1782,7 +1657,7 @@ class DataView extends React.Component<any, any> {
             <div
               className=" pl-0 pr-0 pt-1"
               id="dataView"
-              style={{ display: showing ? "block" : "none" }}
+              style={{ display: showing ?"none"  :  "block"}}
             >
               <form className="form-inline m-0 p-0 ">
                 <div className="form-group col-12  pl-0 filter d-flex">
@@ -1879,7 +1754,7 @@ class DataView extends React.Component<any, any> {
               <div
                 className="col-12  pt-0 "
                 id="dataView"
-                style={{ display: showing ? "none" : "block" }}
+                style={{ display: showing ?  "block" :"none" }}
               >
                 <div className="d-flex  ">
                   <div className="d-flex ">
@@ -1944,7 +1819,7 @@ class DataView extends React.Component<any, any> {
                 className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                 onClick={() => this.setState({ showing: !showing })}
               >
-                {showing ? "Analytical View" : "Data View"}
+                {showing ?  "Data View" :"Analytical View"}
               </button>
             </div>
           </div>
@@ -1952,7 +1827,7 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="dataView"
-              style={{ display: showing ? "block" : "none" }}
+              style={{ display: showing ? "none"  :"block"}}
             >
               <ReactFlexyTable
                 className="table table-stripped table-hover table-sm tableReg"
@@ -1975,7 +1850,7 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12  pt-0"
               id="dataView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ?"block"  :  "none"}}
             >
               <div
                 style={{
