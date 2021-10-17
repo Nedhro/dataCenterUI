@@ -1660,15 +1660,15 @@ class DataView extends React.Component<any, any> {
             <div
               className=" pl-0 pr-0 pt-1"
               id="dataView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ? "none" : "block", width: '1050px' }}
             >
               <form className="form-inline m-0 p-0 ">
-                <div className="form-group col-12  pl-0 filter d-flex">
+                <div className="form-group col-12  pl-0 filter d-flex flex-wrap">
                   <div className="d-flex">
-                    <label className="label mr-1 p-1 text-info font-weight-bold">
-                      Division
+                    <label style={{ color: "#066B86" }} className="label mr-1 mt-2 p-1  font-weight-bold">
+                      <b>Division</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "240px" }}>
                       <Select
                         styles={customStyles}
                         name="division"
@@ -1683,10 +1683,10 @@ class DataView extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label  mr-1 p-1  text-info font-weight-bold">
-                      District
+                    <label style={{ color: "#066B86" }} className="label  mr-1 mt-2 p-1   font-weight-bold">
+                      <b>District</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "240px" }}>
                       <Select
                         styles={customStyles}
                         name="districtName"
@@ -1701,10 +1701,10 @@ class DataView extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label mr-1 p-1  text-info font-weight-bold">
-                      Facility Name
+                    <label style={{ color: "#066B86", width: "110px" }} className="label mr-1 p-1 mt-2 font-weight-bold">
+                      <b>Facility Name</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "260px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1718,12 +1718,12 @@ class DataView extends React.Component<any, any> {
                       />{" "}
                     </div>{" "}
                   </div>
-                  <div className="d-flex">
-                    <label className="label  p-1 mr-1 text-info font-weight-bold">
-                      Start Date
+                  <div className="d-flex ">
+                    <label style={{ color: "#066B86", width: "85px" }} className="label  p-1 mr-1 mt-1   font-weight-bold">
+                      <b>Start Date</b>
                     </label>
                     <input
-                      style={{ width: "160px" }}
+                      style={{ width: "180px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1735,11 +1735,11 @@ class DataView extends React.Component<any, any> {
                     />
                   </div>
                   <div className="d-flex">
-                    <label className="label  mr-1 p-1 text-info font-weight-bold">
-                      End Date
+                    <label style={{ color: "#066B86", width: "76px" }} className="label mt-1  mr-1 p-1  font-weight-bold">
+                      <b>End Date</b>
                     </label>
                     <input
-                      style={{ width: "160px" }}
+                      style={{ width: "180px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1761,8 +1761,8 @@ class DataView extends React.Component<any, any> {
               >
                 <div className="d-flex  ">
                   <div className="d-flex ">
-                    <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
-                      Division
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 mt-2 p-1  font-weight-bold">
+                      <b>  Division</b>
                     </label>
                     <div style={{ width: "180px" }}>
                       <Select
@@ -1779,8 +1779,8 @@ class DataView extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                      District
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 p-1 mt-2 font-weight-bold">
+                      <b>    District</b>
                     </label>
                     <div style={{ width: "180px" }}>
                       <Select
@@ -1797,10 +1797,10 @@ class DataView extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                      Facility Name
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 p-1 mt-2  font-weight-bold">
+                      <b>   Facility Name</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "260px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1884,8 +1884,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2  p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label ml-2 mt-1  p-1 mr-1 font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1899,8 +1899,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2  mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label ml-2 mt-1 mr-1 p-1 font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1960,8 +1960,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label  ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 p-1 mr-1  font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1975,8 +1975,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label  ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 mr-1 p-1  font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2033,8 +2033,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label  ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 p-1 mr-1  font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2048,8 +2048,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label  ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 mr-1 p-1  font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
