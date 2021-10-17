@@ -1865,7 +1865,7 @@ class DataView extends React.Component<any, any> {
                   height: "100%",
                 }}
               >
-                <div className="p-3 text-dark text-center">
+                <div className=" text-dark text-center">
                   <h2>
                     <u>Emergency-OPD</u>
                   </h2>
@@ -1941,7 +1941,7 @@ class DataView extends React.Component<any, any> {
                   marginTop: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
+                <div className=" text-dark text-center">
                   <h2>
                     <u>Male-Female</u>
                   </h2>
@@ -2014,7 +2014,7 @@ class DataView extends React.Component<any, any> {
                   marginBottom: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
+                <div className=" text-dark text-center">
                   <h2>
                     <u>Free-Paid</u>
                   </h2>
