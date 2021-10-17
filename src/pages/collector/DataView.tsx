@@ -1512,142 +1512,145 @@ class DataView extends React.Component<any, any> {
                 <u>Todays Report</u>
               </h5>
             </div>
-            <div className="row d-flex justify-content-center">
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
+            <div className="d-flex justify-content-center">
+              <div className="row ">
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img src={totalPatient} alt="total-patient" />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">Total Patient</small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img src={totalPatient} alt="total-patient" />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">Total Patient</small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-opd" src={opdPatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalOpdPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total OPD Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-opd" src={opdPatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalOpdPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total OPD Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-emergency" src={emergencyPatient} />
-                  </div>
-                  <div className="col-8">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalEmergencyPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Emergency Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-emergency" src={emergencyPatient} />
+                    </div>
+                    <div className="col-8">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalEmergencyPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Emergency Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-male" src={malePatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalMalePatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Male Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-male" src={malePatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalMalePatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Male Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row "
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-female" src={femalePatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalFemalePatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Female Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row "
+                  >
+                    <div className="col-4">
+                      <img alt="total-female" src={femalePatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalFemalePatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Female Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
               </div>
