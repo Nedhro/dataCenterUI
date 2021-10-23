@@ -53,12 +53,12 @@ class DataView extends React.Component<any, any> {
       MFList: [],
       FPList: [],
       dataList: [],
-      divisionNameChart: "",
-      districtNameChart: "",
-      facilityNameChart: "",
-      divisionNameData: "",
-      districtNameData: "",
-      facilityNameData: "",
+      selectedDivisionChart: "",
+      selectedDistrictChart: "",
+      selectedFacilityChart: "",
+      selectedDivisionData: "",
+      selectedDistrictData: "",
+      selectedFacilityData: "",
       divisionData: null,
       districtData: null,
       divisionChart: null,
@@ -207,6 +207,21 @@ class DataView extends React.Component<any, any> {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
+  tableData = (resultData: any) => resultData?.map((data: any) => {
+    let config = {
+      "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+      "Total Patient": data.totalPatient || 0,
+      "OPD": data.numberOfOpdPatient || 0,
+      "Emergency": data.numberOfEmergencyPatient || 0,
+      "Male": data.numberOfMalePatient || 0,
+      "Female": data.numberOfFemalePatient || 0,
+      "Paid": data.numberOfPaidPatient || 0,
+      "Free": data.numberOfFreePatient || 0,
+      "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+      "Date": data.sentTime || "N/A",
+    };
+    return config;
+  });
   formateNowDate = (data: any) => {
     let formattedNowDate = "";
     let date = ("0" + data.getDate()).slice(-2);
@@ -247,8 +262,8 @@ class DataView extends React.Component<any, any> {
     let facilityId = this.dataConfigEO.facilityId;
     let startDate = this.dataConfigEO.startDate;
     let endDate = this.dataConfigEO.endDate;
-    
-    if(facilityId !== null){
+
+    if (facilityId !== null) {
       this.dataConfigEO = {
         division: this.state.divisionChart,
         district: this.state.districtChart,
@@ -256,9 +271,9 @@ class DataView extends React.Component<any, any> {
         startDate: startDate,
         endDate: endDate,
       };
-      this.getRegDataEO(this.dataConfigEO); 
+      this.getRegDataEO(this.dataConfigEO);
     }
-    if(facilityId === null){
+    if (facilityId === null) {
       this.dataConfigEO = {
         division: null,
         district: null,
@@ -300,7 +315,7 @@ class DataView extends React.Component<any, any> {
     let facilityId = this.dataConfigMF.facilityId;
     let startDate = this.dataConfigMF.startDate;
     let endDate = this.dataConfigMF.endDate;
-    if(facilityId !== null){
+    if (facilityId !== null) {
       this.dataConfigMF = {
         division: this.state.divisionChart,
         district: this.state.districtChart,
@@ -308,9 +323,9 @@ class DataView extends React.Component<any, any> {
         startDate: startDate,
         endDate: endDate,
       };
-      this.getRegDataMF(this.dataConfigMF); 
+      this.getRegDataMF(this.dataConfigMF);
     }
-    if(facilityId === null){
+    if (facilityId === null) {
       this.dataConfigMF = {
         division: null,
         district: null,
@@ -350,7 +365,7 @@ class DataView extends React.Component<any, any> {
     let facilityId = this.dataConfigFP.facilityId;
     let startDate = this.dataConfigFP.startDate;
     let endDate = this.dataConfigFP.endDate;
-        if(facilityId !== null){
+    if (facilityId !== null) {
       this.dataConfigFP = {
         division: this.state.divisionChart,
         district: this.state.districtChart,
@@ -358,9 +373,9 @@ class DataView extends React.Component<any, any> {
         startDate: startDate,
         endDate: endDate,
       };
-      this.getRegDataFP(this.dataConfigFP); 
+      this.getRegDataFP(this.dataConfigFP);
     }
-    if(facilityId === null){
+    if (facilityId === null) {
       this.dataConfigFP = {
         division: null,
         district: null,
@@ -412,92 +427,36 @@ class DataView extends React.Component<any, any> {
   getRegData(data: any) {
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
-        if (this.state.divisionNameData.value === undefined) {
+        if (this.state.selectedDivisionData.value === undefined) {
           const resultData = res.data.content;
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
           });
         }
-        else if (this.state.divisionNameData.value !== undefined) {
+        else if (this.state.selectedDivisionData.value !== undefined) {
           let allRecord = res.data.content;
-          const resultData = allRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameData.value)
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionData.value)
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
           });
         }
-        else if (this.state.districtNameData.value !== undefined && this.state.districtNameData.value !== undefined) {
+        else if (this.state.selectedDistrictData.value !== undefined && this.state.selectedDistrictData.value !== undefined) {
           let allRecord = res.data.content;
-          const resultData = allRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameData.value)
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictData.value)
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
           });
         }
-        if (this.state.facilityNameData.value !== undefined) {
+        if (this.state.selectedFacilityData.value !== undefined) {
           let allRecord = res.data.content;
-          const resultData = allRecord.filter(item => item.facilityInfo.facilityName === this.state.facilityNameData.value)
-          const dataFinal = resultData?.map((data: any) => {
-            let config = {
-              "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-              "Total Patient": data.totalPatient || 0,
-              "OPD": data.numberOfOpdPatient || 0,
-              "Emergency": data.numberOfEmergencyPatient || 0,
-              "Male": data.numberOfMalePatient || 0,
-              "Female": data.numberOfFemalePatient || 0,
-              "Paid": data.numberOfPaidPatient || 0,
-              "Free": data.numberOfFreePatient || 0,
-              "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-              "Date": data.sentTime || "N/A",
-            };
-            return config;
-          });
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityName === this.state.selectedFacilityData.value)
+          const dataFinal = this.tableData(resultData);
           this.setState({
             isLoaded: true,
             items: dataFinal,
@@ -542,17 +501,17 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          if (this.state.divisionNameChart.value === undefined) {
+          if (this.state.selectedDivisionChart.value === undefined) {
             this.dataToExportEO = response.data.content;
           }
-          else if (this.state.divisionNameChart.value !== undefined) {
+          else if (this.state.selectedDivisionChart.value !== undefined) {
             let allEORecord = response.data.content;
-            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameChart.value)
+            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionChart.value)
             this.dataToExportEO = EOData;
           }
-          else if (this.state.districtNameChart.value !== undefined) {
+          else if (this.state.selectedDistrictChart.value !== undefined) {
             let allEORecord = response.data.content;
-            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameChart.value)
+            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictChart.value)
             this.dataToExportEO = EOData;
           }
           this.setState({
@@ -586,17 +545,17 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          if (this.state.divisionNameChart.value === undefined) {
+          if (this.state.selectedDivisionChart.value === undefined) {
             this.dataToExportMF = response.data.content;
           }
-          else if (this.state.divisionNameChart.value !== undefined) {
+          else if (this.state.selectedDivisionChart.value !== undefined) {
             let allMFRecord = response.data.content;
-            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameChart.value)
+            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionChart.value)
             this.dataToExportMF = MFData;
           }
-          else if (this.state.districtNameChart.value !== undefined) {
+          else if (this.state.selectedDistrictChart.value !== undefined) {
             let allMFRecord = response.data.content;
-            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameChart.value)
+            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictChart.value)
             this.dataToExportMF = MFData;
           }
           this.setState({
@@ -630,17 +589,17 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          if (this.state.divisionNameChart.value === undefined) {
+          if (this.state.selectedDivisionChart.value === undefined) {
             this.dataToExportFP = response.data.content;
           }
-          else if (this.state.divisionNameChart.value !== undefined) {
+          else if (this.state.selectedDivisionChart.value !== undefined) {
             let allFPRecord = response.data.content;
-            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDivision === this.state.divisionNameChart.value)
+            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionChart.value)
             this.dataToExportFP = FPData;
           }
-          else if (this.state.districtNameChart.value !== undefined) {
+          else if (this.state.selectedDistrictChart.value !== undefined) {
             let allFPRecord = response.data.content;
-            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.districtNameChart.value)
+            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictChart.value)
             this.dataToExportFP = FPData;
           }
           this.setState({
@@ -658,7 +617,7 @@ class DataView extends React.Component<any, any> {
   onSearchFacilityData = (selectedOption: any) => {
     if (selectedOption !== null) {
       this.setState({
-        facilityNameData: {
+        selectedFacilityData: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
@@ -717,7 +676,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameData: {
+          selectedDivisionData: {
             label: division[0],
             value: division[0],
           },
@@ -725,7 +684,7 @@ class DataView extends React.Component<any, any> {
       }
       if (district[0]) {
         this.setState({
-          districtNameData: {
+          selectedDistrictData: {
             label: district[0],
             value: district[0],
           },
@@ -735,30 +694,16 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityId === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
       });
     } else if (selectedOption === null) {
       this.setState({
-        districtNameData: "",
-        divisionNameData: "",
-        facilityNameData: "",
+        selectedDistrictData: "",
+        selectedDivisionData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
@@ -796,21 +741,7 @@ class DataView extends React.Component<any, any> {
         });
       }
       const resultData = this.state.dataList;
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -823,12 +754,12 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         divisionData: selectedOption.value,
-        divisionNameData: {
+        selectedDivisionData: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        districtNameData: "",
-        facilityNameData: "",
+        selectedDistrictData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       let tempAll = all.filter(
@@ -870,21 +801,7 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityInfo.facilityDivision === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -892,11 +809,11 @@ class DataView extends React.Component<any, any> {
     } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        divisionNameData: "",
-        districtNameData: "",
+        selectedDivisionData: "",
+        selectedDistrictData: "",
         divisionData: null,
         districtData: null,
-        facilityNameData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       const tempDistrict = all.map((item) => item.facilityDistrict);
@@ -933,21 +850,7 @@ class DataView extends React.Component<any, any> {
       }
 
       const resultData = this.state.dataList;
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -960,11 +863,11 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         districtData: selectedOption.value,
-        districtNameData: {
+        selectedDistrictData: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        facilityNameData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       let allList = all.filter(
@@ -1011,7 +914,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameData: {
+          selectedDivisionData: {
             label: division[0],
             value: division[0],
           },
@@ -1021,21 +924,7 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityInfo.facilityDistrict === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -1043,11 +932,11 @@ class DataView extends React.Component<any, any> {
     } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        districtNameData: "",
+        selectedDistrictData: "",
         divisionData: null,
         districtData: null,
-        divisionNameData: "",
-        facilityNameData: "",
+        selectedDivisionData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
@@ -1083,21 +972,7 @@ class DataView extends React.Component<any, any> {
         });
       }
       const resultData = this.state.dataList;
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
@@ -1109,7 +984,7 @@ class DataView extends React.Component<any, any> {
   onSearchFacilityChart = (selectedOption: any) => {
     if (selectedOption !== null) {
       this.setState({
-        facilityNameChart: {
+        selectedFacilityChart: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
@@ -1168,7 +1043,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameChart: {
+          selectedDivisionChart: {
             label: division[0],
             value: division[0],
           },
@@ -1176,7 +1051,7 @@ class DataView extends React.Component<any, any> {
       }
       if (district[0]) {
         this.setState({
-          districtNameChart: {
+          selectedDistrictChart: {
             label: district[0],
             value: district[0],
           },
@@ -1217,9 +1092,9 @@ class DataView extends React.Component<any, any> {
         filterWithFacilityIdEO: false,
         filterWithFacilityIdMF: false,
         filterWithFacilityIdFP: false,
-        districtNameChart: "",
-        facilityNameChart: "",
-        divisionNameChart: "",
+        selectedDistrictChart: "",
+        selectedFacilityChart: "",
+        selectedDivisionChart: "",
       });
       const all = this.state.allList;
       const allList = all.map((item) => item.facilityName);
@@ -1270,12 +1145,12 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         divisionChart: selectedOption.value,
-        divisionNameChart: {
+        selectedDivisionChart: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        districtNameChart: "",
-        facilityNameChart: "",
+        selectedDistrictChart: "",
+        selectedFacilityChart: "",
         filterWithFacilityIdEO: false,
         filterWithFacilityIdMF: false,
         filterWithFacilityIdFP: false,
@@ -1339,11 +1214,11 @@ class DataView extends React.Component<any, any> {
     else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        divisionNameChart: "",
-        districtNameChart: "",
+        selectedDivisionChart: "",
+        selectedDistrictChart: "",
         divisionChart: null,
         districtChart: null,
-        facilityNameChart: "",
+        selectedFacilityChart: "",
         filterWithFacilityIdEO: false,
         filterWithFacilityIdMF: false,
         filterWithFacilityIdFP: false,
@@ -1400,11 +1275,11 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         districtChart: selectedOption.value,
-        districtNameChart: {
+        selectedDistrictChart: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        facilityNameChart: "",
+        selectedFacilityChart: "",
         filterWithFacilityIdEO: false,
         filterWithFacilityIdMF: false,
         filterWithFacilityIdFP: false,
@@ -1457,7 +1332,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameChart: {
+          selectedDivisionChart: {
             label: division[0],
             value: division[0],
           },
@@ -1481,16 +1356,16 @@ class DataView extends React.Component<any, any> {
     } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        districtNameChart: "",
+        selectedDistrictChart: "",
         divisionChart: null,
-        divisionNameChart: "",
-        facilityNameChart: "",
+        selectedDivisionChart: "",
+        selectedFacilityChart: "",
         districtChart: null,
         filterWithFacilityIdEO: false,
         filterWithFacilityIdMF: false,
         filterWithFacilityIdFP: false,
       });
-       this.dataConfigEO.facilityId = null;
+      this.dataConfigEO.facilityId = null;
       this.dataConfigMF.facilityId = null;
       this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
@@ -1637,142 +1512,145 @@ class DataView extends React.Component<any, any> {
                 <u>Todays Report</u>
               </h5>
             </div>
-            <div className="row d-flex justify-content-center">
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
+            <div className="d-flex justify-content-center">
+              <div className="row ">
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img src={totalPatient} alt="total-patient" />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">Total Patient</small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img src={totalPatient} alt="total-patient" />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">Total Patient</small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-opd" src={opdPatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalOpdPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total OPD Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-opd" src={opdPatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalOpdPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total OPD Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-emergency" src={emergencyPatient} />
-                  </div>
-                  <div className="col-8">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalEmergencyPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Emergency Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-emergency" src={emergencyPatient} />
+                    </div>
+                    <div className="col-8">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalEmergencyPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Emergency Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-male" src={malePatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalMalePatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Male Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-male" src={malePatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalMalePatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Male Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row "
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-female" src={femalePatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalFemalePatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Female Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row "
+                  >
+                    <div className="col-4">
+                      <img alt="total-female" src={femalePatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalFemalePatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Female Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1782,15 +1660,15 @@ class DataView extends React.Component<any, any> {
             <div
               className=" pl-0 pr-0 pt-1"
               id="dataView"
-              style={{ display: showing ? "block" : "none" }}
+              style={{ display: showing ? "none" : "block", width: '1050px' }}
             >
               <form className="form-inline m-0 p-0 ">
-                <div className="form-group col-12  pl-0 filter d-flex">
+                <div className="form-group col-12  pl-0 filter d-flex flex-wrap">
                   <div className="d-flex">
-                    <label className="label mt-2 mr-1 p-1 text-info font-weight-bold">
-                      Division
+                    <label style={{ color: "#066B86" }} className="label mr-1 mt-2 p-1  font-weight-bold">
+                      <b>Division</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "240px" }}>
                       <Select
                         styles={customStyles}
                         name="division"
@@ -1798,17 +1676,17 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchDivisionData(e);
                         }}
-                        value={this.state.divisionNameData}
+                        value={this.state.selectedDivisionData}
                         isSearchable={true}
                         isClearable={true}
                       />
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label mt-2  mr-1 p-1  text-info font-weight-bold">
-                      District
+                    <label style={{ color: "#066B86" }} className="label  mr-1 mt-2 p-1   font-weight-bold">
+                      <b>District</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "240px" }}>
                       <Select
                         styles={customStyles}
                         name="districtName"
@@ -1818,15 +1696,15 @@ class DataView extends React.Component<any, any> {
                         }}
                         isSearchable={true}
                         isClearable={true}
-                        value={this.state.districtNameData}
+                        value={this.state.selectedDistrictData}
                       />{" "}
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label mt-2 mr-1 p-1  text-info font-weight-bold">
-                      Facility Name
+                    <label style={{ color: "#066B86", width: "110px" }} className="label mr-1 p-1 mt-2 font-weight-bold">
+                      <b>Facility Name</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "260px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1836,16 +1714,16 @@ class DataView extends React.Component<any, any> {
                         }}
                         isSearchable={true}
                         isClearable={true}
-                        value={this.state.facilityNameData}
+                        value={this.state.selectedFacilityData}
                       />{" "}
                     </div>{" "}
                   </div>
-                  <div className="d-flex">
-                    <label className="label mt-2 p-1 mr-1 text-info font-weight-bold">
-                      Start Date
+                  <div className="d-flex ">
+                    <label style={{ color: "#066B86", width: "85px" }} className="label  p-1 mr-1 mt-1   font-weight-bold">
+                      <b>Start Date</b>
                     </label>
                     <input
-                      style={{ width: "160px" }}
+                      style={{ width: "180px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1857,11 +1735,11 @@ class DataView extends React.Component<any, any> {
                     />
                   </div>
                   <div className="d-flex">
-                    <label className="label mt-2 mr-1 p-1 text-info font-weight-bold">
-                      End Date
+                    <label style={{ color: "#066B86", width: "76px" }} className="label mt-1  mr-1 p-1  font-weight-bold">
+                      <b>End Date</b>
                     </label>
                     <input
-                      style={{ width: "160px" }}
+                      style={{ width: "180px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1879,12 +1757,12 @@ class DataView extends React.Component<any, any> {
               <div
                 className="col-12  pt-0 "
                 id="dataView"
-                style={{ display: showing ? "none" : "block" }}
+                style={{ display: showing ? "block" : "none" }}
               >
                 <div className="d-flex  ">
                   <div className="d-flex ">
-                    <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
-                      Division
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 mt-2 p-1  font-weight-bold">
+                      <b>  Division</b>
                     </label>
                     <div style={{ width: "180px" }}>
                       <Select
@@ -1894,15 +1772,15 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchDivisionChart(e);
                         }}
-                        value={this.state.divisionNameChart}
+                        value={this.state.selectedDivisionChart}
                         isSearchable={true}
                         isClearable={true}
                       />
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                      District
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 p-1 mt-2 font-weight-bold">
+                      <b>    District</b>
                     </label>
                     <div style={{ width: "180px" }}>
                       <Select
@@ -1912,17 +1790,17 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchDistrictChart(e);
                         }}
-                        value={this.state.districtNameChart}
+                        value={this.state.selectedDistrictChart}
                         isSearchable={true}
                         isClearable={true}
                       />
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                      Facility Name
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 p-1 mt-2  font-weight-bold">
+                      <b>   Facility Name</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "260px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1930,7 +1808,7 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchFacilityChart(e);
                         }}
-                        value={this.state.facilityNameChart}
+                        value={this.state.selectedFacilityChart}
                         isSearchable={true}
                         isClearable={true}
                       />{" "}
@@ -1944,7 +1822,7 @@ class DataView extends React.Component<any, any> {
                 className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                 onClick={() => this.setState({ showing: !showing })}
               >
-                {showing ? "Analytical View" : "Data View"}
+                {showing ? "Data View" : "Analytical View"}
               </button>
             </div>
           </div>
@@ -1952,7 +1830,7 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12 pl-0 pr-0 pt-0"
               id="dataView"
-              style={{ display: showing ? "block" : "none" }}
+              style={{ display: showing ? "none" : "block" }}
             >
               <ReactFlexyTable
                 className="table table-stripped table-hover table-sm tableReg"
@@ -1975,7 +1853,7 @@ class DataView extends React.Component<any, any> {
             <div
               className="col-12  pt-0"
               id="dataView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ? "block" : "none" }}
             >
               <div
                 style={{
@@ -1985,11 +1863,9 @@ class DataView extends React.Component<any, any> {
                   borderRight: "2px solid #066B86",
                   borderRadius: "15px",
                   height: "100%",
-                  // marginTop: "20px",
-                  // marginBottom: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
+                <div className=" text-dark text-center">
                   <h2>
                     <u>Emergency-OPD</u>
                   </h2>
@@ -2008,8 +1884,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mt-1 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label ml-2 mt-1  p-1 mr-1 font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2023,8 +1899,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mt-1 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label ml-2 mt-1 mr-1 p-1 font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2063,10 +1939,9 @@ class DataView extends React.Component<any, any> {
                   borderRadius: "15px",
                   height: "100%",
                   marginTop: "20px",
-                  // marginBottom: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
+                <div className=" text-dark text-center">
                   <h2>
                     <u>Male-Female</u>
                   </h2>
@@ -2085,8 +1960,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label mt-1 ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 p-1 mr-1  font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2100,8 +1975,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label mt-1 ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 mr-1 p-1  font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2139,7 +2014,7 @@ class DataView extends React.Component<any, any> {
                   marginBottom: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
+                <div className=" text-dark text-center">
                   <h2>
                     <u>Free-Paid</u>
                   </h2>
@@ -2158,8 +2033,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label mt-1 ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 p-1 mr-1  font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -2173,8 +2048,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label mt-1 ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 mr-1 p-1  font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"

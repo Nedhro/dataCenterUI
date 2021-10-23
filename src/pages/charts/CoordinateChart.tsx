@@ -169,7 +169,7 @@ class CoordinateChart extends React.Component<ChartProps, any> {
     let layout = {
       // title: 'Analytical View',
       autoSize: true,
-      width: 1350,
+      width: 1150,
       height: 550,
       margin: {
         l: 50,
