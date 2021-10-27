@@ -121,21 +121,21 @@ class Facility extends React.Component<any, any> {
         this.getSumDataFP(this.dataConfigFP);
         this.timerID = setInterval(() => {
             this.getRegData(this.dataConfig);
-            CollectorService.getAllCard().then((response): any => {
-                if (response) {
-                    this.setState({
-                        card: response.data.content,
-                    });
-                }
-            });
+            // CollectorService.getAllCard().then((response): any => {
+            //     if (response) {
+            //         this.setState({
+            //             card: response.data.content,
+            //         });
+            //     }
+            // });
         }, 5 * 60 * 1000);
-        CollectorService.getAllCard().then((response): any => {
-            if (response) {
-                this.setState({
-                    card: response.data.content,
-                });
-            }
-        });
+        // CollectorService.getAllCard().then((response): any => {
+        //     if (response) {
+        //         this.setState({
+        //             card: response.data.content,
+        //         });
+        //     }
+        // });
         CollectorService.getAllRegistrationCollectionData(this.dataConfig).then(
             (res): any => {
                 const resultData = res.data.content;

@@ -9,8 +9,8 @@ class CollectorService {
   getAllDataByfIdAndDatewithsum(data: Object) {
     return axios.post(baseUrl + "/getAllDataByfIdAndDatewithsum", data);
   }
-  getAllCard() {
-    return axios.get(baseUrl + "/getTotalsForCards");
+  getAllCard(data: Object) {
+    return axios.post(baseUrl + "/getTotalsForCards", data);
   }
 }
 
