@@ -231,7 +231,7 @@ class DataView extends React.Component<any, any> {
     let date = ("0" + data.getDate()).slice(-2);
     let month = ("0" + (data.getMonth() + 1)).slice(-2);
     let year = data.getFullYear();
-    formattedNowDate = date + "-" + month + "-" + year;
+    formattedNowDate = date + "/" + month + "/" + year;
     return formattedNowDate;
   };
   formateDefaultDate = (data: any) => {
@@ -1586,7 +1586,7 @@ class DataView extends React.Component<any, any> {
                   style={{ fontWeight: "bold", position: "relative", bottom: '50px' }}
                   className=" text-center"
                 >
-                  <u>Today's Report:</u> <span style={{ color: "#066B86" }}>{this.formateNowDate(new Date())}</span>
+                  <u>Today's Report:</u> <span style={{ color: "#066B86" }}>{this.formatDateWithDMY(new Date())}</span>
                 </p> : <p
                   style={{ fontWeight: "bold", position: "relative", bottom: '50px', left: '16px' }}
                   className=" text-center"
