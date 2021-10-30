@@ -18,6 +18,7 @@ class DataView extends React.Component<any, any> {
    * FP: Free-Paid
    * */
   dataConfig: any = {};
+  dataConfigCard: any = {};
   dataConfigEO: any = {};
   dataConfigMF: any = {};
   dataConfigFP: any = {};
@@ -33,6 +34,8 @@ class DataView extends React.Component<any, any> {
       items: [],
       dateOfToday: "",
       showing: true,
+      cardHeader: true,
+      cardHeaderValue: "",
       selectedChart: null,
       selectedFilter: null,
       filterWithFacilityId: false,
@@ -118,47 +121,40 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegDataFP(this.dataConfigFP);
     this.getSumDataFP(this.dataConfigFP);
+    this.dataConfigCard = {
+      startDate: dateNow,
+      endDate: dateNow,
+    };
+    this.getCardData(this.dataConfigCard);
     this.timerID = setInterval(() => {
       this.getRegData(this.dataConfig);
-      CollectorService.getAllCard().then((response): any => {
-        if (response) {
-          this.setState({
-            card: response.data.content,
-          });
-        }
-      });
+      this.getCardData(this.dataConfigCard);
     }, 5 * 60 * 1000);
-    CollectorService.getAllCard().then((response): any => {
-      if (response) {
-        this.setState({
-          card: response.data.content,
-        });
-      }
-    });
+
     CollectorService.getAllRegistrationCollectionData(this.dataConfig).then(
       (res): any => {
         const resultData = res.data.content;
-        const all = resultData.map((item) => item.facilityInfo);
-        const tempDistrict = resultData.map(
+        const all = resultData?.map((item) => item.facilityInfo);
+        const tempDistrict = resultData?.map(
           (item) => item.facilityInfo.facilityDistrict
         );
-        const district = tempDistrict.filter(
+        const district = tempDistrict?.filter(
           (item, index) => tempDistrict.indexOf(item) === index
         );
-        const tempDivision = resultData.map(
+        const tempDivision = resultData?.map(
           (item) => item.facilityInfo.facilityDivision
         );
-        const division = tempDivision.filter(
+        const division = tempDivision?.filter(
           (item, index) => tempDivision.indexOf(item) === index
         );
-        const tempFacility = resultData.map(
+        const tempFacility = resultData?.map(
           (item) => item.facilityInfo.facilityName
         );
-        const facility = tempFacility.filter(
+        const facility = tempFacility?.filter(
           (item, index) => tempFacility.indexOf(item) === index
         );
         const tempArrayDis: any = [];
-        if (district.length) {
+        if (district?.length) {
           district.forEach((element: any) => {
             tempArrayDis.push({
               label: `${element}`,
@@ -171,7 +167,7 @@ class DataView extends React.Component<any, any> {
           });
         }
         const tempArrayFacility: any = [];
-        if (facility.length) {
+        if (facility?.length) {
           facility.forEach((element: any) => {
             tempArrayFacility.push({
               label: `${element}`,
@@ -185,7 +181,7 @@ class DataView extends React.Component<any, any> {
           });
         }
         const tempArrayDiv: any = [];
-        if (division.length) {
+        if (division?.length) {
           division.forEach((element: any) => {
             tempArrayDiv.push({
               label: `${element}`,
@@ -230,6 +226,14 @@ class DataView extends React.Component<any, any> {
     formattedNowDate = month + "-" + date + "-" + year;
     return formattedNowDate;
   };
+  formatDateWithDMY = (data: any) => {
+    let formattedNowDate = "";
+    let date = ("0" + data.getDate()).slice(-2);
+    let month = ("0" + (data.getMonth() + 1)).slice(-2);
+    let year = data.getFullYear();
+    formattedNowDate = date + "-" + month + "-" + year;
+    return formattedNowDate;
+  };
   formateDefaultDate = (data: any) => {
     //2021-02-17
     let formattedNowDate = "";
@@ -245,7 +249,34 @@ class DataView extends React.Component<any, any> {
     formattedDate = dateArray[1] + "-" + dateArray[2] + "-" + dateArray[0];
     return formattedDate;
   };
-
+  formateDateCardHeader = (data: any) => {
+    let formattedDate = "";
+    let dateArray = data.split("-");
+    formattedDate = dateArray[1] + "-" + dateArray[0] + "-" + dateArray[2];
+    return formattedDate;
+  };
+  //card
+  changeHandlerCard = (event: any) => {
+    let name = event.target.name;
+    let startDateCard = "";
+    let endDateCard = "";
+    if (name === "startDate") {
+      startDateCard = event.target.value;
+      this.dataConfigCard.startDate = this.formateDate(startDateCard);
+    }
+    if (name === "endDate") {
+      endDateCard = event.target.value;
+      this.dataConfigCard.endDate = this.formateDate(endDateCard);
+    }
+    this.setState({
+      cardHeader: false,
+      cardHeaderValue: {
+        startDate: this.formateDateCardHeader(this.dataConfigCard.startDate),
+        endDate: this.formateDateCardHeader(this.dataConfigCard.endDate)
+      }
+    })
+    this.getCardData(this.dataConfigCard);
+  };
   //Emergency opd
   changeHandlerEO = (event: any) => {
     let name = event.target.name;
@@ -423,6 +454,17 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegData(this.dataConfig);
   };
+  //card
+  getCardData(data: any) {
+    CollectorService.getAllCard(data).then((response): any => {
+      if (response) {
+        this.setState({
+          card: response.data.content,
+        });
+      }
+    }
+    );
+  }
   //data view
   getRegData(data: any) {
     CollectorService.getAllRegistrationCollectionData(data).then(
@@ -1504,15 +1546,69 @@ class DataView extends React.Component<any, any> {
             </h4>
           </div>
           <div className="mt-1">
-            <div className="text-center">
-              <h5
-                style={{ fontWeight: "bold", fontSize: "20px" }}
-                className="text-danger"
-              >
-                <u>Todays Report</u>
-              </h5>
+            <div className="text-center d-flex">
+              <div>
+                <div className=" p-0 ml-2">
+                  <form style={{ position: "relative", zIndex: 1 }} className="form-inline m-0 p-0 ">
+                    <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+
+                      <div className="d-flex">
+                        <label style={{ color: "#066B86" }} className="label mt-1  p-1 mr-1  font-weight-bold">
+                          <b>Start Date</b>
+                        </label>
+                        <input
+                          style={{ width: "140px" }}
+                          className="text m-1 p-1"
+                          onChange={this.changeHandlerCard}
+                          pattern="MM-dd-yyyy"
+                          type="date"
+                          name="startDate"
+                          id="startDate"
+                          defaultValue={dateOfToday}
+                          max={dateOfToday}
+                        />
+                      </div>
+                      <div className="d-flex">
+                        <label style={{ color: "#066B86" }} className="label mt-1  mr-1 p-1  font-weight-bold">
+                          <b>End Date</b>
+                        </label>
+                        <input
+                          style={{ width: "140px" }}
+                          className="text m-1 p-1"
+                          onChange={this.changeHandlerCard}
+                          pattern="MM-dd-yyyy"
+                          type="date"
+                          name="endDate"
+                          id="endDate"
+                          defaultValue={dateOfToday}
+                          max={dateOfToday}
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
             </div>
-            <div className="d-flex justify-content-center">
+            <div className="text-danger" style={{ fontSize: "17px" }}>
+              {
+                this.state.cardHeader ? <p
+                  style={{ fontWeight: "bold", position: "relative", bottom: '50px' }}
+                  className=" text-center"
+                >
+
+
+                  <u>Today's Report:</u> <span style={{ color: "#066B86" }}>{this.formatDateWithDMY(new Date())}</span>
+                </p> : <p
+                  style={{ fontWeight: "bold", position: "relative", bottom: '50px', left: '16px' }}
+                  className=" text-center"
+                >
+                  <u>Report:</u> <span style={{ color: "#066B86" }}>{`From ${this.state.cardHeaderValue.startDate} `}{`to ${this.state.cardHeaderValue.endDate}`}</span>
+                </p>
+              }
+
+            </div>
+            <div style={{ marginTop: '-50px' }} className="d-flex justify-content-center">
               <div className="row ">
                 <div
                   style={{ padding: "0px 2px", margin: "0px 20px" }}
@@ -1660,7 +1756,7 @@ class DataView extends React.Component<any, any> {
             <div
               className=" pl-0 pr-0 pt-1"
               id="dataView"
-              style={{ display: showing ? "none" : "block", width: '1050px' }}
+              style={{ display: showing ? "none" : "block", width: '970px' }}
             >
               <form className="form-inline m-0 p-0 ">
                 <div className="form-group col-12  pl-0 filter d-flex flex-wrap">
@@ -1668,7 +1764,7 @@ class DataView extends React.Component<any, any> {
                     <label style={{ color: "#066B86" }} className="label mr-1 mt-2 p-1  font-weight-bold">
                       <b>Division</b>
                     </label>
-                    <div style={{ width: "240px" }}>
+                    <div style={{ width: "200px" }}>
                       <Select
                         styles={customStyles}
                         name="division"
@@ -1686,7 +1782,7 @@ class DataView extends React.Component<any, any> {
                     <label style={{ color: "#066B86" }} className="label  mr-1 mt-2 p-1   font-weight-bold">
                       <b>District</b>
                     </label>
-                    <div style={{ width: "240px" }}>
+                    <div style={{ width: "200px" }}>
                       <Select
                         styles={customStyles}
                         name="districtName"
@@ -1704,7 +1800,7 @@ class DataView extends React.Component<any, any> {
                     <label style={{ color: "#066B86", width: "110px" }} className="label mr-1 p-1 mt-2 font-weight-bold">
                       <b>Facility Name</b>
                     </label>
-                    <div style={{ width: "260px" }}>
+                    <div style={{ width: "240px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1822,8 +1918,15 @@ class DataView extends React.Component<any, any> {
                 className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                 onClick={() => this.setState({ showing: !showing })}
               >
-                {showing ? "Data View" : "Analytical View"}
+                <b>  {showing ? "Data View" : "Analytical View"}</b>
               </button>
+              {/* <button
+                style={{ position: "relative", left: "10px" }}
+                className="btn btn-success text-white font-weight-bold  mb-1 mt-1 "
+                onClick={() => window.open('/billingInfo', '_blank')}
+              >
+                <b>  Billing Info</b>
+              </button> */}
             </div>
           </div>
           <div>
@@ -1865,9 +1968,9 @@ class DataView extends React.Component<any, any> {
                   height: "100%",
                 }}
               >
-                <div className=" text-dark text-center">
-                  <h2>
-                    <u>Emergency-OPD</u>
+                <div className="text-center">
+                  <h2 style={{ color: '#FF7F0E' }}>
+                    <u>Chart of Emergency-OPD</u>
                   </h2>
                 </div>
                 <div>
@@ -1941,9 +2044,9 @@ class DataView extends React.Component<any, any> {
                   marginTop: "20px",
                 }}
               >
-                <div className=" text-dark text-center">
-                  <h2>
-                    <u>Male-Female</u>
+                <div className="text-center">
+                  <h2 style={{ color: '#FF7F0E' }}>
+                    <u>Chart of Male-Female</u>
                   </h2>
                 </div>
                 <div>
@@ -2014,9 +2117,9 @@ class DataView extends React.Component<any, any> {
                   marginBottom: "20px",
                 }}
               >
-                <div className=" text-dark text-center">
-                  <h2>
-                    <u>Free-Paid</u>
+                <div className="text-center">
+                  <h2 style={{ color: '#FF7F0E' }}>
+                    <u>Chart of Free-Paid</u>
                   </h2>
                 </div>
                 <div>
