@@ -6,8 +6,8 @@ function Header() {
   return (
     <nav>
       <div className="container-fluid">
-        <div className="header">
-          <img className="headerImage" src={banner} alt="Banner" height="100%" />
+        <div className="header justify-content-center">
+          <img className="headerImage" src={banner} alt="Banner"/>
         </div>
       </div>
     </nav>

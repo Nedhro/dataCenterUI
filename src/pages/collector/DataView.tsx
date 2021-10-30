@@ -1524,26 +1524,16 @@ class DataView extends React.Component<any, any> {
       return (
         <div className="container-fluid">
           <div
+          className="text-center"
             style={{
               backgroundColor: "#066B86",
               height: "50px",
-              marginLeft: "3px",
-              marginTop: "-15px",
+              marginLeft: "5.5px",
+              marginRight: "3px",
+              marginTop: "-10px"
             }}
           >
-            <h4
-              className="mb-0 mt-0 pb-0 pt-0 text-white"
-              style={{
-                textAlign: "center",
-                marginTop: 0,
-                marginBottom: 0,
-                fontWeight: "bold",
-                fontSize: "30px",
-              }}
-            >
-              {" "}
-              SHR DASHBOARD
-            </h4>
+            <h4 className="text-white font-weight-bold " style={{ fontSize: "30px" }}>SHR DASHBOARD</h4>
           </div>
           <div className="mt-1">
             <div className="text-center d-flex">
@@ -1590,15 +1580,13 @@ class DataView extends React.Component<any, any> {
               </div>
 
             </div>
-            <div className="text-danger" style={{ fontSize: "17px" }}>
+            <div className="text-danger text-center" style={{ fontSize: "18px" }}>
               {
                 this.state.cardHeader ? <p
                   style={{ fontWeight: "bold", position: "relative", bottom: '50px' }}
                   className=" text-center"
                 >
-
-
-                  <u>Today's Report:</u> <span style={{ color: "#066B86" }}>{this.formatDateWithDMY(new Date())}</span>
+                  <u>Today's Report:</u> <span style={{ color: "#066B86" }}>{this.formateNowDate(new Date())}</span>
                 </p> : <p
                   style={{ fontWeight: "bold", position: "relative", bottom: '50px', left: '16px' }}
                   className=" text-center"
