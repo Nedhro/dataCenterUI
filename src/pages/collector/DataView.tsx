@@ -1920,13 +1920,13 @@ class DataView extends React.Component<any, any> {
               >
                 <b>  {showing ? "Data View" : "Analytical View"}</b>
               </button>
-              <button
+              {/* <button
                 style={{ position: "relative", left: "10px" }}
                 className="btn btn-success text-white font-weight-bold  mb-1 mt-1 "
                 onClick={() => window.open('/billingInfo', '_blank')}
               >
                 <b>  Billing Info</b>
-              </button>
+              </button> */}
             </div>
           </div>
           <div>
