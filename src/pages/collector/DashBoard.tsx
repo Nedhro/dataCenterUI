@@ -126,21 +126,21 @@ class DashBoard extends React.Component<any, any> {
       this.getRegDataEO(this.dataConfigEO);
       this.getRegDataMF(this.dataConfigMF);
       this.getRegDataFP(this.dataConfigFP);
-      CollectorService.getAllCard().then((response): any => {
-        if (response) {
-          this.setState({
-            card: response.data.content,
-          });
-        }
-      });
+      // CollectorService.getAllCard().then((response): any => {
+      //   if (response) {
+      //     this.setState({
+      //       card: response.data.content,
+      //     });
+      //   }
+      // });
     }, 5 * 60 * 1000);
-    CollectorService.getAllCard().then((response): any => {
-      if (response) {
-        this.setState({
-          card: response.data.content,
-        });
-      }
-    });
+    // CollectorService.getAllCard().then((response): any => {
+    //   if (response) {
+    //     this.setState({
+    //       card: response.data.content,
+    //     });
+    //   }
+    // });
     CollectorService.getAllRegistrationCollectionData(this.dataConfig).then(
       (res): any => {
         const resultData = res.data.content;
@@ -1883,7 +1883,7 @@ class DashBoard extends React.Component<any, any> {
                       </div>
                     </div>
                     <Carousel.Caption>
-                      <h5 style={{marginTop:"-200px"}} className="text-center text-dark">{selectedFacilityName}</h5>
+                      <h5 style={{ marginTop: "-200px" }} className="text-center text-dark">{selectedFacilityName}</h5>
                     </Carousel.Caption>
                   </Carousel.Item>
                   {/* Male Female */}
@@ -1950,7 +1950,7 @@ class DashBoard extends React.Component<any, any> {
                       </div>
                     </div>
                     <Carousel.Caption >
-                      <h5 style={{marginTop:"-200px"}} className="text-center text-dark">{selectedFacilityName}</h5>
+                      <h5 style={{ marginTop: "-200px" }} className="text-center text-dark">{selectedFacilityName}</h5>
                     </Carousel.Caption>
                   </Carousel.Item>
                   {/* Free Paid */}
@@ -2017,7 +2017,7 @@ class DashBoard extends React.Component<any, any> {
                       </div>
                     </div>
                     <Carousel.Caption>
-                      <h5 style={{marginTop:"-200px"}} className="text-center text-dark">{selectedFacilityName}</h5>
+                      <h5 style={{ marginTop: "-200px" }} className="text-center text-dark">{selectedFacilityName}</h5>
                     </Carousel.Caption>
                   </Carousel.Item>
                 </Carousel>

@@ -17,8 +17,8 @@ class DataView extends React.Component<any, any> {
    * MF: Male-Female
    * FP: Free-Paid
    * */
-
   dataConfig: any = {};
+  dataConfigCard: any = {};
   dataConfigEO: any = {};
   dataConfigMF: any = {};
   dataConfigFP: any = {};
@@ -34,6 +34,8 @@ class DataView extends React.Component<any, any> {
       items: [],
       dateOfToday: "",
       showing: true,
+      cardHeader: true,
+      cardHeaderValue: "",
       selectedChart: null,
       selectedFilter: null,
       filterWithFacilityId: false,
@@ -54,12 +56,12 @@ class DataView extends React.Component<any, any> {
       MFList: [],
       FPList: [],
       dataList: [],
-      divisionNameChart: "",
-      districtNameChart: "",
-      facilityNameChart: "",
-      divisionNameData: "",
-      districtNameData: "",
-      facilityNameData: "",
+      selectedDivisionChart: "",
+      selectedDistrictChart: "",
+      selectedFacilityChart: "",
+      selectedDivisionData: "",
+      selectedDistrictData: "",
+      selectedFacilityData: "",
       divisionData: null,
       districtData: null,
       divisionChart: null,
@@ -119,50 +121,40 @@ class DataView extends React.Component<any, any> {
     };
     this.getRegDataFP(this.dataConfigFP);
     this.getSumDataFP(this.dataConfigFP);
+    this.dataConfigCard = {
+      startDate: dateNow,
+      endDate: dateNow,
+    };
+    this.getCardData(this.dataConfigCard);
     this.timerID = setInterval(() => {
       this.getRegData(this.dataConfig);
-      this.getRegDataEO(this.dataConfigEO);
-      this.getRegDataMF(this.dataConfigMF);
-      this.getRegDataFP(this.dataConfigFP);
-      CollectorService.getAllCard().then((response): any => {
-        if (response) {
-          this.setState({
-            card: response.data.content,
-          });
-        }
-      });
+      this.getCardData(this.dataConfigCard);
     }, 5 * 60 * 1000);
-    CollectorService.getAllCard().then((response): any => {
-      if (response) {
-        this.setState({
-          card: response.data.content,
-        });
-      }
-    });
+
     CollectorService.getAllRegistrationCollectionData(this.dataConfig).then(
       (res): any => {
         const resultData = res.data.content;
-        const all = resultData.map((item) => item.facilityInfo);
-        const tempDistrict = resultData.map(
+        const all = resultData?.map((item) => item.facilityInfo);
+        const tempDistrict = resultData?.map(
           (item) => item.facilityInfo.facilityDistrict
         );
-        const district = tempDistrict.filter(
+        const district = tempDistrict?.filter(
           (item, index) => tempDistrict.indexOf(item) === index
         );
-        const tempDivision = resultData.map(
+        const tempDivision = resultData?.map(
           (item) => item.facilityInfo.facilityDivision
         );
-        const division = tempDivision.filter(
+        const division = tempDivision?.filter(
           (item, index) => tempDivision.indexOf(item) === index
         );
-        const tempFacility = resultData.map(
+        const tempFacility = resultData?.map(
           (item) => item.facilityInfo.facilityName
         );
-        const facility = tempFacility.filter(
+        const facility = tempFacility?.filter(
           (item, index) => tempFacility.indexOf(item) === index
         );
         const tempArrayDis: any = [];
-        if (district.length) {
+        if (district?.length) {
           district.forEach((element: any) => {
             tempArrayDis.push({
               label: `${element}`,
@@ -175,7 +167,7 @@ class DataView extends React.Component<any, any> {
           });
         }
         const tempArrayFacility: any = [];
-        if (facility.length) {
+        if (facility?.length) {
           facility.forEach((element: any) => {
             tempArrayFacility.push({
               label: `${element}`,
@@ -189,7 +181,7 @@ class DataView extends React.Component<any, any> {
           });
         }
         const tempArrayDiv: any = [];
-        if (division.length) {
+        if (division?.length) {
           division.forEach((element: any) => {
             tempArrayDiv.push({
               label: `${element}`,
@@ -211,12 +203,35 @@ class DataView extends React.Component<any, any> {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
+  tableData = (resultData: any) => resultData?.map((data: any) => {
+    let config = {
+      "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
+      "Total Patient": data.totalPatient || 0,
+      "OPD": data.numberOfOpdPatient || 0,
+      "Emergency": data.numberOfEmergencyPatient || 0,
+      "Male": data.numberOfMalePatient || 0,
+      "Female": data.numberOfFemalePatient || 0,
+      "Paid": data.numberOfPaidPatient || 0,
+      "Free": data.numberOfFreePatient || 0,
+      "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
+      "Date": data.sentTime || "N/A",
+    };
+    return config;
+  });
   formateNowDate = (data: any) => {
     let formattedNowDate = "";
     let date = ("0" + data.getDate()).slice(-2);
     let month = ("0" + (data.getMonth() + 1)).slice(-2);
     let year = data.getFullYear();
     formattedNowDate = month + "-" + date + "-" + year;
+    return formattedNowDate;
+  };
+  formatDateWithDMY = (data: any) => {
+    let formattedNowDate = "";
+    let date = ("0" + data.getDate()).slice(-2);
+    let month = ("0" + (data.getMonth() + 1)).slice(-2);
+    let year = data.getFullYear();
+    formattedNowDate = date + "-" + month + "-" + year;
     return formattedNowDate;
   };
   formateDefaultDate = (data: any) => {
@@ -234,124 +249,282 @@ class DataView extends React.Component<any, any> {
     formattedDate = dateArray[1] + "-" + dateArray[2] + "-" + dateArray[0];
     return formattedDate;
   };
-  changeHandler = (event: any) => {
-    let nam = event.target.name;
-    let startDateInput = "";
-    let endDateInput = "";
-    if (nam === "startDate") {
-      startDateInput = event.target.value;
-      this.dataConfig.startDate = this.formateDate(startDateInput);
+  formateDateCardHeader = (data: any) => {
+    let formattedDate = "";
+    let dateArray = data.split("-");
+    formattedDate = dateArray[1] + "-" + dateArray[0] + "-" + dateArray[2];
+    return formattedDate;
+  };
+  //card
+  changeHandlerCard = (event: any) => {
+    let name = event.target.name;
+    let startDateCard = "";
+    let endDateCard = "";
+    if (name === "startDate") {
+      startDateCard = event.target.value;
+      this.dataConfigCard.startDate = this.formateDate(startDateCard);
     }
-    if (nam === "endDate") {
-      endDateInput = event.target.value;
-      this.dataConfig.endDate = this.formateDate(endDateInput);
+    if (name === "endDate") {
+      endDateCard = event.target.value;
+      this.dataConfigCard.endDate = this.formateDate(endDateCard);
     }
-    let facilityId = this.dataConfig.facilityId;
-    let startDate = this.dataConfig.startDate;
-    let endDate = this.dataConfig.endDate;
-    let district = this.state.districtData;
-    let division = this.state.divisionData;
-    this.dataConfig = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    this.getRegData(this.dataConfig);
+    this.setState({
+      cardHeader: false,
+      cardHeaderValue: {
+        startDate: this.formateDateCardHeader(this.dataConfigCard.startDate),
+        endDate: this.formateDateCardHeader(this.dataConfigCard.endDate)
+      }
+    })
+    this.getCardData(this.dataConfigCard);
   };
   //Emergency opd
   changeHandlerEO = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateEO = "";
     let endDateEO = "";
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateEO = event.target.value;
       this.dataConfigEO.startDate = this.formateDate(startDateEO);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateEO = event.target.value;
       this.dataConfigEO.endDate = this.formateDate(endDateEO);
     }
     let facilityId = this.dataConfigEO.facilityId;
     let startDate = this.dataConfigEO.startDate;
     let endDate = this.dataConfigEO.endDate;
-    let district = this.state.districtChart;
-    let division = this.state.divisionChart;
-    this.dataConfigEO = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
+
+    if (facilityId !== null) {
+      this.dataConfigEO = {
+        division: this.state.divisionChart,
+        district: this.state.districtChart,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataEO(this.dataConfigEO);
+    }
+    if (facilityId === null) {
+      this.dataConfigEO = {
+        division: null,
+        district: null,
+        facilityId: null,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getSumDataEO(this.dataConfigEO);
+    }
+    CollectorService.getAllDataByfIdAndDatewithsum({
+      division: null,
+      district: null,
+      facilityId: null,
       startDate: startDate,
       endDate: endDate,
-    };
-    this.getRegDataEO(this.dataConfigEO);
-    this.getSumDataEO(this.dataConfigEO);
+    }).then(
+      (response): any => {
+        this.setState({
+          EOList: response.data.content,
+        });
+      }
+    );
   };
   //male female
   changeHandlerMF = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateMF = "";
     let endDateMF = "";
 
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateMF = event.target.value;
 
       this.dataConfigMF.startDate = this.formateDate(startDateMF);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateMF = event.target.value;
       this.dataConfigMF.endDate = this.formateDate(endDateMF);
     }
     let facilityId = this.dataConfigMF.facilityId;
     let startDate = this.dataConfigMF.startDate;
     let endDate = this.dataConfigMF.endDate;
-    let district = this.state.districtChart;
-    let division = this.state.divisionChart;
-    this.dataConfigMF = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
+    if (facilityId !== null) {
+      this.dataConfigMF = {
+        division: this.state.divisionChart,
+        district: this.state.districtChart,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataMF(this.dataConfigMF);
+    }
+    if (facilityId === null) {
+      this.dataConfigMF = {
+        division: null,
+        district: null,
+        facilityId: null,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getSumDataMF(this.dataConfigMF);
+    }
+    CollectorService.getAllDataByfIdAndDatewithsum({
+      division: null,
+      district: null,
+      facilityId: null,
       startDate: startDate,
       endDate: endDate,
-    };
-    this.getRegDataMF(this.dataConfigMF);
-    this.getSumDataMF(this.dataConfigMF);
+    }).then(
+      (response): any => {
+        this.setState({
+          MFList: response.data.content,
+        });
+      }
+    );
   };
   //free paid
   changeHandlerFP = (event: any) => {
-    let nam = event.target.name;
+    let name = event.target.name;
     let startDateFP = "";
     let endDateFP = "";
-    if (nam === "startDate") {
+    if (name === "startDate") {
       startDateFP = event.target.value;
       this.dataConfigFP.startDate = this.formateDate(startDateFP);
     }
-    if (nam === "endDate") {
+    if (name === "endDate") {
       endDateFP = event.target.value;
       this.dataConfigFP.endDate = this.formateDate(endDateFP);
     }
     let facilityId = this.dataConfigFP.facilityId;
     let startDate = this.dataConfigFP.startDate;
     let endDate = this.dataConfigFP.endDate;
-    let district = this.state.districtChart;
-    let division = this.state.divisionChart;
-    this.dataConfigFP = {
-      division: division,
-      district: district,
-      facilityId: facilityId,
+    if (facilityId !== null) {
+      this.dataConfigFP = {
+        division: this.state.divisionChart,
+        district: this.state.districtChart,
+        facilityId: facilityId,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getRegDataFP(this.dataConfigFP);
+    }
+    if (facilityId === null) {
+      this.dataConfigFP = {
+        division: null,
+        district: null,
+        facilityId: null,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      this.getSumDataFP(this.dataConfigFP);
+    }
+    CollectorService.getAllDataByfIdAndDatewithsum({
+      division: null,
+      district: null,
+      facilityId: null,
+      startDate: startDate,
+      endDate: endDate,
+    }).then(
+      (response): any => {
+        this.setState({
+          FPList: response.data.content,
+        });
+      }
+    );
+  };
+  //data view
+  changeHandler = (event: any) => {
+    let name = event.target.name;
+    let startDateInput = "";
+    let endDateInput = "";
+    if (name === "startDate") {
+      startDateInput = event.target.value;
+      this.dataConfig.startDate = this.formateDate(startDateInput);
+    }
+    if (name === "endDate") {
+      endDateInput = event.target.value;
+      this.dataConfig.endDate = this.formateDate(endDateInput);
+    }
+    let startDate = this.dataConfig.startDate;
+    let endDate = this.dataConfig.endDate;
+    this.dataConfig = {
+      division: null,
+      district: null,
+      facilityId: null,
       startDate: startDate,
       endDate: endDate,
     };
-    this.getRegDataFP(this.dataConfigFP);
-    this.getSumDataFP(this.dataConfigFP);
+    this.getRegData(this.dataConfig);
   };
+  //card
+  getCardData(data: any) {
+    CollectorService.getAllCard(data).then((response): any => {
+      if (response) {
+        this.setState({
+          card: response.data.content,
+        });
+      }
+    }
+    );
+  }
+  //data view
+  getRegData(data: any) {
+    CollectorService.getAllRegistrationCollectionData(data).then(
+      (res): any => {
+        if (this.state.selectedDivisionData.value === undefined) {
+          const resultData = res.data.content;
+          const dataFinal = this.tableData(resultData);
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
+        else if (this.state.selectedDivisionData.value !== undefined) {
+          let allRecord = res.data.content;
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionData.value)
+          const dataFinal = this.tableData(resultData);
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
+        else if (this.state.selectedDistrictData.value !== undefined && this.state.selectedDistrictData.value !== undefined) {
+          let allRecord = res.data.content;
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictData.value)
+          const dataFinal = this.tableData(resultData);
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
+        if (this.state.selectedFacilityData.value !== undefined) {
+          let allRecord = res.data.content;
+          const resultData = allRecord.filter(item => item.facilityInfo.facilityName === this.state.selectedFacilityData.value)
+          const dataFinal = this.tableData(resultData);
+          this.setState({
+            isLoaded: true,
+            items: dataFinal,
+          });
+        }
 
+        this.setState({
+          isLoaded: true,
+          dateOfToday: this.formateDefaultDate(new Date()),
+          dataList: res.data.content,
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      }
+    );
+  }
   //emergency-opd
   getRegDataEO(data: any) {
     CollectorService.getAllRegistrationCollectionData(data).then(
       (res): any => {
         if (data.facilityId !== null) {
+          console.log(res.data.content)
           this.dataToExportEO = res.data.content;
           this.setState({
             filterWithFacilityIdEO: true,
@@ -370,7 +543,19 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          this.dataToExportEO = response.data.content;
+          if (this.state.selectedDivisionChart.value === undefined) {
+            this.dataToExportEO = response.data.content;
+          }
+          else if (this.state.selectedDivisionChart.value !== undefined) {
+            let allEORecord = response.data.content;
+            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionChart.value)
+            this.dataToExportEO = EOData;
+          }
+          else if (this.state.selectedDistrictChart.value !== undefined) {
+            let allEORecord = response.data.content;
+            const EOData = allEORecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictChart.value)
+            this.dataToExportEO = EOData;
+          }
           this.setState({
             filterWithFacilityIdEO: false,
             EOList: response.data.content,
@@ -402,7 +587,19 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          this.dataToExportMF = response.data.content;
+          if (this.state.selectedDivisionChart.value === undefined) {
+            this.dataToExportMF = response.data.content;
+          }
+          else if (this.state.selectedDivisionChart.value !== undefined) {
+            let allMFRecord = response.data.content;
+            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionChart.value)
+            this.dataToExportMF = MFData;
+          }
+          else if (this.state.selectedDistrictChart.value !== undefined) {
+            let allMFRecord = response.data.content;
+            const MFData = allMFRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictChart.value)
+            this.dataToExportMF = MFData;
+          }
           this.setState({
             filterWithFacilityIdMF: false,
             MFList: response.data.content,
@@ -434,7 +631,19 @@ class DataView extends React.Component<any, any> {
     CollectorService.getAllDataByfIdAndDatewithsum(data).then(
       (response): any => {
         if (data.facilityId === null) {
-          this.dataToExportFP = response.data.content;
+          if (this.state.selectedDivisionChart.value === undefined) {
+            this.dataToExportFP = response.data.content;
+          }
+          else if (this.state.selectedDivisionChart.value !== undefined) {
+            let allFPRecord = response.data.content;
+            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDivision === this.state.selectedDivisionChart.value)
+            this.dataToExportFP = FPData;
+          }
+          else if (this.state.selectedDistrictChart.value !== undefined) {
+            let allFPRecord = response.data.content;
+            const FPData = allFPRecord.filter(item => item.facilityInfo.facilityDistrict === this.state.selectedDistrictChart.value)
+            this.dataToExportFP = FPData;
+          }
           this.setState({
             filterWithFacilityIdFP: false,
             FPList: response.data.content,
@@ -443,49 +652,14 @@ class DataView extends React.Component<any, any> {
       }
     );
   }
-  //data view
-  getRegData(data: any) {
-    CollectorService.getAllRegistrationCollectionData(data).then(
-      (res): any => {
-        const resultData = res.data.content;
-        const dataFinal = resultData?.map((data: any) => {
-          let config = {
-            "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-            "Total Patient": data.totalPatient || 0,
-            "OPD": data.numberOfOpdPatient || 0,
-            "Emergency": data.numberOfEmergencyPatient || 0,
-            "Male": data.numberOfMalePatient || 0,
-            "Female": data.numberOfFemalePatient || 0,
-            "Paid": data.numberOfPaidPatient || 0,
-            "Free": data.numberOfFreePatient || 0,
-            "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-            "Date": data.sentTime || "N/A",
-          };
-          return config;
-        });
-        var date = new Date();
-        this.setState({
-          isLoaded: true,
-          items: dataFinal,
-          dateOfToday: this.formateDefaultDate(date),
-          dataList: resultData,
-        });
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
-  }
+
 
   //for data view
   //facility
   onSearchFacilityData = (selectedOption: any) => {
     if (selectedOption !== null) {
       this.setState({
-        facilityNameData: {
+        selectedFacilityData: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
@@ -544,7 +718,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameData: {
+          selectedDivisionData: {
             label: division[0],
             value: division[0],
           },
@@ -552,26 +726,26 @@ class DataView extends React.Component<any, any> {
       }
       if (district[0]) {
         this.setState({
-          districtNameData: {
+          selectedDistrictData: {
             label: district[0],
             value: district[0],
           },
         });
       }
-      this.dataConfig.facilityId = selectedOption.value;
-      this.dataConfig = {
-        facilityId: selectedOption.value,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: this.state.divisionData,
-        district: this.state.districtData,
-      };
-      this.getRegData(this.dataConfig);
+      let allDataRecord = this.state.dataList;
+      const resultData = allDataRecord.filter(
+        (item) => item.facilityId === selectedOption.value
+      );
+      const dataFinal = this.tableData(resultData);
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     } else if (selectedOption === null) {
       this.setState({
-        districtNameData: "",
-        divisionNameData: "",
-        facilityNameData: "",
+        selectedDistrictData: "",
+        selectedDivisionData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
@@ -608,15 +782,12 @@ class DataView extends React.Component<any, any> {
           facilityListData: tempArrayFacility,
         });
       }
-      this.dataConfig.facilityId = selectedOption;
-      this.dataConfig = {
-        facilityId: null,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegData(this.dataConfig);
+      const resultData = this.state.dataList;
+      const dataFinal = this.tableData(resultData);
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     }
   };
   //division
@@ -625,16 +796,12 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         divisionData: selectedOption.value,
-        divisionNameData: {
+        selectedDivisionData: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-      });
-      this.setState({
-        districtNameData: "",
-      });
-      this.setState({
-        facilityNameData: "",
+        selectedDistrictData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       let tempAll = all.filter(
@@ -676,35 +843,19 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityInfo.facilityDivision === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
-      var date = new Date();
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
-        dateOfToday: this.formateDefaultDate(date),
       });
     } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        divisionNameData: "",
-        districtNameData: "",
+        selectedDivisionData: "",
+        selectedDistrictData: "",
         divisionData: null,
         districtData: null,
-        facilityNameData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       const tempDistrict = all.map((item) => item.facilityDistrict);
@@ -739,14 +890,13 @@ class DataView extends React.Component<any, any> {
           facilityListData: tempArrayFacility,
         });
       }
-      this.dataConfig = {
-        facilityId: null,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegData(this.dataConfig);
+
+      const resultData = this.state.dataList;
+      const dataFinal = this.tableData(resultData);
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     }
   };
   //district
@@ -755,11 +905,11 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         districtData: selectedOption.value,
-        districtNameData: {
+        selectedDistrictData: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        facilityNameData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       let allList = all.filter(
@@ -806,7 +956,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameData: {
+          selectedDivisionData: {
             label: division[0],
             value: division[0],
           },
@@ -816,35 +966,19 @@ class DataView extends React.Component<any, any> {
       const resultData = allDataRecord.filter(
         (item) => item.facilityInfo.facilityDistrict === selectedOption.value
       );
-      const dataFinal = resultData?.map((data: any) => {
-        let config = {
-          "Facility Name (Id)": data.facilityInfo.facilityName || "N/A",
-          "Total Patient": data.totalPatient || 0,
-          OPD: data.numberOfOpdPatient || 0,
-          Emergency: data.numberOfEmergencyPatient || 0,
-          Male: data.numberOfMalePatient || 0,
-          Female: data.numberOfFemalePatient || 0,
-          Paid: data.numberOfPaidPatient || 0,
-          Free: data.numberOfFreePatient || 0,
-          "Total Collection (BDT)": data.totalCollection.toFixed(2) || 0,
-          Date: data.sentTime || "N/A",
-        };
-        return config;
-      });
-      var date = new Date();
+      const dataFinal = this.tableData(resultData);
       this.setState({
         isLoaded: true,
         items: dataFinal,
-        dateOfToday: this.formateDefaultDate(date),
       });
     } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        districtNameData: "",
+        selectedDistrictData: "",
         divisionData: null,
         districtData: null,
-        divisionNameData: "",
-        facilityNameData: "",
+        selectedDivisionData: "",
+        selectedFacilityData: "",
       });
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
@@ -879,14 +1013,12 @@ class DataView extends React.Component<any, any> {
           facilityListData: tempArrayFacility,
         });
       }
-      this.dataConfig = {
-        facilityId: null,
-        startDate: this.dataConfig.startDate,
-        endDate: this.dataConfig.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegData(this.dataConfig);
+      const resultData = this.state.dataList;
+      const dataFinal = this.tableData(resultData);
+      this.setState({
+        isLoaded: true,
+        items: dataFinal,
+      });
     }
   };
   //for chart
@@ -894,7 +1026,7 @@ class DataView extends React.Component<any, any> {
   onSearchFacilityChart = (selectedOption: any) => {
     if (selectedOption !== null) {
       this.setState({
-        facilityNameChart: {
+        selectedFacilityChart: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
@@ -953,7 +1085,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameChart: {
+          selectedDivisionChart: {
             label: division[0],
             value: division[0],
           },
@@ -961,7 +1093,7 @@ class DataView extends React.Component<any, any> {
       }
       if (district[0]) {
         this.setState({
-          districtNameChart: {
+          selectedDistrictChart: {
             label: district[0],
             value: district[0],
           },
@@ -978,7 +1110,6 @@ class DataView extends React.Component<any, any> {
         district: this.state.districtChart,
       };
       this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
       this.dataConfigMF = {
         facilityId: selectedOption.value,
         startDate: this.dataConfigMF.startDate,
@@ -987,7 +1118,6 @@ class DataView extends React.Component<any, any> {
         district: this.dataConfigMF.districtChart,
       };
       this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
       this.dataConfigFP = {
         facilityId: selectedOption.value,
         startDate: this.dataConfigFP.startDate,
@@ -996,19 +1126,17 @@ class DataView extends React.Component<any, any> {
         district: this.dataConfigFP.districtChart,
       };
       this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
     } else if (selectedOption === null) {
       this.dataConfigEO.facilityId = selectedOption;
       this.dataConfigMF.facilityId = selectedOption;
       this.dataConfigFP.facilityId = selectedOption;
       this.setState({
-        districtNameChart: "",
-      });
-      this.setState({
-        facilityNameChart: "",
-      });
-      this.setState({
-        divisionNameChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
+        selectedDistrictChart: "",
+        selectedFacilityChart: "",
+        selectedDivisionChart: "",
       });
       const all = this.state.allList;
       const allList = all.map((item) => item.facilityName);
@@ -1045,33 +1173,12 @@ class DataView extends React.Component<any, any> {
           facilityListChart: tempArrayFacility,
         });
       }
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-      this.dataConfigFP = {
-        facilityId: null,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
+      let allEORecord = this.state.EOList;
+      this.dataToExportEO = allEORecord;
+      let allMFRecord = this.state.MFList;
+      this.dataToExportMF = allMFRecord;
+      let allFPRecord = this.state.FPList;
+      this.dataToExportFP = allFPRecord;
     }
   };
   //division
@@ -1080,13 +1187,19 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         divisionChart: selectedOption.value,
-        divisionNameChart: {
+        selectedDivisionChart: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        districtNameChart: "",
-        facilityNameChart: "",
+        selectedDistrictChart: "",
+        selectedFacilityChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       let allList = all.filter(
         (item) => item.facilityDivision === selectedOption.value
@@ -1139,15 +1252,22 @@ class DataView extends React.Component<any, any> {
         (item) => item.facilityInfo.facilityDivision === selectedOption.value
       );
       this.dataToExportFP = FPData;
-    } else if (selectedOption === null) {
+    }
+    else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        divisionNameChart: "",
-        districtNameChart: "",
+        selectedDivisionChart: "",
+        selectedDistrictChart: "",
         divisionChart: null,
         districtChart: null,
-        facilityNameChart: "",
+        selectedFacilityChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
       const facility = tempFacility.filter(
@@ -1183,34 +1303,12 @@ class DataView extends React.Component<any, any> {
           facilityListChart: tempArrayFacility,
         });
       }
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-      this.dataConfigFP = {
-        facilityId: null,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
+      let allEORecord = this.state.EOList;
+      this.dataToExportEO = allEORecord;
+      let allMFRecord = this.state.MFList;
+      this.dataToExportMF = allMFRecord;
+      let allFPRecord = this.state.FPList;
+      this.dataToExportFP = allFPRecord;
     }
   };
   //district
@@ -1219,12 +1317,18 @@ class DataView extends React.Component<any, any> {
       this.setState({
         selectedOption,
         districtChart: selectedOption.value,
-        districtNameChart: {
+        selectedDistrictChart: {
           label: selectedOption.value,
           value: selectedOption.value,
         },
-        facilityNameChart: "",
+        selectedFacilityChart: "",
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       let allList = all.filter(
         (item) => item?.facilityDistrict === selectedOption.value
@@ -1270,7 +1374,7 @@ class DataView extends React.Component<any, any> {
       }
       if (division[0]) {
         this.setState({
-          divisionNameChart: {
+          selectedDivisionChart: {
             label: division[0],
             value: division[0],
           },
@@ -1294,12 +1398,18 @@ class DataView extends React.Component<any, any> {
     } else if (selectedOption === null) {
       this.setState({
         selectedOption,
-        districtNameChart: "",
+        selectedDistrictChart: "",
         divisionChart: null,
-        divisionNameChart: "",
-        facilityNameChart: "",
+        selectedDivisionChart: "",
+        selectedFacilityChart: "",
         districtChart: null,
+        filterWithFacilityIdEO: false,
+        filterWithFacilityIdMF: false,
+        filterWithFacilityIdFP: false,
       });
+      this.dataConfigEO.facilityId = null;
+      this.dataConfigMF.facilityId = null;
+      this.dataConfigFP.facilityId = null;
       const all = this.state.allList;
       const tempFacility = all.map((item) => item.facilityName);
       const facility = tempFacility.filter(
@@ -1333,33 +1443,12 @@ class DataView extends React.Component<any, any> {
           facilityListChart: tempArrayFacility,
         });
       }
-      this.dataConfigEO = {
-        facilityId: null,
-        startDate: this.dataConfigEO.startDate,
-        endDate: this.dataConfigEO.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataEO(this.dataConfigEO);
-      this.getSumDataEO(this.dataConfigEO);
-      this.dataConfigMF = {
-        facilityId: null,
-        startDate: this.dataConfigMF.startDate,
-        endDate: this.dataConfigMF.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataMF(this.dataConfigMF);
-      this.getSumDataMF(this.dataConfigMF);
-      this.dataConfigFP = {
-        facilityId: null,
-        startDate: this.dataConfigFP.startDate,
-        endDate: this.dataConfigFP.endDate,
-        division: null,
-        district: null,
-      };
-      this.getRegDataFP(this.dataConfigFP);
-      this.getSumDataFP(this.dataConfigFP);
+      let allEORecord = this.state.EOList;
+      this.dataToExportEO = allEORecord;
+      let allMFRecord = this.state.MFList;
+      this.dataToExportMF = allMFRecord;
+      let allFPRecord = this.state.FPList;
+      this.dataToExportFP = allFPRecord;
     }
   };
 
@@ -1457,150 +1546,207 @@ class DataView extends React.Component<any, any> {
             </h4>
           </div>
           <div className="mt-1">
-            <div className="text-center">
-              <h5
-                style={{ fontWeight: "bold", fontSize: "20px" }}
-                className="text-danger"
-              >
-                <u>Todays Report</u>
-              </h5>
+            <div className="text-center d-flex">
+              <div>
+                <div className=" p-0 ml-2">
+                  <form style={{ position: "relative", zIndex: 1 }} className="form-inline m-0 p-0 ">
+                    <div className="form-group col-12 ml-1 pl-0 filter d-flex">
+
+                      <div className="d-flex">
+                        <label style={{ color: "#066B86" }} className="label mt-1  p-1 mr-1  font-weight-bold">
+                          <b>Start Date</b>
+                        </label>
+                        <input
+                          style={{ width: "140px" }}
+                          className="text m-1 p-1"
+                          onChange={this.changeHandlerCard}
+                          pattern="MM-dd-yyyy"
+                          type="date"
+                          name="startDate"
+                          id="startDate"
+                          defaultValue={dateOfToday}
+                          max={dateOfToday}
+                        />
+                      </div>
+                      <div className="d-flex">
+                        <label style={{ color: "#066B86" }} className="label mt-1  mr-1 p-1  font-weight-bold">
+                          <b>End Date</b>
+                        </label>
+                        <input
+                          style={{ width: "140px" }}
+                          className="text m-1 p-1"
+                          onChange={this.changeHandlerCard}
+                          pattern="MM-dd-yyyy"
+                          type="date"
+                          name="endDate"
+                          id="endDate"
+                          defaultValue={dateOfToday}
+                          max={dateOfToday}
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
             </div>
-            <div className="row d-flex justify-content-center">
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
-                <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+            <div className="text-danger" style={{ fontSize: "17px" }}>
+              {
+                this.state.cardHeader ? <p
+                  style={{ fontWeight: "bold", position: "relative", bottom: '50px' }}
+                  className=" text-center"
                 >
-                  <div className="col-4">
-                    <img src={totalPatient} alt="total-patient" />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">Total Patient</small>
+
+
+                  <u>Today's Report:</u> <span style={{ color: "#066B86" }}>{this.formatDateWithDMY(new Date())}</span>
+                </p> : <p
+                  style={{ fontWeight: "bold", position: "relative", bottom: '50px', left: '16px' }}
+                  className=" text-center"
+                >
+                  <u>Report:</u> <span style={{ color: "#066B86" }}>{`From ${this.state.cardHeaderValue.startDate} `}{`to ${this.state.cardHeaderValue.endDate}`}</span>
+                </p>
+              }
+
+            </div>
+            <div style={{ marginTop: '-50px' }} className="d-flex justify-content-center">
+              <div className="row ">
+                <div
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
+                >
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img src={totalPatient} alt="total-patient" />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">Total Patient</small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-opd" src={opdPatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalOpdPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total OPD Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-opd" src={opdPatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalOpdPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total OPD Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-emergency" src={emergencyPatient} />
-                  </div>
-                  <div className="col-8">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalEmergencyPatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Emergency Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-emergency" src={emergencyPatient} />
+                    </div>
+                    <div className="col-8">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalEmergencyPatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Emergency Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row"
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-male" src={malePatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalMalePatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Male Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row"
+                  >
+                    <div className="col-4">
+                      <img alt="total-male" src={malePatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalMalePatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Male Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{ padding: "0px 2px", margin: "0px 15px" }}
-                className="col-md-2"
-              >
                 <div
-                  style={{
-                    border: "1px solid lightGray",
-                    borderRadius: "20px",
-                    height: "100px",
-                    boxShadow: "5px 5px 20px gray",
-                    width: "250px",
-                    padding: "15px",
-                  }}
-                  className="d-flex justify-content-center row "
+                  style={{ padding: "0px 2px", margin: "0px 20px" }}
+                  className="col-md-2"
                 >
-                  <div className="col-4">
-                    <img alt="total-female" src={femalePatient} />
-                  </div>
-                  <div className="col-7">
-                    <h2 className="font-weight-bold text-info">
-                      {this.state.card.totalFemalePatient || 0}
-                    </h2>
-                    <small className="font-weight-bold">
-                      Total Female Patient
-                    </small>
+                  <div
+                    style={{
+                      border: "1px solid lightGray",
+                      borderRadius: "20px",
+                      height: "100px",
+                      boxShadow: "5px 5px 20px gray",
+                      width: "240px",
+                      padding: "15px",
+                    }}
+                    className="d-flex justify-content-center row "
+                  >
+                    <div className="col-4">
+                      <img alt="total-female" src={femalePatient} />
+                    </div>
+                    <div className="col-7">
+                      <h2 className="font-weight-bold text-info">
+                        {this.state.card.totalFemalePatient || 0}
+                      </h2>
+                      <small className="font-weight-bold">
+                        Total Female Patient
+                      </small>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1610,15 +1756,15 @@ class DataView extends React.Component<any, any> {
             <div
               className=" pl-0 pr-0 pt-1"
               id="dataView"
-              style={{ display: showing ? "none" : "block" }}
+              style={{ display: showing ? "none" : "block", width: '970px' }}
             >
               <form className="form-inline m-0 p-0 ">
-                <div className="form-group col-12  pl-0 filter d-flex">
+                <div className="form-group col-12  pl-0 filter d-flex flex-wrap">
                   <div className="d-flex">
-                    <label className="label  mr-1 p-1 text-info font-weight-bold">
-                      Division
+                    <label style={{ color: "#066B86" }} className="label mr-1 mt-2 p-1  font-weight-bold">
+                      <b>Division</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "200px" }}>
                       <Select
                         styles={customStyles}
                         name="division"
@@ -1626,17 +1772,17 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchDivisionData(e);
                         }}
-                        value={this.state.divisionNameData}
+                        value={this.state.selectedDivisionData}
                         isSearchable={true}
                         isClearable={true}
                       />
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label  mr-1 p-1  text-info font-weight-bold">
-                      District
+                    <label style={{ color: "#066B86" }} className="label  mr-1 mt-2 p-1   font-weight-bold">
+                      <b>District</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "200px" }}>
                       <Select
                         styles={customStyles}
                         name="districtName"
@@ -1646,15 +1792,15 @@ class DataView extends React.Component<any, any> {
                         }}
                         isSearchable={true}
                         isClearable={true}
-                        value={this.state.districtNameData}
+                        value={this.state.selectedDistrictData}
                       />{" "}
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label mr-1 p-1  text-info font-weight-bold">
-                      Facility Name
+                    <label style={{ color: "#066B86", width: "110px" }} className="label mr-1 p-1 mt-2 font-weight-bold">
+                      <b>Facility Name</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "240px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1664,16 +1810,16 @@ class DataView extends React.Component<any, any> {
                         }}
                         isSearchable={true}
                         isClearable={true}
-                        value={this.state.facilityNameData}
+                        value={this.state.selectedFacilityData}
                       />{" "}
                     </div>{" "}
                   </div>
-                  <div className="d-flex">
-                    <label className="label p-1 mr-1 text-info font-weight-bold">
-                      Start Date
+                  <div className="d-flex ">
+                    <label style={{ color: "#066B86", width: "85px" }} className="label  p-1 mr-1 mt-1   font-weight-bold">
+                      <b>Start Date</b>
                     </label>
                     <input
-                      style={{ width: "160px" }}
+                      style={{ width: "180px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1685,11 +1831,11 @@ class DataView extends React.Component<any, any> {
                     />
                   </div>
                   <div className="d-flex">
-                    <label className="label mr-1 p-1 text-info font-weight-bold">
-                      End Date
+                    <label style={{ color: "#066B86", width: "76px" }} className="label mt-1  mr-1 p-1  font-weight-bold">
+                      <b>End Date</b>
                     </label>
                     <input
-                      style={{ width: "160px" }}
+                      style={{ width: "180px" }}
                       className="text m-1 p-1"
                       onChange={this.changeHandler}
                       pattern="MM-dd-yyyy"
@@ -1711,8 +1857,8 @@ class DataView extends React.Component<any, any> {
               >
                 <div className="d-flex  ">
                   <div className="d-flex ">
-                    <label className="label ml-2 mr-1 mt-2 p-1 text-info font-weight-bold">
-                      Division
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 mt-2 p-1  font-weight-bold">
+                      <b>  Division</b>
                     </label>
                     <div style={{ width: "180px" }}>
                       <Select
@@ -1722,15 +1868,15 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchDivisionChart(e);
                         }}
-                        value={this.state.divisionNameChart}
+                        value={this.state.selectedDivisionChart}
                         isSearchable={true}
                         isClearable={true}
                       />
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                      District
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 p-1 mt-2 font-weight-bold">
+                      <b>    District</b>
                     </label>
                     <div style={{ width: "180px" }}>
                       <Select
@@ -1740,17 +1886,17 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchDistrictChart(e);
                         }}
-                        value={this.state.districtNameChart}
+                        value={this.state.selectedDistrictChart}
                         isSearchable={true}
                         isClearable={true}
                       />
                     </div>
                   </div>
                   <div className="d-flex">
-                    <label className="label ml-2 mr-1 p-1 mt-2 text-info font-weight-bold">
-                      Facility Name
+                    <label style={{ color: "#066B86" }} className="label ml-2 mr-1 p-1 mt-2  font-weight-bold">
+                      <b>   Facility Name</b>
                     </label>
-                    <div style={{ width: "180px" }}>
+                    <div style={{ width: "260px" }}>
                       <Select
                         styles={customStyles}
                         name="facilityId"
@@ -1758,7 +1904,7 @@ class DataView extends React.Component<any, any> {
                         onChange={(e: any) => {
                           this.onSearchFacilityChart(e);
                         }}
-                        value={this.state.facilityNameChart}
+                        value={this.state.selectedFacilityChart}
                         isSearchable={true}
                         isClearable={true}
                       />{" "}
@@ -1772,8 +1918,15 @@ class DataView extends React.Component<any, any> {
                 className="btn btn-success font-weight-bold ml-2 mb-1 mt-1 "
                 onClick={() => this.setState({ showing: !showing })}
               >
-                {showing ? "Data View" : "Analytical View"}
+                <b>  {showing ? "Data View" : "Analytical View"}</b>
               </button>
+              {/* <button
+                style={{ position: "relative", left: "10px" }}
+                className="btn btn-success text-white font-weight-bold  mb-1 mt-1 "
+                onClick={() => window.open('/billingInfo', '_blank')}
+              >
+                <b>  Billing Info</b>
+              </button> */}
             </div>
           </div>
           <div>
@@ -1807,15 +1960,17 @@ class DataView extends React.Component<any, any> {
             >
               <div
                 style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderTop: "5px solid #066B86",
+                  borderBottom: "5px solid #066B86",
+                  borderLeft: "2px solid #066B86",
+                  borderRight: "2px solid #066B86",
+                  borderRadius: "15px",
+                  height: "100%",
                 }}
               >
-                <div className="p-3 text-dark text-center">
-                  <h2>
-                    <u>Emergency-OPD</u>
+                <div className="text-center">
+                  <h2 style={{ color: '#FF7F0E' }}>
+                    <u>Chart of Emergency-OPD</u>
                   </h2>
                 </div>
                 <div>
@@ -1832,8 +1987,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label ml-2 mt-1  p-1 mr-1 font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1847,8 +2002,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label ml-2 mt-1 mr-1 p-1 font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1880,16 +2035,18 @@ class DataView extends React.Component<any, any> {
               </div>
               <div
                 style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderTop: "5px solid #066B86",
+                  borderBottom: "5px solid #066B86",
+                  borderLeft: "2px solid #066B86",
+                  borderRight: "2px solid #066B86",
+                  borderRadius: "15px",
+                  height: "100%",
                   marginTop: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
-                  <h2>
-                    <u>Male-Female</u>
+                <div className="text-center">
+                  <h2 style={{ color: '#FF7F0E' }}>
+                    <u>Chart of Male-Female</u>
                   </h2>
                 </div>
                 <div>
@@ -1906,8 +2063,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 p-1 mr-1  font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1921,8 +2078,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 mr-1 p-1  font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1950,16 +2107,19 @@ class DataView extends React.Component<any, any> {
               </div>
               <div
                 style={{
-                  border: "1px solid lightGray",
-                  borderRadius: "20px",
-                  padding: "15px",
-                  boxShadow: "5px 5px 20px gray",
+                  borderTop: "5px solid #066B86",
+                  borderBottom: "5px solid #066B86",
+                  borderLeft: "2px solid #066B86",
+                  borderRight: "2px solid #066B86",
+                  borderRadius: "15px",
+                  height: "100%",
                   marginTop: "20px",
+                  marginBottom: "20px",
                 }}
               >
-                <div className="p-3 text-dark text-center">
-                  <h2>
-                    <u>Free-Paid</u>
+                <div className="text-center">
+                  <h2 style={{ color: '#FF7F0E' }}>
+                    <u>Chart of Free-Paid</u>
                   </h2>
                 </div>
                 <div>
@@ -1976,8 +2136,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 p-1 mr-1 text-info font-weight-bold">
-                            Start Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 p-1 mr-1  font-weight-bold">
+                            <b>Start Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
@@ -1991,8 +2151,8 @@ class DataView extends React.Component<any, any> {
                           />
                         </div>
                         <div className="d-flex">
-                          <label className="label ml-2 mr-1 p-1 text-info font-weight-bold">
-                            End Date
+                          <label style={{ color: "#066B86" }} className="label mt-1 ml-2 mr-1 p-1  font-weight-bold">
+                            <b>End Date</b>
                           </label>
                           <input
                             className="text m-1 p-1"
